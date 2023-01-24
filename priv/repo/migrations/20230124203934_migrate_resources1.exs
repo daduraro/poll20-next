@@ -10,24 +10,25 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
   def up do
     create table(:votes, primary_key: false) do
       add :id, :uuid, null: false, primary_key: true
+      add :game_id, :uuid
+      add :member_id, :uuid
       add :value, :bigint, null: false
       add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
-      add :game_id, :uuid, null: false
-      add :member_id, :uuid, null: false
     end
 
     create table(:sessions, primary_key: false) do
       add :id, :uuid, null: false, primary_key: true
+      add :game_id, :uuid
+      add :comment, :text, default: ""
       add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
-      add :game_id, :uuid, null: false
     end
 
     create table(:session_members, primary_key: false) do
       add :id, :uuid, null: false, primary_key: true
       add :winner, :boolean, null: false
-      add :vote, :text
+      add :vote, :bigint
 
       add :session_id,
           references(:sessions,
@@ -38,7 +39,7 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
           ),
           null: false
 
-      add :user_id, :uuid, null: false
+      add :member_id, :uuid, null: false
     end
 
     create table(:rooms, primary_key: false) do
@@ -54,11 +55,11 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
     end
 
     alter table(:session_members) do
-      modify :user_id,
+      modify :member_id,
              references(:members,
                column: :id,
                prefix: "public",
-               name: "session_members_user_id_fkey",
+               name: "session_members_member_id_fkey",
                type: :uuid
              )
     end
@@ -113,6 +114,14 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
     end
 
     alter table(:games) do
+      add :room_id,
+          references(:rooms,
+            column: :id,
+            name: "games_room_id_fkey",
+            type: :uuid,
+            prefix: "public"
+          )
+
       add :name, :text, null: false
       add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
@@ -150,10 +159,13 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
 
     drop table(:game_owners)
 
+    drop constraint(:games, "games_room_id_fkey")
+
     alter table(:games) do
       remove :updated_at
       remove :inserted_at
       remove :name
+      remove :room_id
     end
 
     drop constraint(:sessions, "sessions_game_id_fkey")
@@ -185,10 +197,10 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
       remove :room_id
     end
 
-    drop constraint(:session_members, "session_members_user_id_fkey")
+    drop constraint(:session_members, "session_members_member_id_fkey")
 
     alter table(:session_members) do
-      modify :user_id, :uuid
+      modify :member_id, :uuid
     end
 
     drop table(:members)

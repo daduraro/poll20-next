@@ -15,7 +15,7 @@ defmodule Poll20Web.Plugs.Actor do
       [actor, nil] -> actor
       [actor, invite_code] -> Map.put(actor, :invite_code, invite_code)
     end
-
+IO.inspect(actor)
     conn
     |> Ash.PlugHelpers.set_actor(actor)
   end

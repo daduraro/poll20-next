@@ -17,7 +17,6 @@ defmodule Poll20.Member do
 
       get :read, action: :read
       index :read, action: :read
-      post :create
       patch :update
     end
   end
@@ -27,7 +26,15 @@ defmodule Poll20.Member do
   end
 
   policies do
-    policy always() do
+    policy action_type(:create) do
+      authorize_if {Poll20.Policy.MatchResource,
+        attribute: :room_id,
+        resource: Poll20.Room,
+        resource_attribute: :invite_code,
+        actor_attribute: :invite_code}
+    end
+
+    policy action_type([:read, :update, :delete]) do
       authorize_if expr(room.id == ^actor(:room_id))
       authorize_if expr(room.invite_code == ^actor(:invite_code))
     end

@@ -11,13 +11,37 @@
       "type": "uuid"
     },
     {
-      "allow_nil?": false,
+      "allow_nil?": true,
       "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "sessions_game_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "schema": "public",
+        "table": "games"
+      },
+      "size": null,
+      "source": "game_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": true,
+      "default": "\"\"",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "name",
+      "source": "comment",
       "type": "text"
     },
     {
@@ -46,7 +70,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "A7EA1823EDC0F5564A6BCA6712BD687C641B38D8C91335CA54C53B2BFAB0CB9F",
+  "hash": "45C08989635E29386BD4061B4F1470C6440E05FB7145FDA628EE2F5388365819",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -55,5 +79,5 @@
   },
   "repo": "Elixir.Poll20.Repo",
   "schema": null,
-  "table": "games"
+  "table": "sessions"
 }

@@ -11,6 +11,54 @@
       "type": "uuid"
     },
     {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "votes_game_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "schema": "public",
+        "table": "games"
+      },
+      "size": null,
+      "source": "game_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "votes_member_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "schema": "public",
+        "table": "members"
+      },
+      "size": null,
+      "source": "member_id",
+      "type": "uuid"
+    },
+    {
       "allow_nil?": false,
       "default": "nil",
       "generated?": false,
@@ -39,54 +87,6 @@
       "size": null,
       "source": "updated_at",
       "type": "utc_datetime_usec"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": {
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "votes_game_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "schema": "public",
-        "table": "games"
-      },
-      "size": null,
-      "source": "game_id",
-      "type": "uuid"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": {
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "votes_member_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "schema": "public",
-        "table": "members"
-      },
-      "size": null,
-      "source": "member_id",
-      "type": "uuid"
     }
   ],
   "base_filter": null,
@@ -94,7 +94,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "F61DAD124146E678CB45D1D977EE40ACE84D213B6A75289AD6F7B51812D13125",
+  "hash": "B66D67996E5E879B7D85D517FEDD72255EA4B8E6F701ECBDE2D9BA4E9ED25C0B",
   "identities": [],
   "multitenancy": {
     "attribute": null,

@@ -26,9 +26,6 @@ defmodule Poll20.Room do
 
     routes do
       base "/rooms"
-      includes [
-        members: []
-      ]
 
       get :read
       index :read

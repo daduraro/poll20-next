@@ -11,6 +11,40 @@
       "type": "uuid"
     },
     {
+      "allow_nil?": true,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "games_room_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "schema": "public",
+        "table": "rooms"
+      },
+      "size": null,
+      "source": "room_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
+      "references": null,
+      "size": null,
+      "source": "name",
+      "type": "text"
+    },
+    {
       "allow_nil?": false,
       "default": "fragment(\"now()\")",
       "generated?": false,
@@ -29,30 +63,6 @@
       "size": null,
       "source": "updated_at",
       "type": "utc_datetime_usec"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": {
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "sessions_game_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "schema": "public",
-        "table": "games"
-      },
-      "size": null,
-      "source": "game_id",
-      "type": "uuid"
     }
   ],
   "base_filter": null,
@@ -60,7 +70,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "FCFDF7DB66B793D38FE230F48B1A28BBC826B7EF5FDA1F65EAC2BC35CD74BF30",
+  "hash": "C15087DE2AF79157060AE6A858337F3478695D31ACF6A27F4258791B396E9079",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -69,5 +79,5 @@
   },
   "repo": "Elixir.Poll20.Repo",
   "schema": null,
-  "table": "sessions"
+  "table": "games"
 }

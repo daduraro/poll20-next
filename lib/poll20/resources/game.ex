@@ -1,20 +1,63 @@
 defmodule Poll20.Game do
   use Ash.Resource,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    extensions: [AshJsonApi.Resource],
+    authorizers: [
+      Ash.Policy.Authorizer
+    ]
+
+  json_api do
+    type "game"
+    includes [
+      owners: []
+    ]
+
+    routes do
+      base "/games"
+
+      get :read
+      index :read
+      post :create
+      patch :update
+    end
+  end
 
   actions do
-    defaults [:create, :read, :update, :destroy]
+    defaults [:read, :destroy]
+
+    create :create do
+      argument :owners, {:array, :uuid} do
+        allow_nil? true
+        default []
+      end
+
+      change manage_relationship(:owners, :owners, type: :append_and_remove)
+    end
+
+    update :update do
+      argument :owners, {:array, :uuid} do
+        allow_nil? true
+        default []
+      end
+
+      change manage_relationship(:owners, :owners, type: :append_and_remove)
+    end
   end
 
   policies do
-    policy always() do
+    policy action_type(:create) do
+      authorize_if {Poll20.Policy.MatchActorOnCreate, match: %{room_id: :room_id}}
+    end
+
+    policy action_type([:read, :update, :delete]) do
       authorize_if expr(room.id == ^actor(:room_id))
-      authorize_if expr(room.invite_code == ^actor(:invite_code))
     end
   end
 
   attributes do
     uuid_primary_key :id
+
+    attribute :room_id, :uuid
 
     attribute :name, :string do
       allow_nil? false
@@ -24,6 +67,10 @@ defmodule Poll20.Game do
   end
 
   relationships do
+    belongs_to :room, Poll20.Room do
+      allow_nil? false
+    end
+
     many_to_many :owners, Poll20.Member do
       through Poll20.GameOwner
       source_attribute_on_join_resource :game_id

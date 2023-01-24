@@ -2,6 +2,10 @@ defmodule Poll20.GameOwner do
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer
 
+  actions do
+    defaults [:create, :read, :update, :destroy]
+  end
+
   attributes do
     uuid_primary_key :id
     timestamps()

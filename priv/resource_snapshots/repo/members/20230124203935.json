@@ -15,76 +15,62 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
-      "references": null,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "members_room_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "schema": "public",
+        "table": "rooms"
+      },
       "size": null,
-      "source": "winner",
-      "type": "boolean"
+      "source": "room_id",
+      "type": "uuid"
     },
     {
-      "allow_nil?": true,
+      "allow_nil?": false,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "vote",
+      "source": "name",
       "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"now()\")",
       "generated?": false,
       "primary_key?": false,
-      "references": {
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "session_members_session_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "schema": "public",
-        "table": "sessions"
-      },
+      "references": null,
       "size": null,
-      "source": "session_id",
-      "type": "uuid"
+      "source": "inserted_at",
+      "type": "utc_datetime_usec"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
+      "default": "fragment(\"now()\")",
       "generated?": false,
       "primary_key?": false,
-      "references": {
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "session_members_user_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "schema": "public",
-        "table": "members"
-      },
+      "references": null,
       "size": null,
-      "source": "user_id",
-      "type": "uuid"
+      "source": "updated_at",
+      "type": "utc_datetime_usec"
     }
   ],
   "base_filter": null,
   "check_constraints": [],
   "custom_indexes": [],
   "custom_statements": [],
-  "has_create_action": true,
-  "hash": "1F3F0C004A22E30EA477EA99D5672D9DCED3CBAC3D5FAD0FA90E22D7E12BB87D",
+  "has_create_action": false,
+  "hash": "FAB35E57C22711F74AC928D31D330067CA69543EE4F23D1C5B75A59F46376B13",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -93,5 +79,5 @@
   },
   "repo": "Elixir.Poll20.Repo",
   "schema": null,
-  "table": "session_members"
+  "table": "members"
 }
