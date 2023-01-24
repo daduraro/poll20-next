@@ -15,9 +15,33 @@
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
+      "references": {
+        "destination_attribute": "id",
+        "destination_attribute_default": null,
+        "destination_attribute_generated": null,
+        "multitenancy": {
+          "attribute": null,
+          "global": null,
+          "strategy": null
+        },
+        "name": "members_room_id_fkey",
+        "on_delete": null,
+        "on_update": null,
+        "schema": "public",
+        "table": "rooms"
+      },
+      "size": null,
+      "source": "room_id",
+      "type": "uuid"
+    },
+    {
+      "allow_nil?": false,
+      "default": "nil",
+      "generated?": false,
+      "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "email",
+      "source": "name",
       "type": "text"
     },
     {
@@ -46,7 +70,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "F4DF1A8D6A8877CAB0820D0A518ECB28DAFD925FC2E94C72E673FA33599FCEBC",
+  "hash": "3875E4C1328D60F88677CE3FD73654B055C6AF46A385FB9A992EB253D83029FD",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -55,5 +79,5 @@
   },
   "repo": "Elixir.Poll20.Repo",
   "schema": null,
-  "table": "accounts"
+  "table": "members"
 }

@@ -1,12 +1,36 @@
 defmodule Poll20.Member do
-  import Poll20.Gettext
-
   use Ash.Resource,
     data_layer: AshPostgres.DataLayer,
-    extensions: [AshJsonApi.Resource]
+    extensions: [AshJsonApi.Resource],
+    authorizers: [
+      Ash.Policy.Authorizer
+    ]
+
+  json_api do
+    type "member"
+    includes [
+      room: []
+    ]
+
+    routes do
+      base "/members"
+
+      get :read, action: :read
+      index :read, action: :read
+      post :create
+      patch :update
+    end
+  end
 
   actions do
-    defaults [:create, :read, :update, :destroy]
+    defaults [:read, :create, :update, :destroy]
+  end
+
+  policies do
+    policy always() do
+      authorize_if expr(room.id == ^actor(:room_id))
+      authorize_if expr(room.invite_code == ^actor(:invite_code))
+    end
   end
 
   attributes do
@@ -16,27 +40,15 @@ defmodule Poll20.Member do
       allow_nil? false
     end
 
-    attribute :account_id, :uuid do
-      allow_nil? true
-    end
-
     attribute :name, :string do
       allow_nil? false
-    end
-
-    attribute :admin, :boolean do
-      allow_nil? false
-    end
-
-    attribute :invite_code, :uuid do
-      allow_nil? true
     end
 
     timestamps()
   end
 
   relationships do
-    belongs_to :rooms, Poll20.Room do
+    belongs_to :room, Poll20.Room do
       allow_nil? false
     end
   end
@@ -44,18 +56,5 @@ defmodule Poll20.Member do
   postgres do
     table "members"
     repo Poll20.Repo
-  end
-
-  json_api do
-    type "member"
-
-    routes do
-      base "/members"
-
-      get :read
-      index :read
-      post :create
-      patch :update
-    end
   end
 end

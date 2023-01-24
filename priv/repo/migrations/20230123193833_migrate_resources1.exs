@@ -44,6 +44,7 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
     create table(:rooms, primary_key: false) do
       add :id, :uuid, null: false, primary_key: true
       add :name, :text, null: false
+      add :invite_code, :uuid, null: false
       add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
       add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
     end
@@ -63,22 +64,18 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
     end
 
     alter table(:members) do
-      add :room_id, :uuid, null: false
-      add :account_id, :uuid
-      add :name, :text, null: false
-      add :admin, :boolean, null: false
-      add :invite_code, :uuid
-      add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
-      add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
-
-      add :rooms_id,
+      add :room_id,
           references(:rooms,
             column: :id,
-            name: "members_rooms_id_fkey",
+            name: "members_room_id_fkey",
             type: :uuid,
             prefix: "public"
           ),
           null: false
+
+      add :name, :text, null: false
+      add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
+      add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
     end
 
     create table(:games, primary_key: false) do
@@ -144,18 +141,9 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
           ),
           null: false
     end
-
-    create table(:accounts, primary_key: false) do
-      add :id, :uuid, null: false, primary_key: true
-      add :email, :text, null: false
-      add :inserted_at, :utc_datetime_usec, null: false, default: fragment("now()")
-      add :updated_at, :utc_datetime_usec, null: false, default: fragment("now()")
-    end
   end
 
   def down do
-    drop table(:accounts)
-
     drop constraint(:game_owners, "game_owners_game_id_fkey")
 
     drop constraint(:game_owners, "game_owners_member_id_fkey")
@@ -188,16 +176,12 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
 
     drop table(:games)
 
-    drop constraint(:members, "members_rooms_id_fkey")
+    drop constraint(:members, "members_room_id_fkey")
 
     alter table(:members) do
-      remove :rooms_id
       remove :updated_at
       remove :inserted_at
-      remove :invite_code
-      remove :admin
       remove :name
-      remove :account_id
       remove :room_id
     end
 

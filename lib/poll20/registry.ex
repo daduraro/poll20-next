@@ -5,7 +5,6 @@ defmodule Poll20.Registry do
     ]
 
   entries do
-    entry Poll20.Account
     entry Poll20.Game
     entry Poll20.GameOwner
     entry Poll20.Member

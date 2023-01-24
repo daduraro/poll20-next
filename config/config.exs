@@ -52,6 +52,9 @@ config :phoenix, :json_library, Jason
 
 # backwards-compat fix as requested by the docs
 config :ash, :use_all_identities_in_manage_relationship?, false
+config :ash, :policies, show_policy_breakdowns?: true
+config :ash, :policies, log_successful_policy_breakdowns: :info
+config :ash, :policies, log_policy_breakdowns: :info
 
 config :mime, :types, %{
   "application/vnd.api+json" => ["json"]

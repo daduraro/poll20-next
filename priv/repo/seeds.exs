@@ -9,3 +9,14 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+room = Ash.Seed.seed!(%Poll20.Room{})
+member = Ash.Seed.seed!(%Poll20.Member{
+  room_id: room.id
+})
+
+IO.inspect(%{
+  room_id: room.id,
+  invite_code: room.invite_code,
+  member_id: member.id
+})

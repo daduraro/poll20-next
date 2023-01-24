@@ -33,8 +33,8 @@ defmodule Poll20.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:ash, "~> 2.4"},
-      {:ash_json_api, "~> 0.30.1"},
+      {:ash, "~> 2.5.8"},
+      {:ash_json_api, "~> 0.31"},
       {:phoenix, "~> 1.6.15"},
       {:phoenix_ecto, "~> 4.4"},
       {:plug_cowboy, "~> 2.5"},

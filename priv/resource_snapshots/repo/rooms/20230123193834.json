@@ -17,41 +17,11 @@
       "primary_key?": false,
       "references": null,
       "size": null,
-      "source": "room_id",
-      "type": "uuid"
-    },
-    {
-      "allow_nil?": true,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "account_id",
-      "type": "uuid"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
       "source": "name",
       "type": "text"
     },
     {
       "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": null,
-      "size": null,
-      "source": "admin",
-      "type": "boolean"
-    },
-    {
-      "allow_nil?": true,
       "default": "nil",
       "generated?": false,
       "primary_key?": false,
@@ -79,30 +49,6 @@
       "size": null,
       "source": "updated_at",
       "type": "utc_datetime_usec"
-    },
-    {
-      "allow_nil?": false,
-      "default": "nil",
-      "generated?": false,
-      "primary_key?": false,
-      "references": {
-        "destination_attribute": "id",
-        "destination_attribute_default": null,
-        "destination_attribute_generated": null,
-        "multitenancy": {
-          "attribute": null,
-          "global": null,
-          "strategy": null
-        },
-        "name": "members_rooms_id_fkey",
-        "on_delete": null,
-        "on_update": null,
-        "schema": "public",
-        "table": "rooms"
-      },
-      "size": null,
-      "source": "rooms_id",
-      "type": "uuid"
     }
   ],
   "base_filter": null,
@@ -110,7 +56,7 @@
   "custom_indexes": [],
   "custom_statements": [],
   "has_create_action": true,
-  "hash": "D4E187502A50CC2F48B24575C511AE0AA30564B5624F838F7EAC12FA27FFACEE",
+  "hash": "8EFFDB2EFEDF8989BC3C40FB73F34704DE20BD3014AD94175E0EAF3C57235B9D",
   "identities": [],
   "multitenancy": {
     "attribute": null,
@@ -119,5 +65,5 @@
   },
   "repo": "Elixir.Poll20.Repo",
   "schema": null,
-  "table": "members"
+  "table": "rooms"
 }

@@ -3,12 +3,13 @@ defmodule Poll20Web.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Poll20Web.Plugs.Actor
   end
 
-  # scope "/api", Poll20Web do
-  #   pipe_through :api
-  forward "/api", Poll20.Router
-  # end
+  scope "/" do
+    pipe_through :api
+    forward "/api", Poll20.Router
+  end
 
   # Enables LiveDashboard only for development
   #

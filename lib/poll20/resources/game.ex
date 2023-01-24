@@ -6,6 +6,13 @@ defmodule Poll20.Game do
     defaults [:create, :read, :update, :destroy]
   end
 
+  policies do
+    policy always() do
+      authorize_if expr(room.id == ^actor(:room_id))
+      authorize_if expr(room.invite_code == ^actor(:invite_code))
+    end
+  end
+
   attributes do
     uuid_primary_key :id
 
