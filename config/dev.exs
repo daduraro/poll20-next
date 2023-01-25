@@ -23,11 +23,7 @@ config :poll20, Poll20Web.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "YYO+IIMuykjn4zTy9O4bsEnalVRDKTJgbqRp8rCtPW2oIXowLOTxxjaEnJdbYJvZ",
-  watchers: [
-    # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
-    esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}
-  ]
+  secret_key_base: "YYO+IIMuykjn4zTy9O4bsEnalVRDKTJgbqRp8rCtPW2oIXowLOTxxjaEnJdbYJvZ"
 
 # ## SSL Support
 #

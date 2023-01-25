@@ -1,0 +1,7 @@
+.vite-ssg-dist
+.vite-ssg-temp
+dist-ssr
+node_modules
+
+# weird files that vite seems to generate in the root folder
+*.mjs
