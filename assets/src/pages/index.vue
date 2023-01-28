@@ -66,7 +66,6 @@ async function createRoom(): Promise<void> {
         throw join.error
       }
 
-      console.log(join.entity.value)
       const membership = {
         room: join.entity.value,
         member_id: join.entity.value.members[join.entity.value.members.length - 1].id,
@@ -80,9 +79,9 @@ async function createRoom(): Promise<void> {
 </script>
 
 <template>
-  <div>
+  <main>
     <div v-if="memberships.length > 0">
-      <p>Your rooms:</p>
+      <h1 class="text-lg text-left">Your rooms:</h1>
       <ul>
         <li v-for="membership in memberships" :key="membership.room.id" class="my-3">
           <router-link :to="{ name: 'room-id', params: membership.room }" class="text-xl">
@@ -91,9 +90,9 @@ async function createRoom(): Promise<void> {
         </li>
       </ul>
     </div>
-    <p v-else>
+    <h1 v-else>
       {{ t('You have no rooms yet. Create one or get a friend\'s invite!') }}
-    </p>
+    </h1>
     <hr class="my-2"/>
     {{ t('Or...') }}
     <p-form
@@ -103,5 +102,5 @@ async function createRoom(): Promise<void> {
       :busy="busy"
       @submit="createRoom"
     />
-  </div>
+  </main>
 </template>

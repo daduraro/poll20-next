@@ -8,13 +8,21 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     copy: typeof import('./components/TheFooter copy.vue')['default']
+    ICarbonAccessibility: typeof import('~icons/carbon/accessibility')['default']
+    ICarbonCampsite: typeof import('~icons/carbon/campsite')['default']
+    ICarbonCopy: typeof import('~icons/carbon/copy')['default']
+    ICarbonDicomOverlay: typeof import('~icons/carbon/dicom-overlay')['default']
+    ICarbonProgressBarRound: typeof import('~icons/carbon/progress-bar-round')['default']
+    ICarbonWarning: typeof import('~icons/carbon/warning')['default']
     PForm: typeof import('./components/PForm.vue')['default']
     README: typeof import('./components/README.md')['default']
+    RoomNav: typeof import('./components/RoomNav.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheCounter: typeof import('./components/TheCounter.vue')['default']
     TheFooter: typeof import('./components/TheFooter.vue')['default']
     TheHeader: typeof import('./components/TheHeader.vue')['default']
     TheInput: typeof import('./components/TheInput.vue')['default']
+    TheRoomNav: typeof import('./components/TheRoomNav.vue')['default']
   }
 }

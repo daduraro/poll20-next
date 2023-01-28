@@ -34,7 +34,7 @@ const emit = defineEmits(['submit', 'update:value'])
     :aria-busy="busy"
     @submit.prevent="emit('submit')"
   >
-    <h2>{{ title }}</h2>
+    <h2 class="text-xl text-center">{{ title }}</h2>
     <div
       v-for="field in props.definition"
       :key="field.id"
@@ -66,7 +66,7 @@ const emit = defineEmits(['submit', 'update:value'])
       >
         <div v-if="busy" class="text-center w-100%">
           <div class="animate-spin preserve-3d m-auto w-2rem h-2rem">
-            <div class="i-carbon-progress-bar-round w-2rem h-2rem"/>
+            <i-carbon-progress-bar-round w-2rem h-2rem/>
           </div>
           <span class="sr-only">
             {{ t('Loading...') }}

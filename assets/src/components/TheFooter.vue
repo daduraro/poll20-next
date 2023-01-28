@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import IconMoon from '~icons/carbon/moon'
+import IconSun from '~icons/carbon/sun'
 const { t, availableLocales, locale } = useI18n()
 
 const toggleLocales = () => {
@@ -14,7 +16,7 @@ const toggleLocales = () => {
       class="icon-btn mx-2"
       @click="toggleDark()"
     >
-      <div i="carbon-sun dark:carbon-moon" />
+      <component :is="isDark ? IconMoon : IconSun" />
     </button>
 
     <button
@@ -30,7 +32,7 @@ const toggleLocales = () => {
       v-aria-title="t('About')"
       class="icon-btn mx-2"
     >
-      <div i-carbon-dicom-overlay />
+      <i-carbon-dicom-overlay />
     </RouterLink>
   </footer>
 </template>

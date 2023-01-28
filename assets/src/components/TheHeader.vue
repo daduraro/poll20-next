@@ -5,7 +5,7 @@ const { t } = useI18n()
 <template>
   <header class="text-center mb-4">
     <RouterLink class="icon-btn" :to="{ path: '/' }">
-      <div class="text-4xl i-carbon-campsite" />
+      <i-carbon-campsite class="text-4xl" />
       <span class="sr-only">
         {{ t('Home') }}
       </span>

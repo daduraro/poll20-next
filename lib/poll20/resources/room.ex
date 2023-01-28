@@ -21,7 +21,8 @@ defmodule Poll20.Room do
   json_api do
     type "room"
     includes [
-      members: []
+      members: [],
+      games: [],
     ]
 
     routes do
@@ -69,7 +70,9 @@ defmodule Poll20.Room do
 
       change manage_relationship :member_id, :members,
         type: :remove,
-        on_match: :destroy
+        on_match: :destroy,
+        # membership depends on room
+        authorize?: false
     end
   end
 
@@ -92,6 +95,7 @@ defmodule Poll20.Room do
 
   relationships do
     has_many :members, Poll20.Member
+    has_many :games, Poll20.Game
   end
 
   postgres do

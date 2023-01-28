@@ -22,7 +22,12 @@ defmodule Poll20.Member do
   end
 
   actions do
-    defaults [:read, :create, :update, :destroy]
+    defaults [:create, :update, :destroy]
+
+    read :read do
+      primary? true
+      prepare build(sort: [inserted_at: :asc])
+    end
   end
 
   policies do

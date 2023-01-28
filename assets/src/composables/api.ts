@@ -1,6 +1,7 @@
 import { ComputedRef } from "vue";
-import { createFetch, UseFetchOptions, UseFetchReturn } from "@vueuse/core";
+import { createFetch, UseFetchOptions } from "@vueuse/core";
 import { MaybeArray, UUID } from "~/types"
+import NProgress from 'nprogress'
 
 type EntityBase = {
   id: UUID;
@@ -47,6 +48,7 @@ const apiFetch = createFetch({
   baseUrl: 'http://127.0.0.1:4000/api',
   options: {
     beforeFetch: ({ options }) => {
+      NProgress.start()
       const { membership } = useUserStore()
       options.headers = {
         ...options.headers,
@@ -57,6 +59,7 @@ const apiFetch = createFetch({
       return { options }
     },
     afterFetch<T>(context: { data: ApiResponse<T> & { [key: string]: any }}) {
+      NProgress.done()
       if (context.data) {
         context.data.entity = Array.isArray(context.data.data)
           ? undefined
@@ -67,6 +70,10 @@ const apiFetch = createFetch({
       }
   
       return context
+    },
+    onFetchError(ctx) {
+      NProgress.done()
+      return ctx
     },
   }
 })
@@ -81,14 +88,15 @@ export function useApi<T>(
   path: string,
   payload: ApiOptions = {
     query: {},
-    attributes: {}
+    attributes: undefined
   },
   options: UseFetchOptions = {}
 ) {
   const url = path + '?' + (new URLSearchParams(payload.query)).toString()
-  return apiFetch<ApiReturn<T>>(url, options)[method]({
+  const body = payload.attributes === undefined ? undefined : {
     data: {
       attributes: payload.attributes
     }
-  }).json()
+  }
+  return apiFetch<ApiReturn<T>>(url, options)[method](body).json()
 }
