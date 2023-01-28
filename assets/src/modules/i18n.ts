@@ -2,23 +2,27 @@ import { createI18n } from 'vue-i18n'
 import { type UserModule } from '~/types'
 
 // Import i18n resources
-// https://vitejs.dev/guide/features.html#glob-import
-//
-// Don't need this? Try vitesse-lite: https://github.com/antfu/vitesse-lite
+const localeFiles = import.meta.glob<{ default: any }>('../../locales/*.y(a)?ml', { eager: true })
 const messages = Object.fromEntries(
-  Object.entries(
-    import.meta.glob<{ default: any }>('../../locales/*.y(a)?ml', { eager: true }))
-    .map(([key, value]) => {
-      const yaml = key.endsWith('.yaml')
-      return [key.slice(14, yaml ? -5 : -4), value.default]
-    }),
+  Object.entries(localeFiles).map(([key, value]) => {
+    const extensionLength = key.endsWith('.yaml') ? -5 : -4
+    return [key.slice('../../locales/'.length, extensionLength), value.default]
+  })
+)
+
+const defaultLocale = 'en'
+const defaultMessages = Object.fromEntries(
+  Object.keys(messages[Object.keys(messages)[0]]).map(key => [key, key])
 )
 
 export const install: UserModule = ({ app }) => {
   const i18n = createI18n({
     legacy: false,
-    locale: 'en',
-    messages,
+    locale: navigator.language || 'en',
+    messages: {
+      [defaultLocale]: defaultMessages,
+      ...messages
+    },
   })
 
   app.use(i18n)

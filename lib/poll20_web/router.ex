@@ -4,6 +4,23 @@ defmodule Poll20Web.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug Poll20Web.Plugs.Actor
+    plug CORSPlug,
+      origin: ["*"],
+      headers: [
+        "Authorization",
+        "Content-Type",
+        "Accept",
+        "Origin",
+        "User-Agent",
+        "DNT",
+        "Cache-Control",
+        "X-Mx-ReqToken",
+        "Keep-Alive",
+        "X-Requested-With",
+        "If-Modified-Since",
+        "X-CSRF-Token",
+        "X-member-id"
+      ]
   end
 
   pipeline :web do

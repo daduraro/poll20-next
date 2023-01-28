@@ -21,7 +21,7 @@ IO.inspect(actor)
   end
 
   defp get_member(conn) do
-    with [member_id] <- Plug.Conn.get_req_header(conn, "member-id"),
+    with [member_id] <- Plug.Conn.get_req_header(conn, "x-member-id"),
       {:ok, member} <- Poll20.get(Poll20.Member, member_id) do
       member
     else

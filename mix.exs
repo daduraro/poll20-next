@@ -37,9 +37,9 @@ defmodule Poll20.MixProject do
       {:ash_postgres, "~> 1.2"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
+      {:cors_plug, "~> 3.0"},
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
-      {:phoenix_live_dashboard, "~> 0.6"},
       {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]

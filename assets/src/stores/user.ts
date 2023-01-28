@@ -1,34 +1,29 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { type Room, type Member } from '~/types'
+
+export type Membership = {
+  room: Room;
+  member_id: Member['id'];
+}
 
 export const useUserStore = defineStore('user', () => {
-  /**
-   * Current name of the user.
-   */
-  const savedName = ref('')
-  const previousNames = ref(new Set<string>())
+  const route = useRoute()
+  const memberships = useLocalStorage<Membership[]>('pinia/memberships', [])
 
-  const usedNames = computed(() => Array.from(previousNames.value))
-  const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
+  const roomId = computed(() => route.params.id as string|undefined)
+  const membership = computed(() => memberships.value.find(membership => membership.room.id === roomId.value))
 
-  /**
-   * Changes the current name of the user and saves the one that was used
-   * before.
-   *
-   * @param name - new name to set
-   */
-  function setNewName(name: string) {
-    if (savedName.value)
-      previousNames.value.add(savedName.value)
-
-    savedName.value = name
+  function join(membership: Membership) {
+    memberships.value.push(membership)
   }
 
-  return {
-    setNewName,
-    otherNames,
-    savedName,
+  function leave(room_id: Room['id']) {
+    memberships.value.splice(memberships.value.findIndex(membership => membership.room.id === room_id), 1)
   }
+
+  return { memberships, membership, join, leave }
 })
 
-if (import.meta.hot)
+if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
+}
