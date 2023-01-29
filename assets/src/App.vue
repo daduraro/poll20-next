@@ -2,7 +2,7 @@
 const route = useRoute()
 
 useHead({
-  title: computed(() => (route.meta.title as string|undefined) || 'Poll20'),
+  title: computed(() => 'Poll20' + (route.meta.title? ` - ${route.meta.title}` : '')),
   meta: [
     { name: 'description', content: 'Boardgame voting and logging' },
     {

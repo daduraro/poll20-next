@@ -61,7 +61,7 @@ confirmLeave.onConfirm(() => {
 <template>
   <p>{{ t('Members') }}</p>
   <ul>
-    <li v-for="member in membership.room.members" :key="member.id" class="my-8">
+    <li v-for="member in membership.room.members" :key="member.id" class="mt-2 mb-6">
       <div v-if="member.id !== membership.member_id" class="flex items-center">
         <div class="flex-grow text-lg">{{ member.name }}</div>
         <button
@@ -126,3 +126,8 @@ confirmLeave.onConfirm(() => {
       : t('Leave room')"
   />
 </template>
+
+<route lang="yaml">
+  meta:
+    title: 'Settings'
+</route>

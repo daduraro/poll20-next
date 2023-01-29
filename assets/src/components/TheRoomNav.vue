@@ -8,7 +8,7 @@ import IconHistory from '~icons/material-symbols/history-rounded'
 const { membership } = useUserStore()
 const { t } = useI18n()
 
-const links = [
+const links = computed(() => [
   {
     name: t('Votes'),
     route: { name: 'room-id' },
@@ -34,7 +34,7 @@ const links = [
     route: { name: 'room-id-settings' },
     icon: IconSettings,
   },
-]
+])
 </script>
 
 <template>

@@ -2,6 +2,8 @@
 import IconMoon from '~icons/carbon/moon'
 import IconSun from '~icons/carbon/sun'
 const { t, availableLocales, locale } = useI18n()
+const route = useRoute()
+const router = useRouter()
 
 // e.g. es-ES -> es // ca_ES -> ca // EN -> en
 const normalizeLocale = (locale: string) => locale.toLowerCase().match(/[a-z]+/)?.[0]
@@ -34,11 +36,22 @@ const toggleLocales = () => {
     </button>
 
     <RouterLink
+      v-if="route.path !== '/about'"
       to="/about"
       v-aria-title="t('About')"
       class="icon-btn mx-2"
     >
       <i-carbon-dicom-overlay />
     </RouterLink>
+
+    <button
+      v-else
+      v-aria-title="t('Go back')"
+      to="/about"
+      class="icon-btn mx-2"
+      @click="router.back()"
+    >
+      <i-carbon-arrow-left />
+    </button>
   </footer>
 </template>

@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     copy: typeof import('./components/TheFooter copy.vue')['default']
     ICarbonAccessibility: typeof import('~icons/carbon/accessibility')['default']
+    ICarbonArrowLeft: typeof import('~icons/carbon/arrow-left')['default']
     ICarbonCampsite: typeof import('~icons/carbon/campsite')['default']
     ICarbonCopy: typeof import('~icons/carbon/copy')['default']
     ICarbonDicomOverlay: typeof import('~icons/carbon/dicom-overlay')['default']
