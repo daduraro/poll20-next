@@ -3,6 +3,12 @@ import IconMoon from '~icons/carbon/moon'
 import IconSun from '~icons/carbon/sun'
 const { t, availableLocales, locale } = useI18n()
 
+// e.g. es-ES -> es // ca_ES -> ca // EN -> en
+const normalizeLocale = (locale: string) => locale.toLowerCase().match(/[a-z]+/)?.[0]
+const savedLocale = useLocalStorage('i18n.locale', normalizeLocale(navigator.language))
+locale.value = savedLocale.value!
+watch(locale, value => savedLocale.value = value)
+
 const toggleLocales = () => {
   const locales = availableLocales
   locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length]
