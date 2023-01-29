@@ -10,6 +10,8 @@ const messages = Object.fromEntries(
   })
 )
 
+// e.g. es-ES -> es // ca_ES -> ca // EN -> en
+const normalizeLocale = (locale: string) => locale.toLowerCase().match(/[a-z]+/)?.[0]
 const defaultLocale = 'en'
 const defaultMessages = Object.fromEntries(
   Object.keys(messages[Object.keys(messages)[0]]).map(key => [key, key])
@@ -18,7 +20,7 @@ const defaultMessages = Object.fromEntries(
 export const install: UserModule = ({ app }) => {
   const i18n = createI18n({
     legacy: false,
-    locale: navigator.language || 'en',
+    locale: normalizeLocale(navigator.language) || 'en',
     messages: {
       [defaultLocale]: defaultMessages,
       ...messages
