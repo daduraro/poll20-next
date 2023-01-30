@@ -63,11 +63,10 @@ confirmLeave.onConfirm(() => {
   <ul>
     <li v-for="member in membership.room.members" :key="member.id" class="mt-2 mb-6">
       <div v-if="member.id !== membership.member_id" class="flex">
-        <div class="flex-grow text-lg">{{ member.name }}</div>
         <button
           v-if="member.id !== membership.member_id"
           aria-live="assertive"
-          class="btn btn-danger ml-4"
+          class="btn btn-danger mr-4"
           :disabled="kicking && member.id === kickedMemberId"
           @click="() => kickedMemberId === member.id
             ? confirmKick.confirm()
@@ -76,6 +75,7 @@ confirmLeave.onConfirm(() => {
             ? t('Click again to confirm')
             : t('Kick')"
         />
+        <div class="flex-grow text-lg">{{ member.name }}</div>
       </div>
       <div v-else class="flex">
         <input

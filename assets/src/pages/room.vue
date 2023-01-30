@@ -7,7 +7,7 @@ const { membership } = useUserStore()
   <TheRoomNav v-if="membership"/>
   <main>
     <RouterView v-if="membership"/>
-    <div class="text-right my-2">
+    <div class="text-right mt-8">
       <router-link :to="{ name: 'index' }">
         {{ t('Go back') }}
       </router-link>

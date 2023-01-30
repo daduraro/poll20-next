@@ -96,27 +96,14 @@ onConfirm((id: Game['id']) => {
       :aria-label="t('Games')"
     >
       <li v-for="game in games" :key="game.id">
-        <div class="flex">
-          <div class="flex-grow text-2xl">
-            {{ game.name }}
-          </div>
-          <button
-            v-aria-title="t('Edit {name}', game)"
-            class="ml-1 mb-1 btn"
-            @click="editForm.id !== game.id
-              ? editForm.edit(game)
-              : editForm.reset()"
-          >
-            <i-fa-solid-pencil-alt v-if="editForm.id !== game.id"/>
-            <i-fa-solid-arrow-left v-else/>
-          </button>
+        <div class="flex mb-2">
           <button
             v-for="revealed in [isRevealed && revealArguments[0] === game.id]" :key="0"
             aria-controls="games"
             v-aria-title="revealed
               ? t('Confirm?')
               : t('Delete {name}', game)"
-            class="ml-1 mb-1 btn btn-danger"
+            class="mr-2 btn btn-danger"
             @click="() => revealed
               ? confirm(game.id)
               : reveal(game.id)"
@@ -131,6 +118,19 @@ onConfirm((id: Game['id']) => {
               </span>
             </template>
           </button>
+          <button
+            v-aria-title="t('Edit {name}', game)"
+            class="mr-2 btn"
+            @click="editForm.id !== game.id
+              ? editForm.edit(game)
+              : editForm.reset()"
+          >
+            <i-fa-solid-pencil-alt v-if="editForm.id !== game.id"/>
+            <i-fa-solid-arrow-left v-else/>
+          </button>
+          <div class="flex-grow text-2xl">
+            {{ game.name }}
+          </div>
         </div>
       </li>
     </ul>
