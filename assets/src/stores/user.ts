@@ -14,9 +14,14 @@ export type Membership = {
 }
 
 export const useUserStore = defineStore('user', () => {
+  const storageKey = 'pinia/memberships'
+  const memberships = ref<Membership[]>(
+    JSON.parse(localStorage.getItem(storageKey) || JSON.stringify([]))
+  )
+  
+  watch(memberships, value => localStorage.setItem(storageKey, JSON.stringify(value)), {deep: true})
+  
   const route = useRoute()
-  const memberships = useLocalStorage<Membership[]>('pinia/memberships', [])
-
   const roomId = computed(() => route?.params.id as string|undefined)
   const membership = computed(() => memberships.value.find(membership => membership.room.id === roomId.value))
 
@@ -32,7 +37,10 @@ export const useUserStore = defineStore('user', () => {
     if (current && !previous) {
       const { data } = await useApi<Room>('get', `rooms/${current.room.id}`, {
         query: {
-          include: ['members', 'games']
+          include: [
+            'members',
+            'games.owners',
+          ]
         }
       })
       memberships.value[memberships.value.findIndex(match => match.member_id === current!.member_id)].room = data.value.entity

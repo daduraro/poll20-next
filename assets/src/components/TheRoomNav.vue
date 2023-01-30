@@ -51,6 +51,10 @@ const links = computed(() => [
 </template>
 
 <style>
+html.dark .icon-btn {
+  color: #fff1f1;
+}
+
 nav .icon-btn:hover {
   color: inherit;
 }

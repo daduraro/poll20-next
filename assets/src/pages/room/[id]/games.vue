@@ -16,21 +16,26 @@ const editForm = ref({
   busy: false,
   value: {
     name: '',
-    owners: [] as Member['id'][]
+    owners: [] as Member['id'][],
   },
   definition: [
     {
       id: 'name',
+      label: t('Name'),
       is: 'input',
       attrs: {
         type: 'text',
         required: true
       }
-    }
+    },
+    {
+      id: 'owners',
+    },
   ],
   reset(game: Partial<Game> = {}) {
     editForm.value.id = null
     editForm.value.value.name = game.name || ''
+    editForm.value.value.owners = game.owners?.map(owner => owner.id) || []
   },
   edit(game: Game) {
     this.reset(game)
@@ -39,14 +44,16 @@ const editForm = ref({
   },
   async submit() {
     editForm.busy = true
+    const attributes = { ...editForm.value.value }
+    const patch = {
+        name: editForm.value.value.name,
+        owners: editForm.value.value.owners.map(id => ({ id }))
+    }
     const games = membership!.room.games
     const index = games.findIndex(game => game.id === editForm.value.id)
     if (index !== -1) {
-      useApi<Game>('patch', `games/${editForm.value.id}`, { attributes: editForm.value.value })
-      games.splice(index, 1, {
-        id: games[index].id,
-        ...editForm.value.value
-      })
+      useApi<Game>('patch', `games/${editForm.value.id}`, { attributes })
+      games.splice(index, 1, { id: games[index].id, ...patch })
     }
     else {
       editForm.value.busy = true
@@ -57,10 +64,7 @@ const editForm = ref({
         }
       })
       editForm.value.busy = false
-      games.push({
-        id: data.value.entity!.id,
-        ...editForm.value.value
-      })
+      games.push({ id: data.value.entity!.id, ...patch })
     }
     editForm.value.reset()
   },
@@ -138,7 +142,17 @@ onConfirm((id: Game['id']) => {
       :definition="editForm.definition"
       :busy="editForm.busy"
       @submit="editForm.submit"
-    />
+    >
+      <template #owners>
+        <fieldset v-show="editForm.value.name">
+          <legend>{{ t('Game owners') }}</legend>
+          <div v-for="member in membership!.room.members" :key="member.id" class="flex">
+            <input :id="`member-${member.id}`" type="checkbox" v-model="editForm.value.owners" name="owner" :value="member.id" class="m-2">
+            <label :for="`member-${member.id}`">{{ member.name }}</label>
+          </div>
+        </fieldset>
+      </template>
+    </PForm>
   </div>
 </template>
 

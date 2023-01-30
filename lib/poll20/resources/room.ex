@@ -22,7 +22,9 @@ defmodule Poll20.Room do
     type "room"
     includes [
       members: [],
-      games: [],
+      games: [
+        owners: []
+      ],
     ]
 
     routes do

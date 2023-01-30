@@ -43,19 +43,20 @@ const emit = defineEmits(['submit', 'update:value'])
       <label :for="field.id" class="mr-2 mb-0">
         {{ field.label }}
       </label>
-      <component
-        :is="field.is"
-        :id="field.id"
-        :value="value[field.id]"
-        :disabled="busy"
-        v-bind="field.attrs"
-        class="input display-block w-100%"
-        @input="emit('update:value', {
-          ...value,
-          [field.id]: $event.target.value
-        })"
-        >
-      </component>
+      <slot :name="field.id" v-bind="field">
+        <component
+          :is="field.is"
+          :id="field.id"
+          :value="value[field.id]"
+          :disabled="busy"
+          v-bind="field.attrs"
+          class="input display-block w-100%"
+          @input="emit('update:value', {
+            ...value,
+            [field.id]: $event.target.value
+          })"
+          />
+      </slot>
     </div>
     <div class="text-right">
       <button

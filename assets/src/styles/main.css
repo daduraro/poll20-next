@@ -43,7 +43,8 @@ ul {
   margin-bottom: 1rem;
 }
 
-form label {
+form label,
+form legend {
   display: block;
   font-weight: bold;
 }
