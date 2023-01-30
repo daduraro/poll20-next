@@ -73,7 +73,7 @@ const emit = defineEmits(['submit', 'update:value'])
           </span>
         </div>
         <template v-else>
-          {{ t('Submit') || props.submitLabel }}
+          {{ t('Save') || props.submitLabel }}
         </template>
       </button>
     </div>

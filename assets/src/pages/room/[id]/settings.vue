@@ -62,7 +62,7 @@ confirmLeave.onConfirm(() => {
   <p>{{ t('Members') }}</p>
   <ul>
     <li v-for="member in membership.room.members" :key="member.id" class="mt-2 mb-6">
-      <div v-if="member.id !== membership.member_id" class="flex items-center">
+      <div v-if="member.id !== membership.member_id" class="flex">
         <div class="flex-grow text-lg">{{ member.name }}</div>
         <button
           v-if="member.id !== membership.member_id"
@@ -77,7 +77,7 @@ confirmLeave.onConfirm(() => {
             : t('Kick')"
         />
       </div>
-      <div v-else class="flex items-center">
+      <div v-else class="flex">
         <input
           v-on-key-stroke:Enter="() => updateNameButton![0].click()"
           v-model="name"

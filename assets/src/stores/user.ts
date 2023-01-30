@@ -1,9 +1,15 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { Ref } from 'vue';
-import { type Room, type Member } from '~/types'
+import {
+  type Room,
+  type Member,
+  type Game
+} from '~/types'
 
 export type Membership = {
-  room: Room & { members: Member[] };
+  room: Room & { 
+    members: Member[];
+    games: Game[];
+  };
   member_id: Member['id'];
 }
 

@@ -19,6 +19,7 @@ defmodule Poll20.Game do
       index :read
       post :create
       patch :update
+      delete :destroy
     end
   end
 
@@ -49,7 +50,7 @@ defmodule Poll20.Game do
       authorize_if {Poll20.Policy.MatchActorOnCreate, match: %{room_id: :room_id}}
     end
 
-    policy action_type([:read, :update, :delete]) do
+    policy action_type([:read, :update, :destroy]) do
       authorize_if expr(room.id == ^actor(:room_id))
     end
   end

@@ -18,7 +18,7 @@ const toggleLocales = () => {
 </script>
 
 <template>
-  <footer class="text-xl text-center mt-10 justify-center items-center flex">
+  <footer class="text-xl text-center mt-10 justify-center flex">
     <button
       v-aria-title="t('Toggle dark mode')"
       class="icon-btn mx-2"
@@ -51,7 +51,7 @@ const toggleLocales = () => {
       class="icon-btn mx-2"
       @click="router.back()"
     >
-      <i-carbon-arrow-left />
+      <i-fa-solid-arrow-left />
     </button>
   </footer>
 </template>

@@ -18,3 +18,9 @@ export type Member = {
   id: UUID
   name: string
 }
+
+export type Game = {
+  id: UUID
+  name: string
+  owners: Member[]
+}

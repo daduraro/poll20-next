@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import IconPoll from '~icons/mdi/poll'
+import IconPoll from '~icons/line-md/arrows-vertical'
 import IconSettings from '~icons/carbon/settings'
-import IconChart from '~icons/carbon/chart-pie'
-import IconBookStack from '~icons/bx/collection'
+import IconStatistics from '~icons/carbon/chart-pie'
+import IconGames from '~icons/fluent/library-16-filled'
 import IconHistory from '~icons/material-symbols/history-rounded'
 
 const { membership } = useUserStore()
@@ -22,12 +22,12 @@ const links = computed(() => [
   {
     name: t('Statistics'),
     route: { name: 'room-id-statistics' },
-    icon: IconChart,
+    icon: IconStatistics,
   },
   {
     name: t('Games'),
     route: { name: 'room-id-games' },
-    icon: IconBookStack,
+    icon: IconGames,
   },
   {
     name: t('Settings'),
@@ -38,7 +38,7 @@ const links = computed(() => [
 </script>
 
 <template>
-  <nav class="text-xl text-center mb-6 flex border-1 border-red border-rounded items-center">
+  <nav class="text-xl text-center mb-6 flex border-1 border-red border-rounded">
     <router-link
       v-for="(link, index) in links" :key="index"
       :to="{ ...link.route, params: membership.room }"

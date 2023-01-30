@@ -279,6 +279,8 @@ declare global {
   const watchTriggerable: typeof import('@vueuse/core')['watchTriggerable']
   const watchWithFilter: typeof import('@vueuse/core')['watchWithFilter']
   const whenever: typeof import('@vueuse/core')['whenever']
+  const withArguments: typeof import('./composables/confirm')['withArguments']
+  const withTiming: typeof import('./composables/confirm')['withTiming']
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -562,5 +564,7 @@ declare module 'vue' {
     readonly watchTriggerable: UnwrapRef<typeof import('@vueuse/core')['watchTriggerable']>
     readonly watchWithFilter: UnwrapRef<typeof import('@vueuse/core')['watchWithFilter']>
     readonly whenever: UnwrapRef<typeof import('@vueuse/core')['whenever']>
+    readonly withArguments: UnwrapRef<typeof import('./composables/confirm')['withArguments']>
+    readonly withTiming: UnwrapRef<typeof import('./composables/confirm')['withTiming']>
   }
 }
