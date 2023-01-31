@@ -38,21 +38,25 @@ const links = computed(() => [
 </script>
 
 <template>
-  <nav class="text-xl text-center mb-6 flex border-1 border-red border-rounded">
+  <nav class="text-xl text-center mb-6 flex border-1 border-rounded">
     <router-link
       v-for="(link, index) in links" :key="index"
       :to="{ ...link.route, params: membership.room }"
       v-aria-title="t('Go to {name}', link)"
-      class="icon-btn text-2xl p-4 bg-red-400 flex-grow"
+      class="icon-btn text-2xl p-4 flex-grow"
     >
       <component :is="link.icon" class="mx-auto"/>
     </router-link>
   </nav>
 </template>
 
-<style>
+<style scoped>
 html.dark .icon-btn {
   color: #fff1f1;
+}
+
+nav {
+  border-color: var(--main-color);
 }
 
 nav .icon-btn:hover {
@@ -67,5 +71,7 @@ nav .icon-btn:not(.router-link-active) {
 }
 nav .icon-btn.router-link-active {
   opacity: 100%;
+  background-color: var(--main-color);
+  color: var(--main-color-contrast);
 }
 </style>

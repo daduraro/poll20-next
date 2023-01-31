@@ -26,6 +26,7 @@ specifiers:
   pinia: ^2.0.29
   pnpm: ^7.25.1
   ramda: ^0.28.0
+  seedrandom: ^3.0.5
   shiki: ^0.12.1
   taze: ^0.8.5
   typescript: ^4.9.4
@@ -60,6 +61,7 @@ dependencies:
   nprogress: 0.2.0
   pinia: 2.0.29_prq2uz4lho2pwp6irk4cfkrxwu
   ramda: 0.28.0
+  seedrandom: 3.0.5
   vue: 3.2.45
   vue-demi: 0.13.11_vue@3.2.45
   vue-i18n: 9.2.2_vue@3.2.45
@@ -7902,6 +7904,10 @@ packages:
       extend-shallow: 2.0.1
       kind-of: 6.0.3
     dev: true
+
+  /seedrandom/3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
+    dev: false
 
   /select-hose/2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}

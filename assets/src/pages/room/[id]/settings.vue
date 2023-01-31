@@ -81,7 +81,7 @@ confirmLeave.onConfirm(() => {
         <input
           v-on-key-stroke:Enter="() => updateNameButton![0].click()"
           v-model="name"
-          class="input flex-grow text-lg"
+          class="flex-grow text-lg"
         >
         <button
           ref="updateNameButton"
@@ -99,7 +99,7 @@ confirmLeave.onConfirm(() => {
       <input
         readonly
         :value="inviteUrl"
-        class="input flex-grow rounded-0 rounded-l"
+        class="flex-grow rounded-0! rounded-l!"
       />
       <button
         aria-live="polite"

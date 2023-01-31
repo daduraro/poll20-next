@@ -1,4 +1,17 @@
 @import './markdown.css';
+:root {
+  --main-color: #f87171;
+  --main-color-contrast: white;
+  --primary: #1196f5;
+  --danger: #f33e3e;
+  --blue: #1196f5;
+  --border-color: #d4c3c3;
+}
+
+:root.dark {
+  --main-color: #f87171;
+  --main-color-contrast: white;
+}
 
 html,
 body,
@@ -7,7 +20,6 @@ body,
   margin: auto;
   padding: 0;
   max-width: 600px;
-  padding: 1rem;
 }
 
 html.dark {
@@ -23,7 +35,7 @@ html.dark body {
 }
 
 #nprogress .bar {
-  background: rgb(13,148,136);
+  background: var(--main-color);
   opacity: 0.75;
   position: fixed;
   z-index: 1031;
@@ -37,10 +49,9 @@ a {
   text-decoration: underline;
 }
 
-ul {
+ul:not(.remove-list-style) {
   list-style: initial;
   margin-left: 1rem;
-  margin-bottom: 1rem;
 }
 
 form label,
@@ -56,4 +67,51 @@ hr {
 
 .flex {
   align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.icon-btn.active {
+  color: var(--main-color);
+  border-color: var(--main-color);
+}
+
+.form-field {
+  margin-bottom: 2;
+  align-items: baseline;
+}
+
+input:not([type="checkbox"],[type="radio"]) {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  border-radius: 5px;
+  padding: 0.1rem;
+  padding-left: 0.5rem;
+  display: block;
+  width: 100%;
+  font-size: 1.25rem;
+}
+
+.icon-btn {
+  display: inline-block;
+}
+
+.icon-btn.active {
+  color: var(--main-color);
+}
+
+.border {
+  border-color: var(--border-color);
+}
+
+button:not(.icon-btn) {
+  padding: 0.5rem 0.5rem;
+  display: inline-block;
+  background-color: var(--primary);
+}
+
+button.btn-danger {
+  background-color: var(--danger);
 }

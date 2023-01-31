@@ -24,3 +24,10 @@ export type Game = {
   name: string
   owners: Member[]
 }
+
+export type Vote = {
+  id: UUID
+  game_id: Game['id']
+  member_id: Game['id']
+  created_at: string
+}

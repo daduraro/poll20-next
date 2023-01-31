@@ -50,7 +50,6 @@ const emit = defineEmits(['submit', 'update:value'])
           :value="value[field.id]"
           :disabled="busy"
           v-bind="field.attrs"
-          class="input display-block w-100%"
           @input="emit('update:value', {
             ...value,
             [field.id]: $event.target.value
