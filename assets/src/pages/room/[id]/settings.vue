@@ -86,7 +86,8 @@ confirmLeave.onConfirm(() => {
         <button
           ref="updateNameButton"
           :disabled="name === member.name"
-          class="btn ml-4"
+          class="btn ml-4 py-1!"
+          style="white-space: nowrap"
           @click="updateName"
           v-text="t('Change name')"
         />
@@ -104,7 +105,7 @@ confirmLeave.onConfirm(() => {
       <button
         aria-live="polite"
         v-aria-title="copyUrl.isRevealed.value ? t('Copied!') : t('Copy to clipboard')"
-        class="btn rounded-0 rounded-r"
+        class="btn rounded-0! rounded-r!"
         @click="() => copyUrl.reveal()"
       >
         <i-carbon-copy v-if="!copyUrl.isRevealed.value"/>

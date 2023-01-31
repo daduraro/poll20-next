@@ -35,7 +35,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
             column: :id,
             name: "session_members_session_id_fkey",
             type: :uuid,
-            prefix: "public"
+            prefix: "public",
+            on_delete: :delete_all
           ),
           null: false
 
@@ -60,7 +61,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
                column: :id,
                prefix: "public",
                name: "session_members_member_id_fkey",
-               type: :uuid
+               type: :uuid,
+               on_delete: :delete_all
              )
     end
 
@@ -70,7 +72,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
             column: :id,
             name: "members_room_id_fkey",
             type: :uuid,
-            prefix: "public"
+            prefix: "public",
+            on_delete: :delete_all
           ),
           null: false
 
@@ -89,7 +92,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
                column: :id,
                prefix: "public",
                name: "votes_game_id_fkey",
-               type: :uuid
+               type: :uuid,
+               on_delete: :delete_all
              )
     end
 
@@ -99,7 +103,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
                column: :id,
                prefix: "public",
                name: "votes_member_id_fkey",
-               type: :uuid
+               type: :uuid,
+               on_delete: :delete_all
              )
     end
 
@@ -109,7 +114,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
                column: :id,
                prefix: "public",
                name: "sessions_game_id_fkey",
-               type: :uuid
+               type: :uuid,
+               on_delete: :delete_all
              )
     end
 
@@ -119,7 +125,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
             column: :id,
             name: "games_room_id_fkey",
             type: :uuid,
-            prefix: "public"
+            prefix: "public",
+            on_delete: :delete_all
           )
 
       add :name, :text, null: false
@@ -137,7 +144,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
             column: :id,
             name: "game_owners_member_id_fkey",
             type: :uuid,
-            prefix: "public"
+            prefix: "public",
+            on_delete: :delete_all
           ),
           null: false
 
@@ -146,7 +154,8 @@ defmodule Poll20.Repo.Migrations.MigrateResources1 do
             column: :id,
             name: "game_owners_game_id_fkey",
             type: :uuid,
-            prefix: "public"
+            prefix: "public",
+            on_delete: :delete_all
           ),
           null: false
     end

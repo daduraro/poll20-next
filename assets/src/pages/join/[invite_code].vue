@@ -16,7 +16,7 @@ const room = computed<undefined|Room & {members: Member[]}>(() => data.value?.en
 // redirect to room if already a member
 onFetchResponse(() => {
   if (memberships.some(membership => membership.room.id === room.value?.id)) {
-    router.push({ name: 'room-id', params: room.value! })
+    router.push({ name: 'room-id-poll', params: room.value! })
   }
 })
 
@@ -73,7 +73,7 @@ async function addMemberAndJoin() {
     </h1>
     <ul>
       <li v-for="member in room.members" :key="member.id" class="mb-4">
-        <button class="underline text-lg" @click="joinWith(room!, member)">
+        <button class="btn-link text-lg" @click="joinWith(room!, member)">
           <i18n-t keypath="Join as {name}">
             <template #name>
               <strong>{{ member.name }}</strong>

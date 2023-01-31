@@ -16,7 +16,7 @@ export const rooms = [
     memberName: 'Butcher',
   },
   {
-    roomName: 'Dunwall',
-    memberName: 'Corvo',
+    roomName: 'The Simpsons',
+    memberName: 'Homer',
   },
 ]

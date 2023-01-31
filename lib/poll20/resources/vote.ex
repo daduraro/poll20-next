@@ -19,6 +19,7 @@ defmodule Poll20.Vote do
       index :read
       post :create
       patch :update
+      delete :destroy
     end
   end
 
@@ -40,7 +41,7 @@ defmodule Poll20.Vote do
         actor_attribute: :room_id}
     end
 
-    policy action_type([:update, :delete]) do
+    policy action_type([:update, :destroy]) do
       authorize_if expr(member_id == ^actor(:id))
     end
   end

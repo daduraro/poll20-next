@@ -73,11 +73,6 @@ hr {
   display: none;
 }
 
-.icon-btn.active {
-  color: var(--main-color);
-  border-color: var(--main-color);
-}
-
 .form-field {
   margin-bottom: 2;
   align-items: baseline;
@@ -94,24 +89,31 @@ input:not([type="checkbox"],[type="radio"]) {
   font-size: 1.25rem;
 }
 
+.border {
+  border-color: var(--border-color);
+}
+
 .icon-btn {
   display: inline-block;
 }
 
 .icon-btn.active {
   color: var(--main-color);
-}
-
-.border {
-  border-color: var(--border-color);
+  border-color: var(--main-color);
 }
 
 button:not(.icon-btn) {
   padding: 0.5rem 0.5rem;
   display: inline-block;
   background-color: var(--primary);
+  border-radius: 5px;
 }
 
 button.btn-danger {
   background-color: var(--danger);
+}
+
+.btn-link {
+  background-color: transparent !important;
+  text-decoration: underline;
 }

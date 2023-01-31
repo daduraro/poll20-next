@@ -18,7 +18,7 @@ defmodule Poll20.SessionMember do
         actor_attribute: :room_id}
     end
 
-    policy action_type([:read, :update, :delete]) do
+    policy action_type([:read, :update, :destroy]) do
       authorize_if expr(session.game.room_id == ^actor(:room_id))
     end
   end

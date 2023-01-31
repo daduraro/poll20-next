@@ -39,7 +39,7 @@ defmodule Poll20.Member do
         actor_attribute: :invite_code}
     end
 
-    policy action_type([:read, :update, :delete]) do
+    policy action_type([:read, :update, :destroy]) do
       authorize_if expr(room.id == ^actor(:room_id))
       authorize_if expr(room.invite_code == ^actor(:invite_code))
     end

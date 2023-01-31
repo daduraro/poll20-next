@@ -12,7 +12,7 @@ defmodule Poll20.Room do
     end
 
     # need to specify types since the previous bypass for create doesn't work with AshJsonApi
-    policy action_type([:read, :update, :delete]) do
+    policy action_type([:read, :update, :destroy]) do
       authorize_if expr(exists(members, id == ^actor(:id)))
       authorize_if expr(invite_code == ^actor(:invite_code)) # ugly but way simpler
     end

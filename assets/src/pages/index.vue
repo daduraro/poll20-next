@@ -34,8 +34,8 @@ const form = [
 ]
 
 const newRoom = ref({
-  roomName: 'a',
-  memberName: 'b',
+  roomName: '',
+  memberName: '',
 })
 
 const busy = ref(false)
@@ -47,14 +47,13 @@ async function createRoom(): Promise<void> {
           name: newRoom.value.roomName
         }
       })
-
-      if (!create.entity.value) {
-        throw create.error
+      if (!create.data.value.entity) {
+        throw create.error.value
       }
       
-      const join = await useApi<Room>('patch', `/rooms/${create.entity.value.id}/join`, {
+      const join = await useApi<Room>('patch', `/rooms/${create.data.value.entity.id}/join`, {
         query: {
-          invite_code: create.entity.value!.invite_code,
+          invite_code: create.data.value.entity.invite_code,
           include: 'members'
         },
         attributes: {
@@ -62,16 +61,16 @@ async function createRoom(): Promise<void> {
         }
       })
 
-      if (!join.entity.value) {
+      if (!join.data.value.entity) {
         throw join.error
       }
 
       const membership = {
-        room: join.entity.value,
-        member_id: join.entity.value.members[join.entity.value.members.length - 1].id,
+        room: join.data.value.entity,
+        member_id: join.data.value.entity.members[join.data.value.entity.members.length - 1].id,
       }
       addMembership(membership)
-      router.push({ name: 'room-id', params: membership.room })
+      router.push({ name: 'room-id-settings', params: membership.room })
     } finally {
       busy.value = false
     }
@@ -84,17 +83,17 @@ async function createRoom(): Promise<void> {
       <h1 class="text-lg text-left">Your rooms:</h1>
       <ul>
         <li v-for="membership in memberships" :key="membership.room.id" class="my-3">
-          <router-link :to="{ name: 'room-id', params: membership.room }" class="text-xl">
+          <router-link :to="{ name: 'room-id-poll', params: membership.room }" class="text-xl">
             {{ membership.room.name }}
           </router-link>
         </li>
       </ul>
+      <hr class="my-2"/>
+      {{ t('Or...') }}
     </div>
-    <h1 v-else>
+    <h1 v-else class="mb-4">
       {{ t('You have no rooms yet. Create one or get a friend\'s invite!') }}
     </h1>
-    <hr class="my-2"/>
-    {{ t('Or...') }}
     <p-form
       v-model:value="newRoom"
       :title="t('Create room')"

@@ -22,6 +22,7 @@ declare module '@vue/runtime-core' {
     IFaArrowUp: typeof import('~icons/fa/arrow-up')['default']
     IFaCog: typeof import('~icons/fa/cog')['default']
     IFaGroup: typeof import('~icons/fa/group')['default']
+    IFaRefresh: typeof import('~icons/fa/refresh')['default']
     IFaSolidArrowLeft: typeof import('~icons/fa-solid/arrow-left')['default']
     IFaSolidPencil: typeof import('~icons/fa-solid/pencil')['default']
     IFaSolidPencilAlt: typeof import('~icons/fa-solid/pencil-alt')['default']

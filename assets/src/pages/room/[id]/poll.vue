@@ -17,9 +17,9 @@ const presenceVisible = ref(true)
 const { t } = useI18n()
 const { membership } = useUserStore()
 
-const members = computed(() => membership!.room.members)
-const membersSorted = computed(() => sortBy(prop('name'), members.value))
-const membersById = computed(() => indexBy(prop('id'), members.value))
+const members = computed(() => membership?.room.members ?? [])
+const membersSorted = computed(() => sortBy(prop('name'), members?.value))
+const membersById = computed(() => indexBy(prop('id'), members?.value))
 const membersActive = computed(
   () => filters.value.activeMemberIds.length > 0 // ignore filter if none checked
     ? members.value.filter(member => filters.value.activeMemberIds.some(equals(member.id)))
@@ -27,7 +27,7 @@ const membersActive = computed(
 )
 const activeMemberIds = computed(() => new Set(membersActive.value.map(member => member.id)))
 
-const games = computed(() => membership!.room.games)
+const games = computed(() => membership?.room.games ?? [])
 const gamesActive = computed(
   () => filters.value.onlyPresentGames
     ? games.value.filter(game =>
@@ -53,7 +53,7 @@ const votesVisible = computed<Vote & {active: boolean}>(
   )
 )
 const votesByGame = computed(() => groupBy(prop('game_id'), votesVisible.value))
-const votesOwn = computed(() => votes.value.filter(vote => vote.member_id === membership!.member_id))
+const votesOwn = computed(() => votes.value.filter(vote => vote.member_id === membership?.member_id))
 const votesOwnByGame = computed(() => indexBy(prop('game_id'), votesOwn.value))
 const votesActive = computed(
   () => filters.value.onlyPresentVotes
@@ -89,17 +89,56 @@ const gamesSorted = computed(() => {
   })))
 })
 
-function vote(game_id: Game['id'], value: Vote['value']|undefined) {
+let refreshRate = 10000
+let refreshHandle: any
+let isFetching = ref(false)
+async function fetchVotes(manual = false) {
+  refreshHandle && clearTimeout(refreshHandle)
+  isFetching.value = true
+  const { data } = await useApi<Vote[]>('get', 'votes')
+  votes.value = data.value.entities!
+  isFetching.value = false
+  refreshHandle = setTimeout(fetchVotes, refreshRate)
+  if (!manual) {
+    refreshRate *= 1.5 // decay rate over time
+  }
+}
+
+fetchVotes()
+onBeforeUnmount(() => {
+  refreshHandle && clearTimeout(refreshHandle)
+})
+
+// Delays next tick of vote fetching.
+// Useful to avoid that tick overriding the temporary local state
+function throttleVotes() {
+  refreshHandle && clearTimeout(refreshHandle)
+  refreshHandle = setTimeout(fetchVotes, refreshRate)
+}
+
+async function vote(game_id: Game['id'], value: Vote['value']|undefined) {
+  throttleVotes()
+
   const member_id = membership!.member_id
   const current = votes.value.find(vote => vote.member_id === member_id && vote.game_id === game_id)
+  if (current && !current.id) {
+    await current.handle // wait before attempting to operate on new items to quick
+  }
+
   if (current && value === undefined) {
     votes.value.splice(votes.value.indexOf(current), 1)
+    useApi<Vote>('delete', `votes/${current.id}`)
   }
   else if (current) {
     current.value = value
+    useApi<Vote>('patch', `votes/${current.id}`, { attributes: { value }})
   }
   else if (value !== undefined) {
-    votes.value.push({ game_id, member_id, value})
+    const attributes =  { game_id, member_id, value }
+    const localVote: any = { ...attributes, id: null, handle: null }
+    votes.value.push(localVote)
+    localVote.handle = useApi<Vote>('post', 'votes', { attributes })
+    localVote.handle.then(({ data }: any) => localVote.id = data.value.entity!.id)
   }
 }
 </script>
@@ -107,6 +146,15 @@ function vote(game_id: Game['id'], value: Vote['value']|undefined) {
 <template>
   <div>
     <div class="flex">
+      <button
+        aria-controls="games"
+        v-aria-title="t('Refresh votes')"
+        class="icon-btn border border-rounded p-2 display-block mr-2"
+        :disabled="isFetching"
+        @click="() => fetchVotes()"
+      >
+        <i-fa-refresh :class="{ 'animate-spin preserve-3d': isFetching} "/>
+      </button>
       <span class="flex-grow"/>
       <button
         aria-controls="filters"
@@ -252,7 +300,7 @@ function vote(game_id: Game['id'], value: Vote['value']|undefined) {
 
 <route lang="yaml">
   meta:
-    title: 'Vote'
+    title: 'Poll'
 </route>
 
 <style scoped>

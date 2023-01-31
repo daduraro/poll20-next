@@ -11,7 +11,7 @@ const { t } = useI18n()
 const links = computed(() => [
   {
     name: t('Votes'),
-    route: { name: 'room-id' },
+    route: { name: 'room-id-poll' },
     icon: IconPoll,
   },
   {
