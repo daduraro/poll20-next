@@ -78,7 +78,8 @@ hr {
   align-items: baseline;
 }
 
-input:not([type="checkbox"],[type="radio"]) {
+input:not([type="checkbox"],[type="radio"]),
+textarea {
   border: 1px solid var(--border-color);
   background: transparent;
   border-radius: 5px;
@@ -106,14 +107,20 @@ button:not(.icon-btn) {
   padding: 0.5rem 0.5rem;
   display: inline-block;
   background-color: var(--primary);
+  color: var(--main-color-contrast);
   border-radius: 5px;
 }
 
 button.btn-danger {
   background-color: var(--danger);
+  color: var(--main-color-contrast);
 }
 
 .btn-link {
   background-color: transparent !important;
   text-decoration: underline;
+}
+
+[aria-role="button"] {
+  cursor: pointer;
 }

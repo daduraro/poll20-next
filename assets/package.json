@@ -20,6 +20,7 @@
     "@vueuse/components": "^9.11.1",
     "@vueuse/core": "^9.11.0",
     "@vueuse/head": "^1.0.22",
+    "date-fns": "^2.29.3",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.29",
     "ramda": "^0.28.0",

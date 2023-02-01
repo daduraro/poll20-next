@@ -9,7 +9,8 @@ defmodule Poll20.Vote do
   json_api do
     type "vote"
     includes [
-      game: []
+      game: [],
+      member: []
     ]
 
     routes do
@@ -56,7 +57,7 @@ defmodule Poll20.Vote do
       allow_nil? false
     end
 
-    timestamps()
+    timestamps(private?: false)
   end
 
   validations do

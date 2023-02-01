@@ -9,7 +9,10 @@ defmodule Poll20.Session do
   json_api do
     type "session"
     includes [
-      attendees: []
+      attendees: [
+        member: []
+      ],
+      game: []
     ]
 
     routes do
@@ -19,6 +22,7 @@ defmodule Poll20.Session do
       index :read
       post :create
       patch :update
+      delete :destroy
     end
   end
 
@@ -53,7 +57,7 @@ defmodule Poll20.Session do
     end
 
     policy action_type([:read, :update, :destroy]) do
-      authorize_if expr(room.id == ^actor(:room_id))
+      authorize_if expr(game.room.id == ^actor(:room_id))
     end
   end
 
@@ -67,7 +71,7 @@ defmodule Poll20.Session do
       default ""
     end
 
-    timestamps()
+    timestamps(private?: false)
   end
 
   relationships do

@@ -33,3 +33,12 @@ export const createApp = ViteSSG(
     context.app.use(Previewer)
   },
 )
+
+// treat role="button" as such
+document.addEventListener('keydown', (event: KeyboardEvent) => {
+  const target = event.target as any
+  if (target?.matches('[aria-role="button"]') && ['Enter', ' '].includes(event.key)) {
+    target.click()
+    event.preventDefault()
+  }
+})

@@ -39,7 +39,7 @@ const form = [
 function joinWith(room: Room, member: Member) {
   const membership = { room, member_id: member.id }
   addMembership(membership)
-  router.push({ name: 'room-id', params: membership.room })
+  router.push({ name: 'room-id-poll', params: membership.room })
 }
 
 // create a new member and join as that one

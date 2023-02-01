@@ -5,12 +5,13 @@ const { t } = useI18n()
 
 const props = defineProps({
   definition: {
-    type: Array as PropType<{
+    type: Array as PropType<({
       id: string;
       label: string;
+    } & Partial<{
       is: string;
       attrs: Record<string, any>;
-    }[]>,
+    }>)[]>,
     required: true
   },
   value: {
@@ -30,11 +31,11 @@ const emit = defineEmits(['submit', 'update:value'])
 
 <template>
   <form
-    :aria-label="title"
+    :aria-label="props.title"
     :aria-busy="busy"
     @submit.prevent="emit('submit')"
   >
-    <h2 class="text-xl text-center">{{ title }}</h2>
+    <h2 class="text-xl text-center">{{ props.title }}</h2>
     <div
       v-for="field in props.definition"
       :key="field.id"
