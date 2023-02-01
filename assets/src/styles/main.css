@@ -1,6 +1,5 @@
 @import './markdown.css';
 :root {
-  --main-color: #f87171;
   --main-color-contrast: white;
   --primary: #1196f5;
   --danger: #f33e3e;
@@ -8,9 +7,24 @@
   --border-color: #d4c3c3;
 }
 
-:root.dark {
+:root[main-color="red"] {
   --main-color: #f87171;
-  --main-color-contrast: white;
+}
+:root[main-color="blue"] {
+  --main-color: #1196f5;
+}
+:root[main-color="green"] {
+  --main-color: #75d04c;
+}
+
+:root.dark[main-color="red"] {
+  --main-color: #ca535e;
+}
+:root.dark[main-color="blue"] {
+  --main-color: #175ad9;
+}
+:root.dark[main-color="green"] {
+  --main-color: #359752;
 }
 
 html,
