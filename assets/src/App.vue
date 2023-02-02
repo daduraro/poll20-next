@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import faviconUrl from '~/assets/logo-plain-transparent.svg?url'
 const route = useRoute()
 
 useHead({
@@ -14,7 +15,7 @@ useHead({
     {
       rel: 'icon',
       type: 'image/svg+xml',
-      href: computed(() => preferredDark.value ? '/favicon-dark.svg' : '/favicon.svg'),
+      href: faviconUrl,
     },
   ],
 })

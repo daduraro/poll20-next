@@ -18,6 +18,7 @@ import Shiki from 'markdown-it-shiki'
 import VueMacros from 'unplugin-vue-macros/vite'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import svgLoader from 'vite-svg-loader'
 
 export default defineConfig({
   build: {
@@ -73,6 +74,8 @@ export default defineConfig({
       ],
       vueTemplate: true,
     }),
+
+    svgLoader(),
 
     // https://github.com/antfu/unplugin-vue-components
     Components({
