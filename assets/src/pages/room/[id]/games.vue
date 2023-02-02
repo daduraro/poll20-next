@@ -11,7 +11,7 @@ const { membership } = useUserStore()
 const games = computed(() => membership?.room.games || [])
 
 const editForm = ref({
-  title: computed(() => editForm.value.id ? t('Edit game') : t('Create game')),
+  title: computed(() => editForm.value.id ? t('Edit game') : t('Add game')),
   id: null as Game['id']|null,
   busy: false,
   value: {

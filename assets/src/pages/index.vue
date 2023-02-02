@@ -10,7 +10,7 @@ const { memberships, join: addMembership } = useUserStore()
 
 const sampleValue = randomPick(roomSamples)
 
-const form = [
+const form = computed(() => [
   {
     id: 'roomName',
     label: t('Room name'),
@@ -31,7 +31,7 @@ const form = [
       placeholder: sampleValue.memberName,
     },
   },
-]
+])
 
 const newRoom = ref({
   roomName: '',
@@ -80,7 +80,9 @@ async function createRoom(): Promise<void> {
 <template>
   <main>
     <div v-if="memberships.length > 0">
-      <h1 class="text-lg text-left">Your rooms:</h1>
+      <h1 class="text-lg text-left">
+        {{ t('Your rooms:') }}
+      </h1>
       <ul>
         <li v-for="membership in memberships" :key="membership.room.id" class="my-3">
           <router-link :to="{ name: 'room-id-poll', params: membership.room }" class="text-xl">

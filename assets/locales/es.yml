@@ -1,11 +1,55 @@
-Hi, {name}!: Hola, {name}!
+"Invite link:": "Enlace para invitar:"
+"Your rooms:": "Tus grupos:"
 About: Acerca de
-Votes: Votos
-Home: Inicio
-Settings: Configuración
+Add game: Añadir juego
+Change color: Cambiar color
+Change language: Cambiar idioma
+Change name: Cambiar nombre
+Comments: Comentarios
+Copy to clipboard: Copiar al portapapeles
+Create room: Crear grupo
+Date: Fecha
+Delete {name}: Eliminar {name}
+Delete: Eliminar
+Edit {name}: Editar {name}
+Edit game: Editar juego
+Game owners: Propietarios del juego
+Game: Juego
+Games: Juegos
+Go back: Atrás
 Go to {name}: Ir a {name}
-Toggle dark mode: Cambiar modo oscuro
-Toggle language: Cambiar idioma
-You have been invited to {name}: Has sido invitado a {name}
+Hi, {name}!: Hola, {name}!
+History: Sesiones
+Home: Inicio
 Join as {name}: Unirse como {name}
+Join as new member: Unirse como nuevo miembro
+Join: Unirse
+Kick: Echar
+Leave room: Salir del grupo
+Loading...: Cargando...
 Log session of {name}: Registrar sesión de {name}
+Log session: Registrar sesión
+Members: Miembros
+Name: Nombre
+Nobody: Nadie
+Only count votes of present members: Solo contar votos de jugadores presentes
+Only show games of present members: Solo mostrar juegos de jugadores presentes
+Or...: O...
+Players: Jugadores
+Presence: Jugadores presentes
+Refresh votes: Refrescar votos
+Room name: Nombre de grupo
+Save: Guardar
+Select all: Seleccionar todos
+Settings: Configuración
+Statistics: Estadísticas
+Toggle dark mode: Cambiar modo oscuro
+Toggle filters: Mostrar filtros
+Toggle list of votes: Mostrar lista de votos
+Vote down: Voto negativo
+Vote up: Voto positivo
+Votes: Votos
+Winners: Ganadores
+You have been invited to {name}: Has sido invitado a {name}
+Your name: Tu nombre
+Your rooms: Tus grupos
