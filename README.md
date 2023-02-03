@@ -1,10 +1,21 @@
 # Poll20
 
-<div style="text-align: center;">
-    <img src="assets/src/assets/logo-transparent.svg" style="width: 75px; margin-bottom: 1rem">
-</div>
+<p align="center">
+    <img src="assets/src/assets/logo-transparent.svg" style="width: 75px">
+</p>
 
-Ash + Phoenix + Vue board game voting and logging app
+<p align="center">
+    Ash + Phoenix + Vue board game voting and logging app
+</p>
+
+<p align="center">
+    <img src="docs/images/s1.png">
+    <img src="docs/images/s2.png">
+    <img src="docs/images/s3.png">
+    <img src="docs/images/s4.png">
+    <img src="docs/images/s5.png">
+    <img src="docs/images/s6.png">
+</p>
 
 ## Server
 Regular Phoenix server https://hexdocs.pm/phoenix/up_and_running.html + Ash https://www.ash-hq.org/docs/guides/ash/latest/tutorials/get-started (+ AshJsonApi + AshPostgres)
