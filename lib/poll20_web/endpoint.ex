@@ -17,8 +17,7 @@ defmodule Poll20Web.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :poll20,
-    gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    gzip: false
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

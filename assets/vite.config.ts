@@ -120,11 +120,12 @@ export default defineConfig({
     // https://github.com/antfu/vite-plugin-pwa
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'safari-pinned-tab.svg'],
+      includeAssets: ['favicon.svg'],
+      outDir: '../priv/static',
       manifest: {
-        name: 'Vitesse',
-        short_name: 'Vitesse',
-        theme_color: '#ffffff',
+        name: 'Poll20',
+        short_name: 'Poll20',
+        theme_color: '#f87171',
         icons: [
           {
             src: '/pwa-192x192.png',
