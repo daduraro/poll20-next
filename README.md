@@ -1,8 +1,10 @@
 # Poll20
 
-(WIP) Ash + Phoenix + Vue board game voting and logging app
+<div style="text-align: center;">
+    <img src="assets/src/assets/logo-transparent.svg" style="width: 75px; margin-bottom: 1rem">
+</div>
 
-> Note: this project is missing some stuff (like proper Auth) and has questionable approaches to some features as I ran into too many issues with Ash (mostly just AshJsonApi and policies) to bother wrapping it up nicely.
+Ash + Phoenix + Vue board game voting and logging app
 
 ## Server
 Regular Phoenix server https://hexdocs.pm/phoenix/up_and_running.html + Ash https://www.ash-hq.org/docs/guides/ash/latest/tutorials/get-started (+ AshJsonApi + AshPostgres)

@@ -44,8 +44,12 @@ const serialize = <T>(entity: EntityData<T>, included: EntityData[] = []): T => 
   )
 } as T)
 
+const baseUrl = import.meta.env.DEV
+  ? 'http://127.0.0.1:4000/api'
+  : '/api'
+
 const apiFetch = createFetch({
-  baseUrl: 'http://127.0.0.1:4000/api',
+  baseUrl,
   options: {
     beforeFetch: ({ options }) => {
       NProgress.start()
