@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "vite --port 3333 --open",
     "build": "vite build",
-    "deploy": "cd ..",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview-https": "serve dist",

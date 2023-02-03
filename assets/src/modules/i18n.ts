@@ -12,19 +12,12 @@ const messages = Object.fromEntries(
 
 // locale in which translations appear in the code
 const defaultLocale = 'en'
-// load them as translations
-const defaultMessages = Object.fromEntries(
-  Object.keys(messages[Object.keys(messages)[0]]).map(key => [key, key])
-)
 
 export const install: UserModule = ({ app }) => {
   const i18n = createI18n({
     legacy: false,
     locale: defaultLocale,
-    messages: {
-      [defaultLocale]: defaultMessages,
-      ...messages
-    },
+    messages,
   })
 
   app.use(i18n)

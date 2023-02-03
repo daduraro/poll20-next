@@ -1,5 +1,5 @@
 cd $assets_dir
-node_modules/.bin/vite build
+node_modules/.bin/pnpm build --emptyOutDir
 
 cd $phoenix_dir
 mix "${phoenix_ex}.digest"
