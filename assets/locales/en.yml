@@ -1,7 +1,9 @@
+"{count} games filtered out": "{count} games filtered out"
 "Invite link:": "Invite link:"
 "Your rooms:": "Your rooms:"
 About: About
 Add game: Add game
+Any: Any
 Change color: Change color
 Change language: Change language
 Change name: Change name
@@ -13,6 +15,7 @@ Delete {name}: Delete {name}
 Delete: Delete
 Edit {name}: Edit {name}
 Edit game: Edit game
+Filter by max number of players of the game: Filter by max number of players of the game
 Game owners: Game owners
 Game: Game
 Games: Games
@@ -29,6 +32,7 @@ Leave room: Leave room
 Loading...: Loading...
 Log session of {name}: Log session of {name}
 Log session: Log session
+Max number of players: Max number of players
 Members: Members
 Name: Name
 Nobody: Nobody

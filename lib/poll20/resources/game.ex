@@ -64,6 +64,16 @@ defmodule Poll20.Game do
       allow_nil? false
     end
 
+    attribute :players_min, :integer do
+      allow_nil? true
+      constraints [min: 1]
+    end
+
+    attribute :players_max, :integer do
+      allow_nil? true
+      constraints [min: 1]
+    end
+
     timestamps()
   end
 

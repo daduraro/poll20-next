@@ -10,7 +10,10 @@ const route = useRoute()
 const filters = useLocalStorage(`${route.path}.filters`, {
   onlyPresentVotes: true,
   onlyPresentGames: true,
+  playersInRange: true,
   activeMemberIds: [] as Member['id'][],
+}, {
+  mergeDefaults: true
 })
 const filtersVisible = ref(false)
 
@@ -30,13 +33,27 @@ const activeMemberIds = computed(() => new Set(membersActive.value.map(member =>
 const games = computed(() => membership?.room.games ?? [])
 const gamesById = computed(() => indexBy(prop('id'), games.value))
 const gamesActive = computed(
-  () => filters.value.onlyPresentGames
-    ? games.value.filter(game =>
-        game.owners.length === 0 || // skip games with no ownership info
-        game.owners.some(member => activeMemberIds.value.has(member.id))
-      )
-    : games.value
+  () => games.value.filter(game => {
+    if (
+      filters.value.onlyPresentGames
+      && game.owners.length > 0
+      && !game.owners.some(member => activeMemberIds.value.has(member.id))
+    ) {
+      return false
+    }
+
+    if (
+      filters.value.playersInRange
+      && game.players_max !== null
+      && game.players_max < membersActive.value.length
+    ) {
+      return false
+    }
+
+    return true
+  })
 )
+const gamesFilteredCount = computed(() => games.value.length - gamesActive.value.length)
 const openedGameIds = ref<Set<Game['id']>>(new Set())
 
 const votes = ref<Vote[]>([])
@@ -247,6 +264,10 @@ async function saveSession() {
       </ul>
     </div>
     <div class="flex justify-end">
+      <i v-if="gamesFilteredCount > 0" class="mr-2">
+        {{ t('{count} games filtered out', { count: gamesFilteredCount }) }}
+      </i>
+      <span class="flex-grow"/>
       <button
         aria-controls="games"
         v-aria-title="t('Refresh votes')"
@@ -279,6 +300,9 @@ async function saveSession() {
         </label>
         <label class="flex">
           <input type="checkbox" v-model="filters.onlyPresentGames" :value="true" class="mr-2"> {{ t('Only show games of present members') }}
+        </label>
+        <label class="flex">
+          <input type="checkbox" v-model="filters.playersInRange" :value="true" class="mr-2"> {{ t('Filter by max number of players of the game') }}
         </label>
       </div>
     </div>

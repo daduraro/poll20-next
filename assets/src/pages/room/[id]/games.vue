@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { withArguments, withTiming } from '~/composables/confirm'
-import { compose } from 'ramda'
+import { compose, range } from 'ramda'
 import {
   type Game,
   type Member
@@ -10,6 +10,8 @@ const { t } = useI18n()
 const { membership } = useUserStore()
 const games = computed(() => membership?.room.games || [])
 
+const playerNumberOptions = range(1, 21)
+
 const editForm = ref({
   title: computed(() => editForm.value.id ? t('Edit game') : t('Add game')),
   id: null as Game['id']|null,
@@ -17,6 +19,7 @@ const editForm = ref({
   value: {
     name: '',
     owners: [] as Member['id'][],
+    players_max: null,
   },
   definition: [
     {
@@ -29,6 +32,10 @@ const editForm = ref({
       }
     },
     {
+      id: 'players_max',
+      label: t('Max number of players')
+    },
+    {
       id: 'owners',
     },
   ],
@@ -36,6 +43,7 @@ const editForm = ref({
     editForm.value.id = null
     editForm.value.value.name = game.name || ''
     editForm.value.value.owners = game.owners?.map(owner => owner.id) || []
+    editForm.value.value.players_max = game.players_max || null
   },
   edit(game: Game) {
     this.reset(game)
@@ -46,9 +54,13 @@ const editForm = ref({
     editForm.busy = true
     const attributes = { ...editForm.value.value }
     const patch = {
-        name: editForm.value.value.name,
+        ...attributes,
         owners: editForm.value.value.owners.map(id => ({ id }))
     }
+
+    // api complains about nulls
+    attributes.players_max = attributes.players_max ?? ""
+
     const games = membership!.room.games
     const index = games.findIndex(game => game.id === editForm.value.id)
     if (index !== -1) {
@@ -59,7 +71,7 @@ const editForm = ref({
       editForm.value.busy = true
       const { data } = await useApi<Game>('post', `games`, {
         attributes: {
-          ...editForm.value.value,
+          ...attributes,
           room_id: membership!.room.id
         }
       })
@@ -143,8 +155,14 @@ onConfirm((id: Game['id']) => {
       :busy="editForm.busy"
       @submit="editForm.submit"
     >
+      <template #players_max>
+        <select v-model="editForm.value.players_max">
+          <option :value="null">{{ t('Any') }}</option>
+          <option v-for="number in playerNumberOptions" :key="number" :value="number">{{ number }}</option>
+        </select>
+      </template>
       <template #owners>
-        <fieldset v-show="editForm.value.name">
+        <fieldset>
           <legend>{{ t('Game owners') }}</legend>
           <div v-for="member in membership!.room.members" :key="member.id" class="flex">
             <input :id="`member-${member.id}`" type="checkbox" v-model="editForm.value.owners" name="owner" :value="member.id" class="m-2">

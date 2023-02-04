@@ -1,7 +1,9 @@
+"{count} games filtered out": "{count} juegos no mostrados"
 "Invite link:": "Enlace para invitar:"
 "Your rooms:": "Tus grupos:"
 About: Acerca de
 Add game: Añadir juego
+Any: Cualquiera
 Change color: Cambiar color
 Change language: Cambiar idioma
 Change name: Cambiar nombre
@@ -13,6 +15,7 @@ Delete {name}: Eliminar {name}
 Delete: Eliminar
 Edit {name}: Editar {name}
 Edit game: Editar juego
+Filter by max number of players of the game: Filtrar por máximo de jugadores
 Game owners: Propietarios del juego
 Game: Juego
 Games: Juegos
@@ -29,6 +32,7 @@ Leave room: Salir del grupo
 Loading...: Cargando...
 Log session of {name}: Registrar sesión de {name}
 Log session: Registrar sesión
+Max number of players: Número de jugadores máximo
 Members: Miembros
 Name: Nombre
 Nobody: Nadie

@@ -23,6 +23,8 @@ export type Game = {
   id: UUID;
   name: string;
   owners: Member[];
+  players_min: number|null;
+  players_max: number|null;
 }
 
 

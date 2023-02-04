@@ -93,6 +93,7 @@ hr {
 }
 
 input:not([type="checkbox"],[type="radio"]),
+select,
 textarea {
   border: 1px solid var(--border-color);
   background: transparent;
@@ -102,6 +103,11 @@ textarea {
   display: block;
   width: 100%;
   font-size: 1.25rem;
+}
+
+option {
+  background-color: initial;
+  color: initial;
 }
 
 .border {

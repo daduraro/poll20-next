@@ -1,7 +1,9 @@
+"{count} games filtered out": "{count} jocs no mostrats"
 "Invite link:": "Enllaç per convidar:"
 "Your rooms:": "Els teus grups:"
 About: Sobre l'autor
 Add game: Afegir joc
+Any: Qualsevol
 Change color: Canviar color
 Change language: Canviar idioma
 Change name: Canviar nom
@@ -13,6 +15,7 @@ Delete {name}: Eliminar {name}
 Delete: Eliminar
 Edit {name}: Editar {name}
 Edit game: Editar joc
+Filter by max number of players of the game: Filtrar per màxim de jugadors
 Game owners: Propietaris del joc
 Game: Joc
 Games: Jocs
@@ -29,6 +32,7 @@ Leave room: Sortir del grup
 Loading...: Carregant...
 Log session of {name}: Registrar sessió de {name}
 Log session: Registrar sessió
+Max number of players: Màxim nombre de jugadors
 Members: Membres
 Name: Nom
 Nobody: Ningú
