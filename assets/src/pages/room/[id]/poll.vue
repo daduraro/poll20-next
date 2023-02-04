@@ -347,7 +347,7 @@ async function saveSession() {
             <li
               v-for="vote in votesByGame[game.id]" :key="vote.id"
               :class="{ present: !filters.onlyPresentVotes || activeMemberIds.has(vote.member_id) }"
-              class="flex mt-1"
+              class="game-vote flex mt-1"
             >
               <div class="text-sm">
                 <i-fa-arrow-up v-if="vote.value > 0" class="icon-bt vote-up mt-0" style="font-weight: 300"/>
@@ -431,6 +431,10 @@ async function saveSession() {
   color: var(--blue);
 }
 .vote:not(.present) {
+  opacity: 50%;
+}
+
+.game-vote:not(.present) {
   opacity: 50%;
 }
 
