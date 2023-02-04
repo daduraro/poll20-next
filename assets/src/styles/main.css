@@ -130,9 +130,10 @@ button.btn-danger {
   color: var(--main-color-contrast);
 }
 
-.btn-link {
-  background-color: transparent !important;
+button.btn-link {
+  background-color: transparent;
   text-decoration: underline;
+  color: inherit;
 }
 
 [aria-role="button"] {
