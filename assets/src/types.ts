@@ -25,6 +25,7 @@ export type Game = {
   owners: Member[];
   players_min: number|null;
   players_max: number|null;
+  match_all_owners: boolean;
 }
 
 

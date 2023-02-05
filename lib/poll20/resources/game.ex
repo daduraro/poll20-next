@@ -74,6 +74,11 @@ defmodule Poll20.Game do
       constraints [min: 1]
     end
 
+    attribute :match_all_owners, :boolean do
+      allow_nil? false
+      default false
+    end
+
     timestamps()
   end
 

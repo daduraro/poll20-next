@@ -20,6 +20,7 @@ const editForm = ref({
     name: '',
     owners: [] as Member['id'][],
     players_max: null,
+    match_all_owners: false,
   },
   definition: [
     {
@@ -38,12 +39,17 @@ const editForm = ref({
     {
       id: 'owners',
     },
+    {
+      id: 'match_all_owners',
+      label: t('Match all owners')
+    },
   ],
   reset(game: Partial<Game> = {}) {
     editForm.value.id = null
     editForm.value.value.name = game.name || ''
     editForm.value.value.owners = game.owners?.map(owner => owner.id) || []
     editForm.value.value.players_max = game.players_max || null
+    editForm.value.value.match_all_owners = game.match_all_owners || false
   },
   edit(game: Game) {
     this.reset(game)
@@ -169,6 +175,15 @@ onConfirm((id: Game['id']) => {
             <label :for="`member-${member.id}`">{{ member.name }}</label>
           </div>
         </fieldset>
+      </template>
+      <template #match_all_owners>
+        <label style="font-weight: normal">
+          <input
+            type="checkbox"
+            v-model="editForm.value.match_all_owners"
+            aria-describedby="match_all_owners-description"
+          > {{ t('Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.') }}
+        </label>
       </template>
     </PForm>
   </div>

@@ -34,12 +34,15 @@ const games = computed(() => membership?.room.games ?? [])
 const gamesById = computed(() => indexBy(prop('id'), games.value))
 const gamesActive = computed(
   () => games.value.filter(game => {
-    if (
-      filters.value.onlyPresentGames
-      && game.owners.length > 0
-      && !game.owners.some(member => activeMemberIds.value.has(member.id))
-    ) {
-      return false
+    if (filters.value.onlyPresentGames && game.owners.length > 0) {
+      const presentOwners = game.owners.filter(owner => activeMemberIds.value.has(owner.id))
+      const exactlyAllPresent = game.owners.length === presentOwners.length && presentOwners.length === membersActive.value.length
+      if (!game.match_all_owners && presentOwners.length === 0) {
+        return false
+      }
+      else if (game.match_all_owners && !exactlyAllPresent) {
+        return false
+      }
     }
 
     if (
@@ -84,7 +87,6 @@ const votesActive = computed(
     ? votes.value.filter(vote => membersActive.value.some(item => item.id === vote.member_id))
     : votes.value
 )
-const recentThreshold = startOfDay(new Date).toISOString()
 
 const scoresByGame = computed(
   () => votesActive.value.reduce(

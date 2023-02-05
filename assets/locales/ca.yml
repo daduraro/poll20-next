@@ -32,6 +32,8 @@ Leave room: Sortir del grup
 Loading...: Carregant...
 Log session of {name}: Registrar sessió de {name}
 Log session: Registrar sessió
+Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.: Només mostrar el joc com a disponible si exactament tots els membres especificats estan presents. Útil per a campanyes de rol.
+Match all owners: Requerir tots els membres
 Max number of players: Màxim nombre de jugadors
 Members: Membres
 Name: Nom

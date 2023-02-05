@@ -32,6 +32,8 @@ Leave room: Leave room
 Loading...: Loading...
 Log session of {name}: Log session of {name}
 Log session: Log session
+Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.: Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.
+Match all owners: Match all owners
 Max number of players: Max number of players
 Members: Members
 Name: Name
