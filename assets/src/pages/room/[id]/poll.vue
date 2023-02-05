@@ -106,8 +106,9 @@ const gamesSorted = computed(() => {
   // ensure all members see the same sort result when votes are tied
   const randomGenerator = seedrandom((new Date).getDate())
   return sortByTiered(game => [
-      -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]),
-      game.tiebreaker
+      -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]), // first by score
+      scoresByGame.value[game.id][-1], // then by least downvotes
+      game.tiebreaker, // then by static random factor
   ], gamesActive.value.map(game => ({
     ...game,
     tiebreaker: randomGenerator()
