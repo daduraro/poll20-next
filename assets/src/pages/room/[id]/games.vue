@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { withArguments, withTiming } from '~/composables/confirm'
-import { compose, range } from 'ramda'
+import { compose, range, sortBy } from 'ramda'
 import {
   type Game,
   type Member
@@ -9,6 +9,7 @@ import {
 const { t } = useI18n()
 const { membership } = useUserStore()
 const games = computed(() => membership?.room.games || [])
+const gamesSorted = computed(() => sortBy(game => game.name.toLowerCase(), games.value))
 
 const playerNumberOptions = range(1, 21)
 
@@ -113,7 +114,7 @@ onConfirm((id: Game['id']) => {
       tabindex="-1"
       :aria-label="t('Games')"
     >
-      <li v-for="game in games" :key="game.id">
+      <li v-for="game in gamesSorted" :key="game.id">
         <div class="flex mb-2">
           <button
             v-for="revealed in [isRevealed && revealArguments[0] === game.id]" :key="0"
