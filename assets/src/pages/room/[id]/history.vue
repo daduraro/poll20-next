@@ -7,7 +7,8 @@ const route = useRoute()
 const { t } = useI18n()
 const { data } = useApi<Session>('get', 'sessions', {
   query: {
-    include: ['attendees.member', 'game']
+    include: ['attendees.member', 'game'],
+    sort: '-inserted_at',
   }
 })
 
