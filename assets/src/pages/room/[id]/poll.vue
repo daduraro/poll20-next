@@ -73,7 +73,7 @@ const votesVisible = computed<Vote & {active: boolean}>(
     }))
   )
 )
-const votesByGame = computed(() => ({
+const votesByGame = computed<Record<Game['id'], Vote[]>>(() => ({
   ...fromPairs(games.value.map(game => [game.id, []])),
   ...groupBy(prop('game_id'), votesVisible.value)
 }))
@@ -108,9 +108,18 @@ const gamesSorted = computed(() => {
   // ensure all members see the same sort result when votes are tied
   const randomGenerator = seedrandom((new Date).getDate())
   return sortByTiered(game => [
-      -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]), // first by score
-      scoresByGame.value[game.id][-1], // then by least downvotes
-      game.tiebreaker, // then by static random factor
+      // first by score
+      -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]),
+      // then by least downvotes
+      scoresByGame.value[game.id][-1],
+      // then by least positive votes from inactive people
+      // (we'd like to save them for when they're present)
+      votesByGame.value[game.id]
+        .filter(vote => vote.value === 1)
+        .filter(vote => !activeMemberIds.value.has(vote.member_id))
+        .length,
+      // finally, by a shared, static random factor
+      game.tiebreaker,
   ], gamesActive.value.map(game => ({
     ...game,
     tiebreaker: randomGenerator()
