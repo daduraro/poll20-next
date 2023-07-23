@@ -32,6 +32,7 @@ export type Game = {
 export type Session = {
   id: UUID;
   created_at: string;
+  game: Game;
   attendees: Attendee[];
 }
 
