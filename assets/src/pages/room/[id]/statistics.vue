@@ -72,7 +72,7 @@ charts.value.push(computed(() => {
 
   return {
     component: Bar,
-    title: 'Most played',
+    title: t('Most played'),
     data: {
       labels: games.map(game => game.name),
       datasets: [
@@ -132,7 +132,7 @@ charts.value.push(computed(() => {
   )(attendees)
   return {
     component: Bar,
-    title: 'Winrates',
+    title: t('Winrates'),
     data: {
       labels: members.map(member => member.name),
       datasets: [

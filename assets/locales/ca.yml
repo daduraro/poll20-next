@@ -1,5 +1,7 @@
 "{count} games filtered out": "{count} jocs no mostrats"
 "Invite link:": "Enllaç per convidar:"
+"Only games played by the following members:": "Només partides jugades pels següents members:"
+"Only include these games:": "Només incloure aquests jocs:"
 "Your rooms:": "Els teus grups:"
 About: Sobre l'autor
 Add game: Afegir joc
@@ -7,6 +9,8 @@ Any: Qualsevol
 Change color: Canviar color
 Change language: Canviar idioma
 Change name: Canviar nom
+Choose game: Tria joc
+Choose member: Tria membre
 Comments: Comentaris
 Copy to clipboard: Copiar al portapapers
 Create room: Crear grup
@@ -15,6 +19,7 @@ Delete {name}: Eliminar {name}
 Delete: Eliminar
 Edit {name}: Editar {name}
 Edit game: Editar joc
+Exclude coop games: Excluir jocs cooperatius
 Filter by max number of players of the game: Filtrar per màxim de jugadors
 Game owners: Propietaris del joc
 Game: Joc
@@ -49,6 +54,7 @@ Save: Guardar
 Select all: Seleccionar tots
 Settings: Configuració
 Statistics: Estadístiques
+Times played: nº de partides
 Toggle dark mode: Canviar mode fosc
 Toggle filters: Mostrar filtres
 Toggle list of votes: Mostrar llista de vots
@@ -56,5 +62,7 @@ Vote down: Vot negatiu
 Vote up: Vot positiu
 Votes: Vots
 Winners: Guanyadors
+Winrate: Winrate
+Winrates: Winrates
 You have been invited to {name}: Has sigut convidat a {name}
 Your name: El teu nom

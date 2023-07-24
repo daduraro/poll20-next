@@ -1,5 +1,7 @@
 "{count} games filtered out": "{count} games filtered out"
 "Invite link:": "Invite link:"
+"Only games played by the following members:": "Only games played by the following members:"
+"Only include these games:": "Only include these games:"
 "Your rooms:": "Your rooms:"
 About: About
 Add game: Add game
@@ -7,6 +9,8 @@ Any: Any
 Change color: Change color
 Change language: Change language
 Change name: Change name
+Choose game: Choose game
+Choose member: Choose member
 Comments: Comments
 Copy to clipboard: Copy to clipboard
 Create room: Create room
@@ -15,6 +19,7 @@ Delete {name}: Delete {name}
 Delete: Delete
 Edit {name}: Edit {name}
 Edit game: Edit game
+Exclude coop games: Exclude coop games
 Filter by max number of players of the game: Filter by max number of players of the game
 Game owners: Game owners
 Game: Game
@@ -49,6 +54,7 @@ Save: Save
 Select all: Select all
 Settings: Settings
 Statistics: Statistics
+Times played: Times played
 Toggle dark mode: Toggle dark mode
 Toggle filters: Toggle filters
 Toggle list of votes: Toggle list of votes
@@ -56,6 +62,8 @@ Vote down: Vote down
 Vote up: Vote up
 Votes: Votes
 Winners: Winners
+Winrate: Winrate
+Winrates: Winrates
 You have been invited to {name}: You have been invited to {name}
 Your name: Your name
 Your rooms: Your rooms

@@ -1,5 +1,7 @@
 "{count} games filtered out": "{count} juegos no mostrados"
 "Invite link:": "Enlace para invitar:"
+"Only games played by the following members:": "Solo partidas jugadas por los siguientes miembros:"
+"Only include these games:": "Solo incluir estos juegos:"
 "Your rooms:": "Tus grupos:"
 About: Acerca de
 Add game: Añadir juego
@@ -7,6 +9,8 @@ Any: Cualquiera
 Change color: Cambiar color
 Change language: Cambiar idioma
 Change name: Cambiar nombre
+Choose game: Elige juego
+Choose member: Elige miembro
 Comments: Comentarios
 Copy to clipboard: Copiar al portapapeles
 Create room: Crear grupo
@@ -15,6 +19,7 @@ Delete {name}: Eliminar {name}
 Delete: Eliminar
 Edit {name}: Editar {name}
 Edit game: Editar juego
+Exclude coop games: Excluir juegos cooperativos
 Filter by max number of players of the game: Filtrar por máximo de jugadores
 Game owners: Propietarios del juego
 Game: Juego
@@ -49,6 +54,7 @@ Save: Guardar
 Select all: Seleccionar todos
 Settings: Configuración
 Statistics: Estadísticas
+Times played: nº de partidas
 Toggle dark mode: Cambiar modo oscuro
 Toggle filters: Mostrar filtros
 Toggle list of votes: Mostrar lista de votos
@@ -56,6 +62,8 @@ Vote down: Voto negativo
 Vote up: Voto positivo
 Votes: Votos
 Winners: Ganadores
+Winrate: Winrate
+Winrates: Winrates
 You have been invited to {name}: Has sido invitado a {name}
 Your name: Tu nombre
 Your rooms: Tus grupos
