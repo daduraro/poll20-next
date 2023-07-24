@@ -26,6 +26,7 @@ const filterVisibility = ref({
 const filters = ref({
   gameIds: [] as Game['id'][],
   memberIds: [] as Member['id'][],
+  excludeCoop: true,
 })
 
 function selectViaInput(filter: string[], event: any) {
@@ -38,13 +39,25 @@ function selectViaInput(filter: string[], event: any) {
 const sessions = computed(() => (data?.value?.entities ?? []))
 const filteredSessions = computed(
   () => sessions.value.filter((session: Session) => {
-    const { gameIds, memberIds } = filters.value
+    const { gameIds, memberIds, excludeCoop } = filters.value
     return (gameIds.length === 0 || gameIds.some(id => session.game.id === id))
       && (memberIds.length === 0 || memberIds.every(id => session.attendees.find(attendee => attendee.member_id === id)))
+      && (!excludeCoop || session.attendees.slice(1).some((attendee, previousIndex) => attendee.winner !== session.attendees[previousIndex].winner))
   })
 )
 
-const chart = computed(() => {
+const style = getComputedStyle(document.body)
+const gridStyle = {
+  color: style.getPropertyValue('--border-color'),
+  borderColor: style.getPropertyValue('--border-color'),
+}
+
+const charts = ref([] as any[])
+
+/**
+ * Most played
+ */
+charts.value.push(computed(() => {
   const limit = 5
   const games = compose(
     sortBy(game => game.count),
@@ -55,13 +68,8 @@ const chart = computed(() => {
     map(sessions => ({ ...sessions[0].game, count: sessions.length })),
     groupBy(session => session.game.id.toString())
   )(filteredSessions.value)
-
   const total = sum(games.map(game => game.count))
-  const style = getComputedStyle(document.body)
-  const gridStyle = {
-    color: style.getPropertyValue('--border-color'),
-    borderColor: style.getPropertyValue('--border-color'),
-  }
+
   return {
     component: Bar,
     title: 'Most played',
@@ -100,9 +108,56 @@ const chart = computed(() => {
           },
         }
       },
-    },
+    }
   }
-})
+}))
+
+/**
+ * Winrates
+ */
+charts.value.push(computed(() => {
+  const attendees = filteredSessions.value.flatMap(session => session.attendees)
+  const members = compose(
+    sortBy(member => member.winrate),
+    values,
+    map(attendees => {
+      const won = attendees.filter(attendee => attendee.winner)
+      const winrate = won.length / attendees.length
+      return {
+        ...membersById.value[attendees[0].member_id],
+        winrate
+      }
+    }),
+    groupBy(attendee => attendee.member_id)
+  )(attendees)
+  return {
+    component: Bar,
+    title: 'Winrates',
+    data: {
+      labels: members.map(member => member.name),
+      datasets: [
+        {
+          label: t('Winrate'),
+          data: members.map(member => (member.winrate * 100)),
+          backgroundColor: style.getPropertyValue('--main-color')
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          grid: gridStyle,
+        },
+        y: {
+          grid: gridStyle,
+          min: 0,
+          max: 100,
+        },
+      },
+    }
+  }
+}))
 
 </script>
 
@@ -127,6 +182,9 @@ const chart = computed(() => {
     <div id="filters-games" v-show="filterVisibility.games" class="p-2 border-rounded mt-2 border">
       <!-- options -->
       <div class="options">
+        <label>
+          <input type="checkbox" v-model="filters.excludeCoop"> {{ t('Exclude coop games') }}
+        </label>
         <label for="filter-games" class="flex">
           {{ t('Only include these games:') }}
         </label>
@@ -153,7 +211,7 @@ const chart = computed(() => {
       <!-- options -->
       <div class="options">
         <label for="filter-players" class="flex">
-          {{ t('Only include these members:') }}
+          {{ t('Only games played by the following members:') }}
         </label>
         <select id="filter-players" @input="selectViaInput(filters.memberIds, $event)">
           <option value="">{{ t('Choose member') }}</option>
@@ -174,7 +232,12 @@ const chart = computed(() => {
         </ul>
       </div>
     </div>
-    <component :is="chart.component" v-bind="chart" />
+    <component
+      :is="chart.value.component"
+      v-for="(chart, index) in charts"
+      :key="index"
+      v-bind="chart.value"
+    />
   </div>
 </template>
 
