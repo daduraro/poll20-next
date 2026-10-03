@@ -19,9 +19,8 @@ defmodule Poll20.Policy.MatchResource do
   @impl true
   def match?(nil, _, _), do: false
   def match?(actor, %{changeset: %{attributes: attributes}}, opts) do
-    IO.inspect(attributes)
     with {:ok, fkey} <- Map.fetch(attributes, opts[:attribute]),
-        {:ok, item} <- Poll20.get(opts[:resource], fkey),
+        {:ok, item} <- Ash.get(opts[:resource], fkey, authorize?: false),
         {:ok, value} <- Map.fetch(item, opts[:resource_attribute]),
         {:ok, actor_value} <- Map.fetch(actor, opts[:actor_attribute]) do
       value == actor_value

@@ -5,12 +5,13 @@ defmodule Poll20.MixProject do
     [
       app: :poll20,
       version: "0.1.0",
-      elixir: "~> 1.13",
+      elixir: "~> 1.18",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      listeners: [Phoenix.CodeReloader]
     ]
   end
 
@@ -27,21 +28,25 @@ defmodule Poll20.MixProject do
 
   defp deps do
     [
-      {:ash, "~> 2.5.8"},
-      {:ash_json_api, "~> 0.31"},
-      {:phoenix, "~> 1.6.15"},
-      {:phoenix_ecto, "~> 4.4"},
-      {:plug_cowboy, "~> 2.5"},
-      {:ecto_sql, "~> 3.6"},
+      {:ash, "~> 3.34"},
+      {:ash_json_api, "~> 1.7"},
+      # Optional dep of ash_json_api, but its request validation calls AshJsonApi.OpenApi
+      # (only compiled when open_api_spex is present), so it's effectively required.
+      {:open_api_spex, "~> 3.22"},
+      {:ash_postgres, "~> 2.14"},
+      {:picosat_elixir, "~> 0.2"},
+      {:phoenix, "~> 1.8"},
+      {:phoenix_ecto, "~> 4.7"},
+      {:bandit, "~> 1.12"},
+      {:ecto_sql, "~> 3.13"},
       {:postgrex, ">= 0.0.0"},
-      {:ash_postgres, "~> 1.2"},
-      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:cors_plug, "~> 3.0"},
-      {:gettext, "~> 0.18"},
-      {:jason, "~> 1.2"},
-      {:elixir_sense, github: "elixir-lsp/elixir_sense", only: [:dev, :test]},
-      {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
+      {:gettext, "~> 1.0"},
+      {:jason, "~> 1.4"},
+      {:igniter, "~> 0.8", only: [:dev, :test]},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 

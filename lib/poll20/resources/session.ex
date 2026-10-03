@@ -1,5 +1,6 @@
 defmodule Poll20.Session do
   use Ash.Resource,
+    domain: Poll20,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshJsonApi.Resource],
     authorizers: [
@@ -27,6 +28,7 @@ defmodule Poll20.Session do
   end
 
   actions do
+    default_accept :*
     defaults [:read, :destroy]
 
     create :create do
@@ -38,6 +40,8 @@ defmodule Poll20.Session do
     end
 
     update :update do
+      require_atomic? false
+
       argument :attendees, {:array, :uuid} do
         allow_nil? true
         default []
@@ -64,21 +68,29 @@ defmodule Poll20.Session do
   attributes do
     uuid_primary_key :id
 
-    attribute :game_id, :uuid
+    attribute :game_id, :uuid do
+      public? true
+    end
 
     attribute :comment, :string do
       allow_nil? true
+      public? true
       default ""
     end
 
-    timestamps(private?: false)
+    timestamps(public?: true)
   end
 
   relationships do
     belongs_to :game, Poll20.Game do
       allow_nil? false
+      public? true
+      define_attribute? false
     end
-    has_many :attendees, Poll20.SessionMember
+
+    has_many :attendees, Poll20.SessionMember do
+      public? true
+    end
   end
 
   postgres do

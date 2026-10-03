@@ -15,14 +15,14 @@ defmodule Poll20Web.Plugs.Actor do
       [actor, nil] -> actor
       [actor, invite_code] -> Map.put(actor, :invite_code, invite_code)
     end
-IO.inspect(actor)
+
     conn
     |> Ash.PlugHelpers.set_actor(actor)
   end
 
   defp get_member(conn) do
     with [member_id] <- Plug.Conn.get_req_header(conn, "x-member-id"),
-      {:ok, member} <- Poll20.get(Poll20.Member, member_id) do
+      {:ok, member} <- Ash.get(Poll20.Member, member_id, authorize?: false) do
       member
     else
       _ -> nil

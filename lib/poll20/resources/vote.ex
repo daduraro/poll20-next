@@ -1,5 +1,6 @@
 defmodule Poll20.Vote do
   use Ash.Resource,
+    domain: Poll20,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshJsonApi.Resource],
     authorizers: [
@@ -25,6 +26,7 @@ defmodule Poll20.Vote do
   end
 
   actions do
+    default_accept :*
     defaults [:create, :read, :update, :destroy]
   end
 
@@ -50,14 +52,20 @@ defmodule Poll20.Vote do
   attributes do
     uuid_primary_key :id
 
-    attribute :game_id, :uuid
-    attribute :member_id, :uuid
+    attribute :game_id, :uuid do
+      public? true
+    end
+
+    attribute :member_id, :uuid do
+      public? true
+    end
 
     attribute :value, :integer do
       allow_nil? false
+      public? true
     end
 
-    timestamps(private?: false)
+    timestamps(public?: true)
   end
 
   validations do
@@ -68,10 +76,14 @@ defmodule Poll20.Vote do
   relationships do
     belongs_to :game, Poll20.Game do
       allow_nil? false
+      public? true
+      define_attribute? false
     end
 
     belongs_to :member, Poll20.Member do
       allow_nil? false
+      public? true
+      define_attribute? false
     end
   end
 

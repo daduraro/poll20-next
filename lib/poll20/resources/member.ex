@@ -1,5 +1,8 @@
 defmodule Poll20.Member do
+  # The primary read sorts members by join order on purpose, also when loaded as a relationship
   use Ash.Resource,
+    domain: Poll20,
+    primary_read_warning?: false,
     data_layer: AshPostgres.DataLayer,
     extensions: [AshJsonApi.Resource],
     authorizers: [
@@ -15,13 +18,14 @@ defmodule Poll20.Member do
     routes do
       base "/members"
 
-      get :read, action: :read
-      index :read, action: :read
+      get :read
+      index :read
       patch :update
     end
   end
 
   actions do
+    default_accept :*
     defaults [:create, :update, :destroy]
 
     read :read do
@@ -50,10 +54,12 @@ defmodule Poll20.Member do
 
     attribute :room_id, :uuid do
       allow_nil? false
+      public? true
     end
 
     attribute :name, :string do
       allow_nil? false
+      public? true
     end
 
     timestamps()
@@ -62,6 +68,8 @@ defmodule Poll20.Member do
   relationships do
     belongs_to :room, Poll20.Room do
       allow_nil? false
+      public? true
+      define_attribute? false
     end
   end
 

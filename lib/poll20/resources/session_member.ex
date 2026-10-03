@@ -1,11 +1,19 @@
 defmodule Poll20.SessionMember do
   use Ash.Resource,
+    domain: Poll20,
     data_layer: AshPostgres.DataLayer,
+    extensions: [AshJsonApi.Resource],
     authorizers: [
       Ash.Policy.Authorizer
     ]
 
+  # No routes: only exposed as included `attendees` of sessions
+  json_api do
+    type "session_member"
+  end
+
   actions do
+    default_accept :*
     defaults [:create, :read, :update, :destroy]
   end
 
@@ -26,14 +34,18 @@ defmodule Poll20.SessionMember do
   attributes do
     uuid_primary_key :id
 
-    attribute :member_id, :uuid
+    attribute :member_id, :uuid do
+      public? true
+    end
 
     attribute :winner, :boolean do
       allow_nil? false
+      public? true
     end
 
     attribute :vote, :integer do
       allow_nil? true
+      public? true
     end
   end
 
@@ -44,9 +56,13 @@ defmodule Poll20.SessionMember do
   relationships do
     belongs_to :session, Poll20.Session do
       allow_nil? false
+      public? true
     end
+
     belongs_to :member, Poll20.Member do
       allow_nil? false
+      public? true
+      define_attribute? false
     end
   end
 

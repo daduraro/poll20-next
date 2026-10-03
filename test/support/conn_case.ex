@@ -24,8 +24,6 @@ defmodule Poll20Web.ConnCase do
       import Phoenix.ConnTest
       import Poll20Web.ConnCase
 
-      alias Poll20Web.Router.Helpers, as: Routes
-
       # The default endpoint for testing
       @endpoint Poll20Web.Endpoint
     end

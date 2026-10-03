@@ -1,3 +1,3 @@
 defmodule Poll20.Gettext do
-  use Gettext, otp_app: :poll20
+  use Gettext.Backend, otp_app: :poll20
 end
