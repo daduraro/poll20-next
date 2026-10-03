@@ -8,7 +8,7 @@ import Config
 config :poll20, Poll20.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: System.get_env("DATABASE_HOSTNAME") || "localhost",
   database: "poll20_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10

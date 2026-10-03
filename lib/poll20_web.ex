@@ -63,7 +63,6 @@ defmodule Poll20Web do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import Poll20Web.ErrorHelpers
       import Poll20.Gettext
       alias Poll20Web.Router.Helpers, as: Routes
     end
