@@ -40,24 +40,13 @@ defmodule Poll20.Session do
     end
 
     update :update do
-      require_atomic? false
-
-      argument :attendees, {:array, :uuid} do
-        allow_nil? true
-        default []
-      end
-
-      change manage_relationship(:attendees, :attendees, type: :direct_control)
+      accept [:comment]
     end
   end
 
   policies do
     policy action_type(:create) do
-      authorize_if {Poll20.Policy.MatchResource,
-        attribute: :game_id,
-        resource: Poll20.Game,
-        resource_attribute: :room_id,
-        actor_attribute: :room_id}
+      authorize_if expr(game.room_id == ^actor(:room_id))
     end
 
     policy action_type([:read, :update, :destroy]) do
@@ -67,10 +56,6 @@ defmodule Poll20.Session do
 
   attributes do
     uuid_primary_key :id
-
-    attribute :game_id, :uuid do
-      public? true
-    end
 
     attribute :comment, :string do
       allow_nil? true
@@ -85,7 +70,7 @@ defmodule Poll20.Session do
     belongs_to :game, Poll20.Game do
       allow_nil? false
       public? true
-      define_attribute? false
+      attribute_writable? true
     end
 
     has_many :attendees, Poll20.SessionMember do
@@ -96,5 +81,9 @@ defmodule Poll20.Session do
   postgres do
     table "sessions"
     repo Poll20.Repo
+
+    references do
+      reference :game, on_delete: :delete
+    end
   end
 end

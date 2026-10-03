@@ -379,4 +379,94 @@ defmodule Poll20Web.ApiTest do
       assert {200, %{"data" => []}} = api(:get, "/sessions", member: other.member)
     end
   end
+
+  describe "updates only change editable fields" do
+    test "a member cannot move to another room" do
+      room = create_room()
+      other = create_room("Other", "Eve")
+
+      {status, _} = api(:patch, "/members/#{room.member}", member: room.member, attributes: %{room_id: other.id})
+      assert status in 400..499
+
+      {200, body} = api(:get, "/rooms/#{other.id}?include=members", member: other.member)
+      refute Enum.any?(included(body, "member"), &(&1["id"] == room.member))
+    end
+
+    test "a game cannot be moved to another room" do
+      room = create_room()
+      other = create_room("Other", "Eve")
+      game = create_game(room)
+
+      {status, _} = api(:patch, "/games/#{game["id"]}", member: room.member, attributes: %{room_id: other.id})
+      assert status in 400..499
+
+      {200, body} = api(:get, "/rooms/#{room.id}?include=games", member: room.member)
+      assert [%{"id" => id}] = included(body, "game")
+      assert id == game["id"]
+    end
+
+    test "a vote cannot be reassigned to another member or game" do
+      room = create_room()
+      bob = join(room, "Bob")
+      game = create_game(room)
+      other_game = create_game(room, %{name: "Other"})
+
+      {201, %{"data" => vote}} =
+        api(:post, "/votes", member: room.member, attributes: %{game_id: game["id"], member_id: room.member, value: 1})
+
+      {status, _} = api(:patch, "/votes/#{vote["id"]}", member: room.member, attributes: %{member_id: bob})
+      assert status in 400..499
+      {status, _} = api(:patch, "/votes/#{vote["id"]}", member: room.member, attributes: %{game_id: other_game["id"]})
+      assert status in 400..499
+
+      {200, %{"data" => [listed]}} = api(:get, "/votes", member: room.member)
+      assert listed["attributes"]["member_id"] == room.member
+      assert listed["attributes"]["game_id"] == game["id"]
+    end
+
+    test "the invite code cannot be set through a room update" do
+      room = create_room()
+
+      {status, _} = api(:patch, "/rooms/#{room.id}", member: room.member, attributes: %{invite_code: Ecto.UUID.generate()})
+      assert status in 400..499
+
+      {200, body} = api(:get, "/rooms/#{room.id}", member: room.member)
+      assert body["data"]["attributes"]["invite_code"] == room.invite_code
+    end
+
+    test "updating a game without owners keeps its owners" do
+      room = create_room()
+      game = create_game(room, %{owners: [room.member]})
+
+      {status, _} = api(:patch, "/games/#{game["id"]}", member: room.member, attributes: %{name: "Renamed"})
+      assert status in [200, 201]
+
+      {200, body} = api(:get, "/rooms/#{room.id}?include=games.owners", member: room.member)
+      [g] = included(body, "game")
+      assert g["attributes"]["name"] == "Renamed"
+      assert [%{"id" => owner}] = g["relationships"]["owners"]["data"]
+      assert owner == room.member
+    end
+
+    test "editing a session comment keeps its attendees" do
+      room = create_room()
+      game = create_game(room)
+
+      {201, %{"data" => session}} =
+        api(:post, "/sessions",
+          member: room.member,
+          attributes: %{game_id: game["id"], comment: "", attendees: [%{member_id: room.member, winner: true, vote: 1}]}
+        )
+
+      {status, %{"data" => updated}} =
+        api(:patch, "/sessions/#{session["id"]}", member: room.member, attributes: %{comment: "edited"})
+
+      assert status in [200, 201]
+      assert updated["attributes"]["comment"] == "edited"
+
+      {200, body} = api(:get, "/sessions?include=attendees", member: room.member)
+      assert [listed] = body["data"]
+      assert [_] = listed["relationships"]["attendees"]["data"]
+    end
+  end
 end

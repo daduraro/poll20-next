@@ -26,7 +26,7 @@ defmodule Poll20.Member do
 
   actions do
     default_accept :*
-    defaults [:create, :update, :destroy]
+    defaults [:create, :destroy, update: [:name]]
 
     read :read do
       primary? true
@@ -36,11 +36,7 @@ defmodule Poll20.Member do
 
   policies do
     policy action_type(:create) do
-      authorize_if {Poll20.Policy.MatchResource,
-        attribute: :room_id,
-        resource: Poll20.Room,
-        resource_attribute: :invite_code,
-        actor_attribute: :invite_code}
+      authorize_if expr(room.invite_code == ^actor(:invite_code))
     end
 
     policy action_type([:read, :update, :destroy]) do
@@ -51,11 +47,6 @@ defmodule Poll20.Member do
 
   attributes do
     uuid_primary_key :id
-
-    attribute :room_id, :uuid do
-      allow_nil? false
-      public? true
-    end
 
     attribute :name, :string do
       allow_nil? false
@@ -69,12 +60,16 @@ defmodule Poll20.Member do
     belongs_to :room, Poll20.Room do
       allow_nil? false
       public? true
-      define_attribute? false
+      attribute_writable? true
     end
   end
 
   postgres do
     table "members"
     repo Poll20.Repo
+
+    references do
+      reference :room, on_delete: :delete
+    end
   end
 end

@@ -39,10 +39,11 @@ defmodule Poll20.Game do
 
     update :update do
       require_atomic? false
+      accept [:name, :players_min, :players_max, :match_all_owners]
 
+      # no default: owners are only changed when the argument is sent
       argument :owners, {:array, :uuid} do
         allow_nil? true
-        default []
       end
 
       change manage_relationship(:owners, :owners, type: :append_and_remove)
@@ -51,7 +52,7 @@ defmodule Poll20.Game do
 
   policies do
     policy action_type(:create) do
-      authorize_if {Poll20.Policy.MatchActorOnCreate, match: %{room_id: :room_id}}
+      authorize_if expr(room_id == ^actor(:room_id))
     end
 
     policy action_type([:read, :update, :destroy]) do
@@ -61,10 +62,6 @@ defmodule Poll20.Game do
 
   attributes do
     uuid_primary_key :id
-
-    attribute :room_id, :uuid do
-      public? true
-    end
 
     attribute :name, :string do
       allow_nil? false
@@ -96,7 +93,7 @@ defmodule Poll20.Game do
     belongs_to :room, Poll20.Room do
       allow_nil? false
       public? true
-      define_attribute? false
+      attribute_writable? true
     end
 
     many_to_many :owners, Poll20.Member do
@@ -110,5 +107,9 @@ defmodule Poll20.Game do
   postgres do
     table "games"
     repo Poll20.Repo
+
+    references do
+      reference :room, on_delete: :delete
+    end
   end
 end

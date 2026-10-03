@@ -19,11 +19,7 @@ defmodule Poll20.SessionMember do
 
   policies do
     policy action_type(:create) do
-      authorize_if {Poll20.Policy.MatchResource,
-        attribute: :member_id,
-        resource: Poll20.Member,
-        resource_attribute: :room_id,
-        actor_attribute: :room_id}
+      authorize_if expr(member.room_id == ^actor(:room_id))
     end
 
     policy action_type([:read, :update, :destroy]) do
@@ -33,10 +29,6 @@ defmodule Poll20.SessionMember do
 
   attributes do
     uuid_primary_key :id
-
-    attribute :member_id, :uuid do
-      public? true
-    end
 
     attribute :winner, :boolean do
       allow_nil? false
@@ -62,12 +54,17 @@ defmodule Poll20.SessionMember do
     belongs_to :member, Poll20.Member do
       allow_nil? false
       public? true
-      define_attribute? false
+      attribute_writable? true
     end
   end
 
   postgres do
     table "session_members"
     repo Poll20.Repo
+
+    references do
+      reference :session, on_delete: :delete
+      reference :member, on_delete: :delete
+    end
   end
 end

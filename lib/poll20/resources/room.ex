@@ -43,7 +43,7 @@ defmodule Poll20.Room do
 
   actions do
     default_accept :*
-    defaults [:update, :destroy]
+    defaults [:destroy, update: [:name]]
 
     read :read do
       primary? true
@@ -51,7 +51,6 @@ defmodule Poll20.Room do
 
     create :create do
       accept [:name]
-      set_context(%{new: true})
     end
 
     update :join do

@@ -30,5 +30,10 @@ defmodule Poll20.GameOwner do
   postgres do
     table "game_owners"
     repo Poll20.Repo
+
+    references do
+      reference :member, on_delete: :delete
+      reference :game, on_delete: :delete
+    end
   end
 end

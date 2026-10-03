@@ -27,7 +27,7 @@ defmodule Poll20.Vote do
 
   actions do
     default_accept :*
-    defaults [:create, :read, :update, :destroy]
+    defaults [:create, :read, :destroy, update: [:value]]
   end
 
   policies do
@@ -36,12 +36,8 @@ defmodule Poll20.Vote do
     end
 
     policy action_type(:create) do
-      forbid_unless {Poll20.Policy.MatchActorOnCreate, match: %{member_id: :id}}
-      authorize_if {Poll20.Policy.MatchResource,
-        attribute: :game_id,
-        resource: Poll20.Game,
-        resource_attribute: :room_id,
-        actor_attribute: :room_id}
+      forbid_unless expr(member_id == ^actor(:id))
+      authorize_if expr(game.room_id == ^actor(:room_id))
     end
 
     policy action_type([:update, :destroy]) do
@@ -52,14 +48,6 @@ defmodule Poll20.Vote do
   attributes do
     uuid_primary_key :id
 
-    attribute :game_id, :uuid do
-      public? true
-    end
-
-    attribute :member_id, :uuid do
-      public? true
-    end
-
     attribute :value, :integer do
       allow_nil? false
       public? true
@@ -69,7 +57,6 @@ defmodule Poll20.Vote do
   end
 
   validations do
-    validate present(:value), on: :create
     validate one_of(:value, [-1, 1])
   end
 
@@ -77,18 +64,23 @@ defmodule Poll20.Vote do
     belongs_to :game, Poll20.Game do
       allow_nil? false
       public? true
-      define_attribute? false
+      attribute_writable? true
     end
 
     belongs_to :member, Poll20.Member do
       allow_nil? false
       public? true
-      define_attribute? false
+      attribute_writable? true
     end
   end
 
   postgres do
     table "votes"
     repo Poll20.Repo
+
+    references do
+      reference :game, on_delete: :delete
+      reference :member, on_delete: :delete
+    end
   end
 end
