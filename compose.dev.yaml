@@ -1,0 +1,61 @@
+# Local dev environment. Usage:
+#   podman-compose -f compose.dev.yaml up            # db + phoenix (:4000) + vite (:3333)
+#   podman-compose -f compose.dev.yaml run --rm app iex -S mix
+#   podman-compose -f compose.dev.yaml down -v       # stop and wipe volumes
+name: poll20-dev
+
+services:
+  db:
+    image: docker.io/library/postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_HOSTNAME: db
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app:z
+      - deps:/app/deps
+      - build:/app/_build
+    command: sh -c "mix setup && mix phx.server"
+    stdin_open: true
+    tty: true
+
+  assets:
+    image: docker.io/library/node:18-slim
+    working_dir: /app/assets
+    environment:
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+      npm_config_store_dir: /pnpm-store
+    ports:
+      - "3333:3333"
+    volumes:
+      - .:/app:z
+      - node-modules:/app/assets/node_modules
+      - pnpm-store:/pnpm-store
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile && pnpm exec vite --host 0.0.0.0 --port 3333"
+
+volumes:
+  pg-data:
+  deps:
+  build:
+  node-modules:
+  pnpm-store:

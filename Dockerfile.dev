@@ -1,0 +1,11 @@
+# Dev image: toolchain only. Source is bind-mounted by compose.dev.yaml.
+# Versions match elixir_buildpack.config (Elixir 1.13.4 / OTP 24).
+FROM docker.io/hexpm/elixir:1.13.4-erlang-24.3.4.17-debian-trixie-20260610
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git build-essential inotify-tools postgresql-client \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN mix local.hex --force && mix local.rebar --force
+
+WORKDIR /app
