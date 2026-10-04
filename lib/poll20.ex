@@ -1,4 +1,5 @@
 defmodule Poll20 do
+  @moduledoc false
   use Ash.Domain, extensions: [AshJsonApi.Domain]
 
   resources do

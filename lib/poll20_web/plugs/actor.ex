@@ -1,4 +1,5 @@
 defmodule Poll20Web.Plugs.Actor do
+  @moduledoc false
   def init(opts) do
     opts
   end
@@ -9,20 +10,20 @@ defmodule Poll20Web.Plugs.Actor do
     invite_code = get_invite_code(conn)
 
     # ugly, I know
-    actor = case [member, invite_code] do
-      [nil, nil] -> nil
-      [nil, invite_code] -> %{invite_code: invite_code}
-      [actor, nil] -> actor
-      [actor, invite_code] -> Map.put(actor, :invite_code, invite_code)
-    end
+    actor =
+      case [member, invite_code] do
+        [nil, nil] -> nil
+        [nil, invite_code] -> %{invite_code: invite_code}
+        [actor, nil] -> actor
+        [actor, invite_code] -> Map.put(actor, :invite_code, invite_code)
+      end
 
-    conn
-    |> Ash.PlugHelpers.set_actor(actor)
+    Ash.PlugHelpers.set_actor(conn, actor)
   end
 
   defp get_member(conn) do
     with [member_id] <- Plug.Conn.get_req_header(conn, "x-member-id"),
-      {:ok, member} <- Ash.get(Poll20.Member, member_id, authorize?: false) do
+         {:ok, member} <- Ash.get(Poll20.Member, member_id, authorize?: false) do
       member
     else
       _ -> nil
@@ -30,10 +31,9 @@ defmodule Poll20Web.Plugs.Actor do
   end
 
   defp get_invite_code(conn) do
-      with %{query_params: %{"invite_code" => invite_code}} <- Plug.Conn.fetch_query_params(conn) do
-        invite_code
-      else
-        _ -> nil
-      end
+    case Plug.Conn.fetch_query_params(conn) do
+      %{query_params: %{"invite_code" => invite_code}} -> invite_code
+      _ -> nil
+    end
   end
 end

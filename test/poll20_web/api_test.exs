@@ -29,7 +29,9 @@ defmodule Poll20Web.ApiTest do
 
   # Resolves a relationship the way the frontend's serialize() does: by matching id and type in `included`
   defp related(body, entity, relationship) do
-    resolve = fn ref -> Enum.find(body["included"], &(&1["id"] == ref["id"] and &1["type"] == ref["type"])) end
+    resolve = fn ref ->
+      Enum.find(body["included"], &(&1["id"] == ref["id"] and &1["type"] == ref["type"]))
+    end
 
     case entity["relationships"][relationship]["data"] do
       refs when is_list(refs) -> Enum.map(refs, resolve)
@@ -54,12 +56,14 @@ defmodule Poll20Web.ApiTest do
 
   defp join(room, name) do
     {status, joined} =
-      api(:patch, "/rooms/#{room.id}/join?invite_code=#{room.invite_code}&include=members",
-        attributes: %{name: name}
-      )
+      api(:patch, "/rooms/#{room.id}/join?invite_code=#{room.invite_code}&include=members", attributes: %{name: name})
 
     assert status in [200, 201]
-    joined |> included("member") |> Enum.find(&(&1["attributes"]["name"] == name)) |> Map.get("id")
+
+    joined
+    |> included("member")
+    |> Enum.find(&(&1["attributes"]["name"] == name))
+    |> Map.get("id")
   end
 
   defp create_game(room, attributes \\ %{}) do
@@ -68,7 +72,14 @@ defmodule Poll20Web.ApiTest do
         member: room.member,
         attributes:
           Map.merge(
-            %{name: "Catan", players_min: 3, players_max: 4, match_all_owners: false, owners: [], room_id: room.id},
+            %{
+              name: "Catan",
+              players_min: 3,
+              players_max: 4,
+              match_all_owners: false,
+              owners: [],
+              room_id: room.id
+            },
             attributes
           )
       )
@@ -90,12 +101,13 @@ defmodule Poll20Web.ApiTest do
       code = room["attributes"]["invite_code"]
 
       {status, body} =
-        api(:patch, "/rooms/#{room["id"]}/join?invite_code=#{code}&include=members",
-          attributes: %{name: "Alice"}
-        )
+        api(:patch, "/rooms/#{room["id"]}/join?invite_code=#{code}&include=members", attributes: %{name: "Alice"})
 
       assert status in [200, 201]
-      assert [%{"attributes" => %{"name" => "Alice", "room_id" => room_id}}] = included(body, "member")
+
+      assert [%{"attributes" => %{"name" => "Alice", "room_id" => room_id}}] =
+               included(body, "member")
+
       assert room_id == room["id"]
       assert [%{"id" => _}] = body["data"]["relationships"]["members"]["data"]
     end
@@ -104,7 +116,9 @@ defmodule Poll20Web.ApiTest do
       {201, %{"data" => room}} = api(:post, "/rooms", attributes: %{name: "R"})
 
       {status, _} =
-        api(:patch, "/rooms/#{room["id"]}/join?invite_code=#{Ecto.UUID.generate()}&include=members",
+        api(
+          :patch,
+          "/rooms/#{room["id"]}/join?invite_code=#{Ecto.UUID.generate()}&include=members",
           attributes: %{name: "Mallory"}
         )
 
@@ -130,7 +144,9 @@ defmodule Poll20Web.ApiTest do
       room = create_room()
       game = create_game(room, %{owners: [room.member]})
 
-      {status, body} = api(:get, "/rooms/#{room.id}?include=members,games.owners", member: room.member)
+      {status, body} =
+        api(:get, "/rooms/#{room.id}?include=members,games.owners", member: room.member)
+
       assert status == 200
       assert body["data"]["attributes"]["invite_code"] == room.invite_code
       assert [%{"id" => member_id}] = included(body, "member")
@@ -152,7 +168,9 @@ defmodule Poll20Web.ApiTest do
       room = create_room()
       bob = join(room, "Bob")
 
-      {status, _} = api(:patch, "/rooms/#{room.id}/kick", member: room.member, attributes: %{member_id: bob})
+      {status, _} =
+        api(:patch, "/rooms/#{room.id}/kick", member: room.member, attributes: %{member_id: bob})
+
       assert status in [200, 201]
 
       {200, body} = api(:get, "/rooms/#{room.id}?include=members", member: room.member)
@@ -179,7 +197,12 @@ defmodule Poll20Web.ApiTest do
 
       {200, body} = api(:get, "/rooms/#{room.id}?include=members", member: room.member)
       ids = Enum.map(body["data"]["relationships"]["members"]["data"], & &1["id"])
-      names = Enum.map(ids, fn id -> Enum.find(included(body, "member"), &(&1["id"] == id))["attributes"]["name"] end)
+
+      names =
+        Enum.map(ids, fn id ->
+          Enum.find(included(body, "member"), &(&1["id"] == id))["attributes"]["name"]
+        end)
+
       assert names == ["Alice", "Bob", "Carol"]
     end
   end
@@ -203,7 +226,14 @@ defmodule Poll20Web.ApiTest do
       {status, _} =
         api(:post, "/games",
           member: other.member,
-          attributes: %{name: "Sneaky", players_min: 1, players_max: "", match_all_owners: false, owners: [], room_id: room.id}
+          attributes: %{
+            name: "Sneaky",
+            players_min: 1,
+            players_max: "",
+            match_all_owners: false,
+            owners: [],
+            room_id: room.id
+          }
         )
 
       assert status == 403
@@ -217,7 +247,13 @@ defmodule Poll20Web.ApiTest do
       {status, %{"data" => updated}} =
         api(:patch, "/games/#{game["id"]}",
           member: room.member,
-          attributes: %{name: "Catan 2", players_min: 2, players_max: "", match_all_owners: true, owners: [bob]}
+          attributes: %{
+            name: "Catan 2",
+            players_min: 2,
+            players_max: "",
+            match_all_owners: true,
+            owners: [bob]
+          }
         )
 
       assert status in [200, 201]
@@ -281,7 +317,10 @@ defmodule Poll20Web.ApiTest do
       game = create_game(room)
 
       {status, _} =
-        api(:post, "/votes", member: room.member, attributes: %{game_id: game["id"], member_id: bob, value: 1})
+        api(:post, "/votes",
+          member: room.member,
+          attributes: %{game_id: game["id"], member_id: bob, value: 1}
+        )
 
       assert status == 403
     end
@@ -291,7 +330,10 @@ defmodule Poll20Web.ApiTest do
       game = create_game(room)
 
       {status, _} =
-        api(:post, "/votes", member: room.member, attributes: %{game_id: game["id"], member_id: room.member, value: 5})
+        api(:post, "/votes",
+          member: room.member,
+          attributes: %{game_id: game["id"], member_id: room.member, value: 5}
+        )
 
       assert status == 400
     end
@@ -299,7 +341,12 @@ defmodule Poll20Web.ApiTest do
     test "votes from other rooms are not listed" do
       room = create_room()
       game = create_game(room)
-      {201, _} = api(:post, "/votes", member: room.member, attributes: %{game_id: game["id"], member_id: room.member, value: 1})
+
+      {201, _} =
+        api(:post, "/votes",
+          member: room.member,
+          attributes: %{game_id: game["id"], member_id: room.member, value: 1}
+        )
 
       other = create_room("Other", "Eve")
       assert {200, %{"data" => []}} = api(:get, "/votes?include=member", member: other.member)
@@ -331,7 +378,11 @@ defmodule Poll20Web.ApiTest do
       {201, %{"data" => second}} =
         api(:post, "/sessions",
           member: room.member,
-          attributes: %{game_id: game["id"], comment: "", attendees: [%{member_id: bob, winner: true, vote: nil}]}
+          attributes: %{
+            game_id: game["id"],
+            comment: "",
+            attendees: [%{member_id: bob, winner: true, vote: nil}]
+          }
         )
 
       {status, body} =
@@ -355,7 +406,11 @@ defmodule Poll20Web.ApiTest do
       assert related(body, alice_attendance, "member")["attributes"]["name"] == "Alice"
 
       assert [%{"attributes" => %{"name" => "Catan"}}] = included(body, "game")
-      assert included(body, "member") |> Enum.map(& &1["attributes"]["name"]) |> Enum.sort() == ["Alice", "Bob"]
+
+      member_names =
+        body |> included("member") |> Enum.map(& &1["attributes"]["name"]) |> Enum.sort()
+
+      assert member_names == ["Alice", "Bob"]
 
       {status, _} = api(:delete, "/sessions/#{session["id"]}", member: room.member)
       assert status in [200, 204]
@@ -372,7 +427,11 @@ defmodule Poll20Web.ApiTest do
       {201, _} =
         api(:post, "/sessions",
           member: room.member,
-          attributes: %{game_id: game["id"], comment: "", attendees: [%{member_id: room.member, winner: true, vote: 1}]}
+          attributes: %{
+            game_id: game["id"],
+            comment: "",
+            attendees: [%{member_id: room.member, winner: true, vote: 1}]
+          }
         )
 
       other = create_room("Other", "Eve")
@@ -385,7 +444,12 @@ defmodule Poll20Web.ApiTest do
       room = create_room()
       other = create_room("Other", "Eve")
 
-      {status, _} = api(:patch, "/members/#{room.member}", member: room.member, attributes: %{room_id: other.id})
+      {status, _} =
+        api(:patch, "/members/#{room.member}",
+          member: room.member,
+          attributes: %{room_id: other.id}
+        )
+
       assert status in 400..499
 
       {200, body} = api(:get, "/rooms/#{other.id}?include=members", member: other.member)
@@ -397,7 +461,9 @@ defmodule Poll20Web.ApiTest do
       other = create_room("Other", "Eve")
       game = create_game(room)
 
-      {status, _} = api(:patch, "/games/#{game["id"]}", member: room.member, attributes: %{room_id: other.id})
+      {status, _} =
+        api(:patch, "/games/#{game["id"]}", member: room.member, attributes: %{room_id: other.id})
+
       assert status in 400..499
 
       {200, body} = api(:get, "/rooms/#{room.id}?include=games", member: room.member)
@@ -412,11 +478,22 @@ defmodule Poll20Web.ApiTest do
       other_game = create_game(room, %{name: "Other"})
 
       {201, %{"data" => vote}} =
-        api(:post, "/votes", member: room.member, attributes: %{game_id: game["id"], member_id: room.member, value: 1})
+        api(:post, "/votes",
+          member: room.member,
+          attributes: %{game_id: game["id"], member_id: room.member, value: 1}
+        )
 
-      {status, _} = api(:patch, "/votes/#{vote["id"]}", member: room.member, attributes: %{member_id: bob})
+      {status, _} =
+        api(:patch, "/votes/#{vote["id"]}", member: room.member, attributes: %{member_id: bob})
+
       assert status in 400..499
-      {status, _} = api(:patch, "/votes/#{vote["id"]}", member: room.member, attributes: %{game_id: other_game["id"]})
+
+      {status, _} =
+        api(:patch, "/votes/#{vote["id"]}",
+          member: room.member,
+          attributes: %{game_id: other_game["id"]}
+        )
+
       assert status in 400..499
 
       {200, %{"data" => [listed]}} = api(:get, "/votes", member: room.member)
@@ -427,7 +504,12 @@ defmodule Poll20Web.ApiTest do
     test "the invite code cannot be set through a room update" do
       room = create_room()
 
-      {status, _} = api(:patch, "/rooms/#{room.id}", member: room.member, attributes: %{invite_code: Ecto.UUID.generate()})
+      {status, _} =
+        api(:patch, "/rooms/#{room.id}",
+          member: room.member,
+          attributes: %{invite_code: Ecto.UUID.generate()}
+        )
+
       assert status in 400..499
 
       {200, body} = api(:get, "/rooms/#{room.id}", member: room.member)
@@ -438,7 +520,9 @@ defmodule Poll20Web.ApiTest do
       room = create_room()
       game = create_game(room, %{owners: [room.member]})
 
-      {status, _} = api(:patch, "/games/#{game["id"]}", member: room.member, attributes: %{name: "Renamed"})
+      {status, _} =
+        api(:patch, "/games/#{game["id"]}", member: room.member, attributes: %{name: "Renamed"})
+
       assert status in [200, 201]
 
       {200, body} = api(:get, "/rooms/#{room.id}?include=games.owners", member: room.member)
@@ -455,11 +539,18 @@ defmodule Poll20Web.ApiTest do
       {201, %{"data" => session}} =
         api(:post, "/sessions",
           member: room.member,
-          attributes: %{game_id: game["id"], comment: "", attendees: [%{member_id: room.member, winner: true, vote: 1}]}
+          attributes: %{
+            game_id: game["id"],
+            comment: "",
+            attendees: [%{member_id: room.member, winner: true, vote: 1}]
+          }
         )
 
       {status, %{"data" => updated}} =
-        api(:patch, "/sessions/#{session["id"]}", member: room.member, attributes: %{comment: "edited"})
+        api(:patch, "/sessions/#{session["id"]}",
+          member: room.member,
+          attributes: %{comment: "edited"}
+        )
 
       assert status in [200, 201]
       assert updated["attributes"]["comment"] == "edited"

@@ -1,4 +1,5 @@
 defmodule Poll20.SessionMember do
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     data_layer: AshPostgres.DataLayer,
@@ -10,6 +11,17 @@ defmodule Poll20.SessionMember do
   # No routes: only exposed as included `attendees` of sessions
   json_api do
     type "session_member"
+  end
+
+  postgres do
+    table "session_members"
+    repo Poll20.Repo
+    migration_types vote: :smallint
+
+    references do
+      reference :session, on_delete: :delete
+      reference :member, on_delete: :delete
+    end
   end
 
   actions do
@@ -27,6 +39,10 @@ defmodule Poll20.SessionMember do
     end
   end
 
+  validations do
+    validate one_of(:vote, [-1, 1])
+  end
+
   attributes do
     uuid_primary_key :id
 
@@ -41,10 +57,6 @@ defmodule Poll20.SessionMember do
     end
   end
 
-  validations do
-    validate one_of(:vote, [-1, 1])
-  end
-
   relationships do
     belongs_to :session, Poll20.Session do
       allow_nil? false
@@ -55,17 +67,6 @@ defmodule Poll20.SessionMember do
       allow_nil? false
       public? true
       attribute_writable? true
-    end
-  end
-
-  postgres do
-    table "session_members"
-    repo Poll20.Repo
-    migration_types vote: :smallint
-
-    references do
-      reference :session, on_delete: :delete
-      reference :member, on_delete: :delete
     end
   end
 end

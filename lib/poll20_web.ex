@@ -19,7 +19,6 @@ defmodule Poll20Web do
   def controller do
     quote do
       use Phoenix.Controller, formats: [:html, :json]
-
       use Gettext, backend: Poll20.Gettext
 
       import Plug.Conn
@@ -30,8 +29,8 @@ defmodule Poll20Web do
     quote do
       use Phoenix.Router
 
-      import Plug.Conn
       import Phoenix.Controller
+      import Plug.Conn
     end
   end
 

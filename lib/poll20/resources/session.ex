@@ -1,4 +1,5 @@
 defmodule Poll20.Session do
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     data_layer: AshPostgres.DataLayer,
@@ -9,12 +10,11 @@ defmodule Poll20.Session do
 
   json_api do
     type "session"
-    includes [
-      attendees: [
-        member: []
-      ],
-      game: []
-    ]
+
+    includes attendees: [
+               member: []
+             ],
+             game: []
 
     routes do
       base "/sessions"
@@ -24,6 +24,15 @@ defmodule Poll20.Session do
       post :create
       patch :update
       delete :destroy
+    end
+  end
+
+  postgres do
+    table "sessions"
+    repo Poll20.Repo
+
+    references do
+      reference :game, on_delete: :delete
     end
   end
 
@@ -63,7 +72,7 @@ defmodule Poll20.Session do
       default ""
     end
 
-    timestamps(public?: true)
+    timestamps public?: true
   end
 
   relationships do
@@ -75,15 +84,6 @@ defmodule Poll20.Session do
 
     has_many :attendees, Poll20.SessionMember do
       public? true
-    end
-  end
-
-  postgres do
-    table "sessions"
-    repo Poll20.Repo
-
-    references do
-      reference :game, on_delete: :delete
     end
   end
 end

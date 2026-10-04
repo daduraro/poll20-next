@@ -1,4 +1,5 @@
 defmodule Poll20.Game do
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     data_layer: AshPostgres.DataLayer,
@@ -9,9 +10,7 @@ defmodule Poll20.Game do
 
   json_api do
     type "game"
-    includes [
-      owners: []
-    ]
+    includes owners: []
 
     routes do
       base "/games"
@@ -21,6 +20,15 @@ defmodule Poll20.Game do
       post :create
       patch :update
       delete :destroy
+    end
+  end
+
+  postgres do
+    table "games"
+    repo Poll20.Repo
+
+    references do
+      reference :room, on_delete: :delete
     end
   end
 
@@ -71,13 +79,13 @@ defmodule Poll20.Game do
     attribute :players_min, :integer do
       allow_nil? true
       public? true
-      constraints [min: 1]
+      constraints min: 1
     end
 
     attribute :players_max, :integer do
       allow_nil? true
       public? true
-      constraints [min: 1]
+      constraints min: 1
     end
 
     attribute :match_all_owners, :boolean do
@@ -101,15 +109,6 @@ defmodule Poll20.Game do
       through Poll20.GameOwner
       source_attribute_on_join_resource :game_id
       destination_attribute_on_join_resource :member_id
-    end
-  end
-
-  postgres do
-    table "games"
-    repo Poll20.Repo
-
-    references do
-      reference :room, on_delete: :delete
     end
   end
 end

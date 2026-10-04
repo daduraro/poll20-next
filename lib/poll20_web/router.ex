@@ -4,6 +4,7 @@ defmodule Poll20Web.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug Poll20Web.Plugs.Actor
+
     plug CORSPlug,
       origin: ["*"],
       headers: [
@@ -36,5 +37,4 @@ defmodule Poll20Web.Router do
     pipe_through :web
     get "/*path", Poll20Web.PageController, :index
   end
-
 end

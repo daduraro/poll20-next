@@ -1,7 +1,18 @@
 defmodule Poll20.GameOwner do
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     data_layer: AshPostgres.DataLayer
+
+  postgres do
+    table "game_owners"
+    repo Poll20.Repo
+
+    references do
+      reference :member, on_delete: :delete
+      reference :game, on_delete: :delete
+    end
+  end
 
   actions do
     default_accept :*
@@ -24,16 +35,6 @@ defmodule Poll20.GameOwner do
       allow_nil? false
       public? true
       attribute_writable? true
-    end
-  end
-
-  postgres do
-    table "game_owners"
-    repo Poll20.Repo
-
-    references do
-      reference :member, on_delete: :delete
-      reference :game, on_delete: :delete
     end
   end
 end

@@ -1,4 +1,5 @@
 defmodule Poll20.Room do
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     data_layer: AshPostgres.DataLayer,
@@ -7,26 +8,13 @@ defmodule Poll20.Room do
       Ash.Policy.Authorizer
     ]
 
-  policies do
-    bypass action_type(:create) do
-      authorize_if always()
-    end
-
-    # need to specify types since the previous bypass for create doesn't work with AshJsonApi
-    policy action_type([:read, :update, :destroy]) do
-      authorize_if expr(exists(members, id == ^actor(:id)))
-      authorize_if expr(invite_code == ^actor(:invite_code)) # ugly but way simpler
-    end
-  end
-
   json_api do
     type "room"
-    includes [
-      members: [],
-      games: [
-        owners: []
-      ],
-    ]
+
+    includes members: [],
+             games: [
+               owners: []
+             ]
 
     routes do
       base "/rooms"
@@ -39,6 +27,11 @@ defmodule Poll20.Room do
       patch :join, route: "/:id/join"
       patch :kick, route: "/:id/kick"
     end
+  end
+
+  postgres do
+    table "rooms"
+    repo Poll20.Repo
   end
 
   actions do
@@ -60,9 +53,10 @@ defmodule Poll20.Room do
         allow_nil? false
       end
 
-      change manage_relationship :name, :members,
-        value_is_key: :name,
-        type: :create
+      change manage_relationship(:name, :members,
+               value_is_key: :name,
+               type: :create
+             )
     end
 
     update :kick do
@@ -72,11 +66,26 @@ defmodule Poll20.Room do
         allow_nil? false
       end
 
-      change manage_relationship :member_id, :members,
-        type: :remove,
-        on_match: :destroy,
-        # membership depends on room
-        authorize?: false
+      change manage_relationship(:member_id, :members,
+               type: :remove,
+               on_match: :destroy,
+               # membership depends on room
+               authorize?: false
+             )
+    end
+  end
+
+  policies do
+    bypass action_type(:create) do
+      authorize_if always()
+    end
+
+    # need to specify types since the previous bypass for create doesn't work with AshJsonApi
+    policy action_type([:read, :update, :destroy]) do
+      authorize_if expr(exists(members, id == ^actor(:id)))
+
+      # ugly but way simpler
+      authorize_if expr(invite_code == ^actor(:invite_code))
     end
   end
 
@@ -107,10 +116,5 @@ defmodule Poll20.Room do
     has_many :games, Poll20.Game do
       public? true
     end
-  end
-
-  postgres do
-    table "rooms"
-    repo Poll20.Repo
   end
 end

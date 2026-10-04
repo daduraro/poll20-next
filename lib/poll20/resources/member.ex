@@ -1,5 +1,6 @@
 defmodule Poll20.Member do
   # The primary read sorts members by join order on purpose, also when loaded as a relationship
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     primary_read_warning?: false,
@@ -11,9 +12,7 @@ defmodule Poll20.Member do
 
   json_api do
     type "member"
-    includes [
-      room: []
-    ]
+    includes room: []
 
     routes do
       base "/members"
@@ -21,6 +20,15 @@ defmodule Poll20.Member do
       get :read
       index :read
       patch :update
+    end
+  end
+
+  postgres do
+    table "members"
+    repo Poll20.Repo
+
+    references do
+      reference :room, on_delete: :delete
     end
   end
 
@@ -61,15 +69,6 @@ defmodule Poll20.Member do
       allow_nil? false
       public? true
       attribute_writable? true
-    end
-  end
-
-  postgres do
-    table "members"
-    repo Poll20.Repo
-
-    references do
-      reference :room, on_delete: :delete
     end
   end
 end

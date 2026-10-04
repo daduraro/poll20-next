@@ -1,4 +1,5 @@
 defmodule Poll20.Vote do
+  @moduledoc false
   use Ash.Resource,
     domain: Poll20,
     data_layer: AshPostgres.DataLayer,
@@ -9,10 +10,9 @@ defmodule Poll20.Vote do
 
   json_api do
     type "vote"
-    includes [
-      game: [],
-      member: []
-    ]
+
+    includes game: [],
+             member: []
 
     routes do
       base "/votes"
@@ -22,6 +22,17 @@ defmodule Poll20.Vote do
       post :create
       patch :update
       delete :destroy
+    end
+  end
+
+  postgres do
+    table "votes"
+    repo Poll20.Repo
+    migration_types value: :smallint
+
+    references do
+      reference :game, on_delete: :delete
+      reference :member, on_delete: :delete
     end
   end
 
@@ -45,6 +56,10 @@ defmodule Poll20.Vote do
     end
   end
 
+  validations do
+    validate one_of(:value, [-1, 1])
+  end
+
   attributes do
     uuid_primary_key :id
 
@@ -53,11 +68,7 @@ defmodule Poll20.Vote do
       public? true
     end
 
-    timestamps(public?: true)
-  end
-
-  validations do
-    validate one_of(:value, [-1, 1])
+    timestamps public?: true
   end
 
   relationships do
@@ -71,17 +82,6 @@ defmodule Poll20.Vote do
       allow_nil? false
       public? true
       attribute_writable? true
-    end
-  end
-
-  postgres do
-    table "votes"
-    repo Poll20.Repo
-    migration_types value: :smallint
-
-    references do
-      reference :game, on_delete: :delete
-      reference :member, on_delete: :delete
     end
   end
 end

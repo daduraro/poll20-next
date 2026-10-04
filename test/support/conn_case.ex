@@ -19,9 +19,9 @@ defmodule Poll20Web.ConnCase do
 
   using do
     quote do
+      import Phoenix.ConnTest
       # Import conveniences for testing with connections
       import Plug.Conn
-      import Phoenix.ConnTest
       import Poll20Web.ConnCase
 
       # The default endpoint for testing

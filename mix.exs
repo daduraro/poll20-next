@@ -46,7 +46,8 @@ defmodule Poll20.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.4"},
       {:igniter, "~> 0.8", only: [:dev, :test]},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:styler, "~> 1.12", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -56,7 +57,7 @@ defmodule Poll20.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "api.spec": &api_spec/1,
+      "api.spec": &api_spec/1
     ]
   end
 
