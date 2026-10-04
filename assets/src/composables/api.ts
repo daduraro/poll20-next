@@ -88,6 +88,10 @@ const apiFetch = createFetch({
 interface ApiReturn<T> {
   entity?: T
   entities?: T[]
+  // from the raw response; `next` is null on the last page of a paginated list
+  links?: {
+    next?: string | null
+  }
 }
 
 export function useApi<T>(

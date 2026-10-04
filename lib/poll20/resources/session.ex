@@ -38,7 +38,13 @@ defmodule Poll20.Session do
 
   actions do
     default_accept :*
-    defaults [:read, :destroy]
+    defaults [:destroy]
+
+    read :read do
+      primary? true
+      # optional: the statistics page loads every session at once
+      pagination offset?: true, required?: false
+    end
 
     create :create do
       argument :attendees, {:array, :map} do

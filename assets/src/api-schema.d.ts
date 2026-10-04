@@ -860,8 +860,6 @@ export interface paths {
                     sort?: string;
                     /** @description Paginates the response with the limit and offset or keyset pagination. */
                     page?: {
-                        after?: string;
-                        before?: string;
                         /** @default false */
                         count?: boolean;
                         limit?: number;
