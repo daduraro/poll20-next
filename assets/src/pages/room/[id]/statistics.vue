@@ -47,11 +47,24 @@ const filteredSessions = computed(
   }),
 )
 
-const style = getComputedStyle(document.body)
-const gridStyle = {
-  color: style.getPropertyValue('--border-color'),
-  borderColor: style.getPropertyValue('--border-color'),
+// chart.js draws on a canvas, so it can't use the css colors directly: read them from the page,
+// again after every theme change (the text color is the layout's, the rest are css variables)
+const chartsContainer = ref<HTMLElement | null>(null)
+const themeColors = ref({ text: '', border: '', main: '' })
+function readThemeColors() {
+  const rootStyle = getComputedStyle(document.documentElement)
+  themeColors.value = {
+    text: chartsContainer.value ? getComputedStyle(chartsContainer.value).color : '',
+    border: rootStyle.getPropertyValue('--border-color'),
+    main: rootStyle.getPropertyValue('--main-color'),
+  }
 }
+onMounted(readThemeColors)
+watch(isDark, readThemeColors, { flush: 'post' })
+const gridStyle = computed(() => ({
+  color: themeColors.value.border,
+  borderColor: themeColors.value.border,
+}))
 
 const charts = ref([] as any[])
 
@@ -78,19 +91,22 @@ charts.value.push(computed(() => {
         {
           label: t('Times played'),
           data: games.map(game => game.count),
-          backgroundColor: style.getPropertyValue('--main-color'),
+          backgroundColor: themeColors.value.main,
         },
       ],
     },
     options: {
       responsive: true,
+      color: themeColors.value.text,
       scales: {
         x: {
-          grid: gridStyle,
+          grid: gridStyle.value,
+          ticks: { color: themeColors.value.text },
         },
         y: {
-          grid: gridStyle,
+          grid: gridStyle.value,
           ticks: {
+            color: themeColors.value.text,
             precision: 0,
           },
         },
@@ -138,18 +154,21 @@ charts.value.push(computed(() => {
         {
           label: t('Winrate'),
           data: members.map(member => (member.winrate * 100)),
-          backgroundColor: style.getPropertyValue('--main-color'),
+          backgroundColor: themeColors.value.main,
         },
       ],
     },
     options: {
       responsive: true,
+      color: themeColors.value.text,
       scales: {
         x: {
-          grid: gridStyle,
+          grid: gridStyle.value,
+          ticks: { color: themeColors.value.text },
         },
         y: {
-          grid: gridStyle,
+          grid: gridStyle.value,
+          ticks: { color: themeColors.value.text },
           min: 0,
           max: 100,
         },
@@ -171,7 +190,7 @@ charts.value.push(computed(() => {
   <div v-if="!data">
     {{ t('Loading...') }}
   </div>
-  <div>
+  <div ref="chartsContainer">
     <div class="flex justify-end">
       <span class="flex-grow" />
       <button
