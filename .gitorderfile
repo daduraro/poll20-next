@@ -1,0 +1,29 @@
+# Order of files in diffs (`git config diff.orderFile .gitorderfile` to enable).
+# A path goes with the first pattern it matches, unmatched paths go last; `*` also matches `/`.
+
+# hand-written code
+lib
+config
+priv/repo
+test
+assets/src/*/*
+assets/src/*.vue
+assets/src/main.ts
+assets/src/types.ts
+assets/scripts
+e2e/tests
+
+# tooling and configuration
+mix.exs
+Dockerfile*
+compose*
+assets/package.json
+assets/*.config.*
+e2e/*.config.*
+
+# translations and generated files
+assets/locales
+priv/openapi.json
+assets/src/*.d.ts
+assets/src/api-default-fields.ts
+*lock*
