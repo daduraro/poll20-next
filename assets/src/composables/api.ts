@@ -1,4 +1,3 @@
-import { ComputedRef } from "vue";
 import { createFetch, UseFetchOptions } from "@vueuse/core";
 import { MaybeArray, UUID } from "~/types"
 import NProgress from 'nprogress'
@@ -82,9 +81,10 @@ const apiFetch = createFetch({
   }
 })
 
+// set by afterFetch: `entity` for single resources, `entities` for lists
 type ApiReturn<T> = {
-  entity: ComputedRef<T|undefined>;
-  entities: ComputedRef<T[]|undefined>;
+  entity?: T;
+  entities?: T[];
 }
 
 export function useApi<T>(
@@ -102,5 +102,5 @@ export function useApi<T>(
       attributes: payload.attributes
     }
   }
-  return apiFetch<ApiReturn<T>>(url, options)[method](body).json()
+  return apiFetch(url, options)[method](body).json<ApiReturn<T>>()
 }

@@ -5,7 +5,8 @@ import IconStatistics from '~icons/carbon/chart-pie'
 import IconGames from '~icons/fluent/library-16-filled'
 import IconHistory from '~icons/material-symbols/history-rounded'
 
-const { membership } = useUserStore()
+// only rendered by room.vue when there is a membership
+const membership = useUserStore().membership!
 const { t } = useI18n()
 
 const links = computed(() => [

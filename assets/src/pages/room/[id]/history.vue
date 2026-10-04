@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { formatRelative } from 'date-fns'
 import { compose, sortBy } from 'ramda'
-import { Session } from '~/types'
+import { Attendee, Member, Session } from '~/types'
 
 const route = useRoute()
 const { t } = useI18n()
-const { data } = useApi<Session>('get', 'sessions', {
+type SessionWithMembers = Session & { attendees: (Attendee & { member: Member })[] }
+const { data } = useApi<SessionWithMembers>('get', 'sessions', {
   query: {
     include: ['attendees.member', 'game'],
     sort: '-inserted_at',
   }
 })
 
-const sessions = computed(() => (data?.value.entities ?? []).map(session => {
+const sessions = computed(() => (data.value?.entities ?? []).map(session => {
   const attendees = sortBy(attendee => attendee.member.name, session.attendees)
   const winners = attendees.filter(attendee => attendee.winner)
   return {
@@ -27,7 +28,7 @@ const { isRevealed, reveal, confirm, onConfirm, revealArguments } = compose(
   withTiming(),
 )(useConfirmDialog())
 onConfirm((index: number) => {
-  const [removed] = data.value.entities.splice(index, 1)
+  const [removed] = data.value!.entities!.splice(index, 1)
   triggerRef(data) // otherwise it doesn't pick it up because it's a shallowRef
   useApi('delete', `sessions/${removed.id}`)
 })

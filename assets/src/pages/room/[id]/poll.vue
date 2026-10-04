@@ -3,8 +3,10 @@ import seedrandom from 'seedrandom'
 import { type Vote } from '~/types'
 import { sortByTiered } from '~/lib/utils/array'
 import { equals, fromPairs, groupBy, indexBy, prop, sortBy } from 'ramda';
-import { startOfDay } from 'date-fns'
 import { Game, Member, Session, Attendee } from '~/types';
+
+// votes created locally have no id until the api responds
+type LocalVote = Vote & { handle?: PromiseLike<unknown> }
 
 const route = useRoute()
 const filters = useLocalStorage(`${route.path}.filters`, {
@@ -59,8 +61,8 @@ const gamesActive = computed(
 const gamesFilteredCount = computed(() => games.value.length - gamesActive.value.length)
 const openedGameIds = ref<Set<Game['id']>>(new Set())
 
-const votes = ref<Vote[]>([])
-const votesVisible = computed<Vote & {active: boolean}>(
+const votes = ref<LocalVote[]>([])
+const votesVisible = computed<(Vote & {active: boolean})[]>(
   () => sortByTiered(
     vote => [
       // first active, then newest
@@ -75,13 +77,10 @@ const votesVisible = computed<Vote & {active: boolean}>(
 )
 const votesByGame = computed<Record<Game['id'], Vote[]>>(() => ({
   ...fromPairs(games.value.map(game => [game.id, []])),
-  ...groupBy(prop('game_id'), votesVisible.value)
+  ...groupBy(prop('game_id'), votesVisible.value) as Record<Game['id'], Vote[]>
 }))
 const votesOwn = computed(() => votes.value.filter(vote => vote.member_id === membership?.member_id))
-const votesOwnByGame = computed(() => ({
-  ...fromPairs(games.value.map(game => [game.id, []])),
-  ...indexBy(prop('game_id'), votesOwn.value)
-}))
+const votesOwnByGame = computed<Partial<Record<Game['id'], Vote>>>(() => indexBy(prop('game_id'), votesOwn.value))
 const votesActive = computed(
   () => filters.value.onlyPresentVotes
     ? votes.value.filter(vote => membersActive.value.some(item => item.id === vote.member_id))
@@ -106,7 +105,7 @@ const scoresByGame = computed(
 
 const gamesSorted = computed(() => {
   // ensure all members see the same sort result when votes are tied
-  const randomGenerator = seedrandom((new Date).getDate())
+  const randomGenerator = seedrandom(String((new Date).getDate()))
   return sortByTiered(game => [
       // first by score
       -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]),
@@ -132,13 +131,13 @@ const isFetching = ref(false)
 async function fetchVotes(manual = false) {
   refreshHandle && clearTimeout(refreshHandle)
   isFetching.value = true
-  const { data } = await useApi<Vote[]>('get', 'votes', { query: { include: 'member' }})
-  const newVotes = data.value.entities!
+  const { data } = await useApi<Vote & { member: Member }>('get', 'votes', { query: { include: 'member' }})
+  const newVotes = data.value!.entities!
   membership!.room.members = membership!.room.members.concat(newVotes
     .filter(vote => !members.value.some(member => member.id === vote.member_id))
     .map(vote => vote.member))
   
-  votes.value = data.value.entities!
+  votes.value = newVotes
   isFetching.value = false
   refreshHandle = setTimeout(fetchVotes, refreshRate)
   if (!manual) {
@@ -171,7 +170,7 @@ async function vote(game_id: Game['id'], value: Vote['value']|undefined) {
     votes.value.splice(votes.value.indexOf(current), 1)
     useApi<Vote>('delete', `votes/${current.id}`)
   }
-  else if (current) {
+  else if (current && value !== undefined) {
     current.value = value
     useApi<Vote>('patch', `votes/${current.id}`, { attributes: { value }})
   }
@@ -187,7 +186,7 @@ async function vote(game_id: Game['id'], value: Vote['value']|undefined) {
 const loggedGameId = ref<Game['id']|null>(null)
 const sessionGameId = ref<Game['id']|null>(null)
 const sessionValue = ref({
-  attendees: [] as Attendee[],
+  attendees: [] as (Attendee & { name: string })[],
   comment: '',
 })
 const sessionFormTitle = computed(() => sessionGameId.value ? t('Log session of {name}', gamesById.value[sessionGameId.value]) : '')
@@ -364,11 +363,11 @@ async function saveSession() {
             </button>
             <button
               v-aria-title="t('Vote down')"
-              :class="{ active: votesOwnByGame[game.id].value === -1 }"
+              :class="{ active: votesOwnByGame[game.id]?.value === -1 }"
               class="icon-btn"
-              @click="() => vote(game.id, votesOwnByGame[game.id].value === -1 ? undefined : -1)"
+              @click="() => vote(game.id, votesOwnByGame[game.id]?.value === -1 ? undefined : -1)"
             >
-              <i-fa-arrow-down :class="{'vote-down': votesOwnByGame[game.id].value === -1 }"/>
+              <i-fa-arrow-down :class="{'vote-down': votesOwnByGame[game.id]?.value === -1 }"/>
             </button>
           </div>
         </div>

@@ -36,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
 
   async function refreshMembership(current: Membership|undefined, previous: Membership|undefined = undefined) {
     if (current && !previous) {
-      const { data } = await useApi<Room>('get', `rooms/${current.room.id}`, {
+      const { data } = await useApi<Membership['room']>('get', `rooms/${current.room.id}`, {
         query: {
           include: [
             'members',
@@ -44,7 +44,10 @@ export const useUserStore = defineStore('user', () => {
           ]
         }
       })
-      memberships.value[memberships.value.findIndex(match => match.member_id === current!.member_id)].room = data.value.entity
+      const room = data.value?.entity
+      if (room) {
+        memberships.value[memberships.value.findIndex(match => match.member_id === current!.member_id)].room = room
+      }
     }
   }
 

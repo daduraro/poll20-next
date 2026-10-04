@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { withArguments, withTiming } from '~/composables/confirm'
-import { compose, range, sortBy } from 'ramda'
+import { range, sortBy } from 'ramda'
 import {
   type Game,
   type Member
@@ -14,13 +14,13 @@ const gamesSorted = computed(() => sortBy(game => game.name.toLowerCase(), games
 const playerNumberOptions = range(1, 21)
 
 const editForm = ref({
-  title: computed(() => editForm.value.id ? t('Edit game') : t('Add game')),
+  title: computed((): string => editForm.value.id ? t('Edit game') : t('Add game')),
   id: null as Game['id']|null,
   busy: false,
   value: {
     name: '',
     owners: [] as Member['id'][],
-    players_max: null,
+    players_max: null as number|null,
     match_all_owners: false,
   },
   definition: [
@@ -58,21 +58,22 @@ const editForm = ref({
     nextTick(() => document.querySelector<HTMLInputElement>('#form input')!.focus())
   },
   async submit() {
-    editForm.busy = true
-    const attributes = { ...editForm.value.value }
     const patch = {
-        ...attributes,
-        owners: editForm.value.value.owners.map(id => ({ id }))
+        ...editForm.value.value,
+        owners: membership!.room.members.filter(member => editForm.value.value.owners.includes(member.id))
     }
 
     // api complains about nulls
-    attributes.players_max = attributes.players_max ?? ""
+    const attributes = {
+      ...editForm.value.value,
+      players_max: editForm.value.value.players_max ?? "",
+    }
 
     const games = membership!.room.games
     const index = games.findIndex(game => game.id === editForm.value.id)
     if (index !== -1) {
       useApi<Game>('patch', `games/${editForm.value.id}`, { attributes })
-      games.splice(index, 1, { id: games[index].id, ...patch })
+      games.splice(index, 1, { ...games[index], ...patch })
     }
     else {
       editForm.value.busy = true
@@ -83,17 +84,14 @@ const editForm = ref({
         }
       })
       editForm.value.busy = false
-      games.push({ id: data.value.entity!.id, ...patch })
+      games.push({ id: data.value!.entity!.id, players_min: null, ...patch })
     }
     editForm.value.reset()
   },
 })
 
 const refGames = ref<HTMLUListElement|null>(null)
-const { reveal, revealArguments, isRevealed, confirm, onConfirm } = compose(
-  withTiming(),
-  withArguments()
-)(useConfirmDialog())
+const { reveal, revealArguments, isRevealed, confirm, onConfirm } = withTiming()(withArguments()(useConfirmDialog()))
 onConfirm((id: Game['id']) => {
   useApi<Game>('delete', `games/${id}`)
   membership!.room.games.splice(

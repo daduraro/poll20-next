@@ -32,7 +32,8 @@ export type Game = {
 
 export type Session = {
   id: UUID;
-  created_at: string;
+  inserted_at: string;
+  comment: string|null;
   game: Game;
   attendees: Attendee[];
 }
@@ -40,12 +41,12 @@ export type Session = {
 export type Vote = {
   id: UUID;
   game_id: Game['id'];
-  member_id: Game['id'];
+  member_id: Member['id'];
   value: -1|1;
-  created_at: string;
+  inserted_at: string;
 }
 export type Attendee = {
   member_id: Member['id'];
   winner: boolean;
-  vote: Vote['value'];
+  vote: Vote['value']|null;
 }

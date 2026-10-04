@@ -6,13 +6,14 @@ const route = useRoute('/join/[invite_code]')
 const { join: addMembership, memberships } = useUserStore()
 
 // load room
-const { data, onFetchResponse } = useApi<Room>('get', 'rooms', {
+type RoomWithMembers = Room & { members: Member[] }
+const { data, onFetchResponse } = useApi<RoomWithMembers>('get', 'rooms', {
   query: {
     invite_code: route.params.invite_code,
     include: 'members',
   }
 })
-const room = computed<undefined|Room & {members: Member[]}>(() => data.value?.entities?.[0])
+const room = computed(() => data.value?.entities?.[0])
 // redirect to room if already a member
 onFetchResponse(() => {
   if (memberships.some(membership => membership.room.id === room.value?.id)) {
@@ -36,8 +37,9 @@ const form = [
   }
 ]
 
-function joinWith(room: Room, member: Member) {
-  const membership = { room, member_id: member.id }
+function joinWith(room: RoomWithMembers, member: Member) {
+  // games are loaded by the user store once the membership is active
+  const membership = { room: { games: [], ...room }, member_id: member.id }
   addMembership(membership)
   router.push({ name: '/room/[id]/poll', params: { id: membership.room.id } })
 }
@@ -45,7 +47,7 @@ function joinWith(room: Room, member: Member) {
 // create a new member and join as that one
 async function addMemberAndJoin() {
   busy.value = true
-  const join = await useApi<Room>('patch', `/rooms/${room.value!.id}/join`, {
+  const join = await useApi<RoomWithMembers>('patch', `/rooms/${room.value!.id}/join`, {
     query: {
       invite_code: room.value!.invite_code,
       include: 'members'
@@ -55,10 +57,11 @@ async function addMemberAndJoin() {
     }
   })
   busy.value = false
-  joinWith(
-    join.data.value.entity,
-    join.data.value.entity.members[join.data.value.entity.members.length - 1]
-  )
+  const joined = join.data.value?.entity
+  if (!joined) {
+    throw join.error.value
+  }
+  joinWith(joined, joined.members[joined.members.length - 1])
 }
 </script>
 

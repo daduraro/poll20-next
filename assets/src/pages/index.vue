@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { randomPick } from '~/lib/utils/array'
 import { rooms as roomSamples } from '~/lib/samples'
-import { Room } from '~/types'
+import { Member, Room } from '~/types'
 import { useApi } from '~/composables/api'
 
 const { t } = useI18n()
@@ -47,27 +47,29 @@ async function createRoom(): Promise<void> {
           name: newRoom.value.roomName
         }
       })
-      if (!create.data.value.entity) {
+      const created = create.data.value?.entity
+      if (!created) {
         throw create.error.value
       }
-      
-      const join = await useApi<Room>('patch', `/rooms/${create.data.value.entity.id}/join`, {
+
+      const join = await useApi<Room & { members: Member[] }>('patch', `/rooms/${created.id}/join`, {
         query: {
-          invite_code: create.data.value.entity.invite_code,
+          invite_code: created.invite_code,
           include: 'members'
         },
         attributes: {
           name: newRoom.value.memberName
         }
       })
-
-      if (!join.data.value.entity) {
-        throw join.error
+      const joined = join.data.value?.entity
+      if (!joined) {
+        throw join.error.value
       }
 
       const membership = {
-        room: join.data.value.entity,
-        member_id: join.data.value.entity.members[join.data.value.entity.members.length - 1].id,
+        // a new room has no games
+        room: { games: [], ...joined },
+        member_id: joined.members[joined.members.length - 1].id,
       }
       addMembership(membership)
       router.push({ name: '/room/[id]/settings', params: { id: membership.room.id } })

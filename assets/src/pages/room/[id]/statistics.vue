@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { compose, groupBy, indexBy, map, sortBy, sum, values } from 'ramda'
+import { groupBy, indexBy, sortBy, sum, values } from 'ramda'
 import { Game, Member, Session } from '~/types'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
@@ -36,9 +36,9 @@ function selectViaInput(filter: string[], event: any) {
   event.target.value = ''
 }
 
-const sessions = computed(() => (data?.value?.entities ?? []))
+const sessions = computed((): Session[] => (data?.value?.entities ?? []))
 const filteredSessions = computed(
-  () => sessions.value.filter((session: Session) => {
+  () => sessions.value.filter(session => {
     const { gameIds, memberIds, excludeCoop } = filters.value
     return (gameIds.length === 0 || gameIds.some(id => session.game.id === id))
       && (memberIds.length === 0 || memberIds.every(id => session.attendees.find(attendee => attendee.member_id === id)))
@@ -59,15 +59,14 @@ const charts = ref([] as any[])
  */
 charts.value.push(computed(() => {
   const limit = 5
-  const games = compose(
-    sortBy(game => game.count),
-    games => games.slice(0, limit),
-    games => games.filter((game, index) => index < limit || filters.value.gameIds.includes(game.id)),
-    sortBy(game => -game.count),
-    values,
-    map(sessions => ({ ...sessions[0].game, count: sessions.length })),
-    groupBy(session => session.game.id.toString())
-  )(filteredSessions.value)
+  const played = values(groupBy(session => session.game.id, filteredSessions.value))
+    .map(sessions => ({ ...sessions![0].game, count: sessions!.length }))
+  const games = sortBy(
+    game => game.count,
+    sortBy(game => -game.count, played)
+      .filter((game, index) => index < limit || filters.value.gameIds.includes(game.id))
+      .slice(0, limit)
+  )
   const total = sum(games.map(game => game.count))
 
   return {
@@ -117,19 +116,16 @@ charts.value.push(computed(() => {
  */
 charts.value.push(computed(() => {
   const attendees = filteredSessions.value.flatMap(session => session.attendees)
-  const members = compose(
-    sortBy(member => member.winrate),
-    values,
-    map(attendees => {
-      const won = attendees.filter(attendee => attendee.winner)
-      const winrate = won.length / attendees.length
+  const winrates = values(groupBy(attendee => attendee.member_id, attendees))
+    .map(attendees => {
+      const won = attendees!.filter(attendee => attendee.winner)
+      const winrate = won.length / attendees!.length
       return {
-        ...membersById.value[attendees[0].member_id],
+        ...membersById.value[attendees![0].member_id],
         winrate
       }
-    }),
-    groupBy(attendee => attendee.member_id)
-  )(attendees)
+    })
+  const members = sortBy(member => member.winrate, winrates)
   return {
     component: Bar,
     title: t('Winrates'),

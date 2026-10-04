@@ -1,13 +1,15 @@
-import { useConfirmDialog as _useConfirmDialog } from "@vueuse/core";
-import { ref } from "vue";
+import { useConfirmDialog as _useConfirmDialog, type UseConfirmDialogReturn } from "@vueuse/core";
+import { ref, type Ref } from "vue";
 import { wrap } from "~/lib/utils/function";
+
+type Dialog = UseConfirmDialogReturn<any, any, any>
 
 /**
  * Make the confirm composable auto-cancel after a set time
  */
 export function withTiming(timeout = 2000) {
   let handler: any
-  return (dialog) => ({
+  return <D extends Dialog>(dialog: D): D => ({
     ...dialog,
     reveal: wrap(dialog.reveal, (callback, ...args) => {
       handler && clearTimeout(handler)
@@ -21,12 +23,12 @@ export function withTiming(timeout = 2000) {
  * Make the confirm composable auto-cancel after a set time
  */
 export function withArguments() {
-  return (dialog) => {
-    dialog.revealArguments = ref<any[]>([])
+  return <D extends Dialog>(dialog: D): D & { revealArguments: Ref<any[]> } => {
+    const revealArguments = ref<any[]>([])
     dialog.reveal = wrap(dialog.reveal, (callback, ...args) => {
-      dialog.revealArguments.value = args
+      revealArguments.value = args
       return callback(...args)
     })
-    return dialog
+    return Object.assign(dialog, { revealArguments })
   }
 }

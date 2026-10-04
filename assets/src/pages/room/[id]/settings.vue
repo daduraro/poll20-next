@@ -3,7 +3,10 @@ import { Member } from '~/types'
 import { vOnKeyStroke } from '@vueuse/components'
 
 const { t } = useI18n()
-const { membership, leave: deleteMembership } = useUserStore()
+const userStore = useUserStore()
+// only rendered by room.vue when there is a membership
+const membership = userStore.membership!
+const deleteMembership = userStore.leave
 const router = useRouter()
 
 // =================
@@ -38,7 +41,7 @@ confirmKick.onConfirm(async () => {
 
 // =================
 const updateNameButton = ref<HTMLButtonElement[]|null>(null)
-const member = computed(() => membership?.room.members.find(match => match.id === membership?.member_id))
+const member = computed(() => membership.room.members.find(match => match.id === membership.member_id)!)
 const name = ref(member.value.name)
 async function updateName() {
   useApi<Member>('patch', `members/${membership!.member_id}`, {

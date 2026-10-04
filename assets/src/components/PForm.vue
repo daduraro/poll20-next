@@ -7,7 +7,7 @@ const props = defineProps({
   definition: {
     type: Array as PropType<({
       id: string;
-      label: string;
+      label?: string;
     } & Partial<{
       is: string;
       attrs: Record<string, any>;
@@ -15,7 +15,7 @@ const props = defineProps({
     required: true
   },
   value: {
-    type: Object as PropType<object>,
+    type: Object as PropType<Record<string, any>>,
     required: true,
   },
   title: String,
