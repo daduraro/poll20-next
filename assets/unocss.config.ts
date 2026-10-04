@@ -2,7 +2,7 @@ import {
   defineConfig,
   presetAttributify,
   presetTypography,
-  presetUno,
+  presetWind3,
   presetWebFonts,
   transformerDirectives,
   transformerVariantGroup,
@@ -10,7 +10,7 @@ import {
 
 export default defineConfig({
   presets: [
-    presetUno(),
+    presetWind3(),
     presetAttributify(),
     presetTypography(),
     presetWebFonts({
@@ -25,5 +25,4 @@ export default defineConfig({
     transformerDirectives(),
     transformerVariantGroup(),
   ],
-  safelist: 'prose prose-sm m-auto text-left'.split(' '),
 })

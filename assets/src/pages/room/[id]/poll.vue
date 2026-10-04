@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import seedrandom from 'seedrandom'
-import { type Vote } from '~/types/vote'
+import { type Vote } from '~/types'
 import { sortByTiered } from '~/lib/utils/array'
 import { equals, fromPairs, groupBy, indexBy, prop, sortBy } from 'ramda';
 import { startOfDay } from 'date-fns'

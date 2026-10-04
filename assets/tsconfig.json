@@ -3,36 +3,35 @@
     "baseUrl": ".",
     "module": "ESNext",
     "target": "ESNext",
-    "lib": ["DOM", "ESNext"],
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "jsx": "preserve",
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "types": [
-      "vitest",
       "vite/client",
-      "vue/ref-macros",
-      "vite-plugin-pages/client",
-      "vite-plugin-vue-component-preview/client",
-      "vite-plugin-vue-layouts/client",
+      "vite-plugin-vue-layouts-next/client",
       "vite-plugin-pwa/client",
-      "unplugin-vue-macros/macros-global"
+      "unplugin-icons/types/vue",
+      "@intlify/unplugin-vue-i18n/messages"
     ],
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": [
+        "src/*"
+      ]
     }
   },
-  "vueCompilerOptions": {
-    "plugins": [
-      "@vue-macros/volar/define-model",
-      "@vue-macros/volar/define-slots"
-    ]
-  },
-  "exclude": ["dist", "node_modules", "cypress"]
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

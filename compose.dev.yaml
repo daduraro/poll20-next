@@ -2,6 +2,7 @@
 #   podman-compose -f compose.dev.yaml up            # db + phoenix (:4000) + vite (:3333)
 #   podman-compose -f compose.dev.yaml run --rm app iex -S mix
 #   podman-compose -f compose.dev.yaml down -v       # stop and wipe volumes
+#   podman-compose -f compose.dev.yaml run --rm e2e  # browser tests against the running app
 name: poll20-dev
 
 services:
@@ -40,11 +41,12 @@ services:
     tty: true
 
   assets:
-    image: docker.io/library/node:18-slim
+    image: docker.io/library/node:24-slim
     working_dir: /app/assets
     environment:
       COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
-      npm_config_store_dir: /pnpm-store
+      pnpm_config_store_dir: /pnpm-store
+      COREPACK_HOME: /pnpm-store/corepack
     ports:
       - "3333:3333"
     volumes:
@@ -53,7 +55,20 @@ services:
       - pnpm-store:/pnpm-store
     command: sh -c "corepack enable && pnpm install --frozen-lockfile && pnpm exec vite --host 0.0.0.0 --port 3333"
 
+  # Playwright browser tests (e2e/), only run on demand. Host networking so the
+  # browser reaches the app at localhost:3333 / 127.0.0.1:4000 like you do.
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.63.0-noble
+    profiles: [e2e]
+    network_mode: host
+    working_dir: /app/e2e
+    volumes:
+      - .:/app:z
+      - e2e-node-modules:/app/e2e/node_modules
+    command: sh -c "npm install --no-audit --no-fund --loglevel=error && npx playwright test"
+
 volumes:
+  e2e-node-modules:
   pg-data:
   deps:
   build:

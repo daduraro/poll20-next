@@ -28,7 +28,7 @@ const { isRevealed, reveal, confirm, onConfirm, revealArguments } = compose(
 )(useConfirmDialog())
 onConfirm((index: number) => {
   const [removed] = data.value.entities.splice(index, 1)
-  triggerRef(data.value) // otherwise it doesn't pick it up because it's a shallowRef
+  triggerRef(data) // otherwise it doesn't pick it up because it's a shallowRef
   useApi('delete', `sessions/${removed.id}`)
 })
 </script>
@@ -39,7 +39,7 @@ onConfirm((index: number) => {
   </div>
   <p v-else-if="sessions.length === 0">
     {{ t('No games have been logged yet.') }}
-    <router-link :to="{ name: 'room-id-poll', params: route.params }">
+    <router-link :to="{ name: '/room/[id]/poll', params: route.params }">
       {{ t('Log games in the poll tab') }}
     </router-link>
   </p>

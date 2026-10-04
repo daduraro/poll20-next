@@ -25,6 +25,7 @@ podman-compose -f compose.dev.yaml up -d # postgres (:5432), phoenix (:4000), vi
 podman-compose -f compose.dev.yaml logs -f app
 podman-compose -f compose.dev.yaml exec app iex -S mix # or: run --rm app mix test
 podman-compose -f compose.dev.yaml down # add -v to also wipe db/deps/_build/node_modules
+podman-compose -f compose.dev.yaml run --rm e2e # Playwright browser tests (e2e/) against the running app
 ```
 
 Web on http://localhost:3333, backend on :4000.

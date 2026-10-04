@@ -1,5 +1,5 @@
 ARG ELIXIR_VERSION=1.20.4-otp-29
-ARG NODE_VERSION=19
+ARG NODE_VERSION=24
 
 FROM node:${NODE_VERSION}-slim AS build
 RUN corepack enable

@@ -2,7 +2,7 @@
 import { Member, Room } from '~/types';
 
 const { t } = useI18n()
-const route = useRoute()
+const route = useRoute('/join/[invite_code]')
 const { join: addMembership, memberships } = useUserStore()
 
 // load room
@@ -16,7 +16,7 @@ const room = computed<undefined|Room & {members: Member[]}>(() => data.value?.en
 // redirect to room if already a member
 onFetchResponse(() => {
   if (memberships.some(membership => membership.room.id === room.value?.id)) {
-    router.push({ name: 'room-id-poll', params: room.value! })
+    router.push({ name: '/room/[id]/poll', params: { id: room.value!.id } })
   }
 })
 
@@ -39,7 +39,7 @@ const form = [
 function joinWith(room: Room, member: Member) {
   const membership = { room, member_id: member.id }
   addMembership(membership)
-  router.push({ name: 'room-id-poll', params: membership.room })
+  router.push({ name: '/room/[id]/poll', params: { id: membership.room.id } })
 }
 
 // create a new member and join as that one

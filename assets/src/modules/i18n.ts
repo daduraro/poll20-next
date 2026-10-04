@@ -1,14 +1,8 @@
 import { createI18n } from 'vue-i18n'
+// All files in locales/ (see the VueI18n plugin's `include` in vite.config.ts),
+// precompiled at build time and keyed by file name (en, es, ca)
+import messages from '@intlify/unplugin-vue-i18n/messages'
 import { type UserModule } from '~/types'
-
-// Import i18n resources
-const localeFiles = import.meta.glob<{ default: any }>('../../locales/*.y(a)?ml', { eager: true })
-const messages = Object.fromEntries(
-  Object.entries(localeFiles).map(([key, value]) => {
-    const extensionLength = key.endsWith('.yaml') ? -5 : -4
-    return [key.slice('../../locales/'.length, extensionLength), value.default]
-  })
-)
 
 // locale in which translations appear in the code
 const defaultLocale = 'en'

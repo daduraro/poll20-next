@@ -22,7 +22,8 @@ export const useUserStore = defineStore('user', () => {
   watch(memberships, value => localStorage.setItem(storageKey, JSON.stringify(value)), {deep: true})
   
   const route = useRoute()
-  const roomId = computed(() => route?.params.id as string|undefined)
+  // the store is used from any page; only room pages have an `id` param
+  const roomId = computed(() => 'id' in route.params ? route.params.id : undefined)
   const membership = computed(() => memberships.value.find(membership => membership.room.id === roomId.value))
 
   function join(membership: Membership) {

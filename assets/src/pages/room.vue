@@ -8,7 +8,7 @@ const { membership } = useUserStore()
   <main>
     <RouterView v-if="membership"/>
     <div class="text-right mt-8">
-      <router-link :to="{ name: 'index' }">
+      <router-link :to="{ name: '/' }">
         {{ t('Go back') }}
       </router-link>
     </div>

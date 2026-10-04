@@ -70,7 +70,7 @@ async function createRoom(): Promise<void> {
         member_id: join.data.value.entity.members[join.data.value.entity.members.length - 1].id,
       }
       addMembership(membership)
-      router.push({ name: 'room-id-settings', params: membership.room })
+      router.push({ name: '/room/[id]/settings', params: { id: membership.room.id } })
     } finally {
       busy.value = false
     }
@@ -85,7 +85,7 @@ async function createRoom(): Promise<void> {
       </h1>
       <ul>
         <li v-for="membership in memberships" :key="membership.room.id" class="my-3">
-          <router-link :to="{ name: 'room-id-poll', params: membership.room }" class="text-xl">
+          <router-link :to="{ name: '/room/[id]/poll', params: { id: membership.room.id } }" class="text-xl">
             {{ membership.room.name }}
           </router-link>
         </li>

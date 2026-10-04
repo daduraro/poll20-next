@@ -11,27 +11,27 @@ const { t } = useI18n()
 const links = computed(() => [
   {
     name: t('Votes'),
-    route: { name: 'room-id-poll' },
+    route: { name: '/room/[id]/poll' },
     icon: IconPoll,
   },
   {
     name: t('History'),
-    route: { name: 'room-id-history' },
+    route: { name: '/room/[id]/history' },
     icon: IconHistory,
   },
   {
     name: t('Statistics'),
-    route: { name: 'room-id-statistics' },
+    route: { name: '/room/[id]/statistics' },
     icon: IconStatistics,
   },
   {
     name: t('Games'),
-    route: { name: 'room-id-games' },
+    route: { name: '/room/[id]/games' },
     icon: IconGames,
   },
   {
     name: t('Settings'),
-    route: { name: 'room-id-settings' },
+    route: { name: '/room/[id]/settings' },
     icon: IconSettings,
   },
 ])
@@ -41,7 +41,7 @@ const links = computed(() => [
   <nav class="text-xl text-center mb-6 flex border-1 border-rounded">
     <router-link
       v-for="(link, index) in links" :key="index"
-      :to="{ ...link.route, params: membership.room }"
+      :to="{ ...link.route, params: { id: membership.room.id } }"
       v-aria-title="t('Go to {name}', link)"
       class="icon-btn text-2xl p-4 flex-grow"
     >

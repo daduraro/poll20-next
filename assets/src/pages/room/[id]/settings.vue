@@ -7,7 +7,7 @@ const { membership, leave: deleteMembership } = useUserStore()
 const router = useRouter()
 
 // =================
-const inviteUrl = computed(() => location.origin + router.resolve({ name: 'join-invite_code', params: membership!.room }).href)
+const inviteUrl = computed(() => location.origin + router.resolve({ name: '/join/[invite_code]', params: { invite_code: membership!.room.invite_code } }).href)
 const copyUrl = useConfirmDialog()
 copyUrl.onReveal(() => {
   navigator.clipboard.writeText(inviteUrl.value)

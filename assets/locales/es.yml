@@ -11,7 +11,10 @@ Change language: Cambiar idioma
 Change name: Cambiar nombre
 Choose game: Elige juego
 Choose member: Elige miembro
+"Click again to confirm": "Pulsa otra vez para confirmar"
 Comments: Comentarios
+"Confirm?": "¿Confirmar?"
+"Copied!": "¡Copiado!"
 Copy to clipboard: Copiar al portapapeles
 Create room: Crear grupo
 Date: Fecha
@@ -19,6 +22,7 @@ Delete {name}: Eliminar {name}
 Delete: Eliminar
 Edit {name}: Editar {name}
 Edit game: Editar juego
+"Everyone": "Todos"
 Exclude coop games: Excluir juegos cooperativos
 Filter by max number of players of the game: Filtrar por máximo de jugadores
 Game owners: Propietarios del juego
@@ -35,20 +39,26 @@ Join: Unirse
 Kick: Echar
 Leave room: Salir del grupo
 Loading...: Cargando...
+"Log games in the poll tab": "Registra partidas en la pestaña de votos"
 Log session of {name}: Registrar sesión de {name}
 Log session: Registrar sesión
+"Logged successfully": "Registrada correctamente"
 Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.: Solo mostrar juego como disponible solo si exactamente los miembros especificados estan presentes. Útil para campañas de rol.
 Match all owners: Requerir todos los miembros
 Max number of players: Número de jugadores máximo
 Members: Miembros
+"Most played": "Más jugados"
 Name: Nombre
+"No games have been logged yet.": "Aún no se ha registrado ninguna partida."
 Nobody: Nadie
+"Not found": "No encontrado"
 Only count votes of present members: Solo contar votos de jugadores presentes
 Only show games of present members: Solo mostrar juegos de jugadores presentes
 Or...: O...
 Players: Jugadores
 Presence: Jugadores presentes
 Refresh votes: Refrescar votos
+"Remove {name} from filter": "Quitar {name} del filtro"
 Room name: Nombre de grupo
 Save: Guardar
 Select all: Seleccionar todos
@@ -57,7 +67,9 @@ Statistics: Estadísticas
 Times played: nº de partidas
 Toggle dark mode: Cambiar modo oscuro
 Toggle filters: Mostrar filtros
+"Toggle games filter": "Mostrar filtro de juegos"
 Toggle list of votes: Mostrar lista de votos
+"Toggle players filter": "Mostrar filtro de jugadores"
 Vote down: Voto negativo
 Vote up: Voto positivo
 Votes: Votos
@@ -65,5 +77,7 @@ Winners: Ganadores
 Winrate: Winrate
 Winrates: Winrates
 You have been invited to {name}: Has sido invitado a {name}
+"You have no rooms yet. Create one or get a friend's invite!": "Aún no tienes grupos. ¡Crea uno o pide una invitación a un amigo!"
+"You haven't defined any games yet": "Aún no has añadido ningún juego"
 Your name: Tu nombre
 Your rooms: Tus grupos

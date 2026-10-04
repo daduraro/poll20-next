@@ -1,9 +1,10 @@
-import { type ViteSSGContext } from 'vite-ssg'
+import type { App } from 'vue'
+import type { Router } from 'vue-router'
 
 export type MaybeArray<T> = T|T[]
 export type ElementType<T> = T extends any[] ? T[number] : never;
 
-export type UserModule = (ctx: ViteSSGContext) => void
+export type UserModule = (ctx: { app: App, router: Router }) => void
 
 export type UUID = string
 
