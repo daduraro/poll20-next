@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { PropType } from 'vue'
-
-const { t } = useI18n()
+import type { PropType } from 'vue'
 
 const props = defineProps({
   definition: {
     type: Array as PropType<({
-      id: string;
-      label?: string;
+      id: string
+      label?: string
     } & Partial<{
-      is: string;
-      attrs: Record<string, any>;
+      is: string
+      attrs: Record<string, any>
     }>)[]>,
-    required: true
+    required: true,
   },
   value: {
     type: Object as PropType<Record<string, any>>,
@@ -27,6 +25,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['submit', 'update:value'])
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -35,7 +35,9 @@ const emit = defineEmits(['submit', 'update:value'])
     :aria-busy="busy"
     @submit.prevent="emit('submit')"
   >
-    <h2 class="text-xl text-center">{{ props.title }}</h2>
+    <h2 class="text-xl text-center">
+      {{ props.title }}
+    </h2>
     <div
       v-for="field in props.definition"
       :key="field.id"
@@ -53,9 +55,9 @@ const emit = defineEmits(['submit', 'update:value'])
           v-bind="field.attrs"
           @input="emit('update:value', {
             ...value,
-            [field.id]: $event.target.value
+            [field.id]: $event.target.value,
           })"
-          />
+        />
       </slot>
     </div>
     <div class="text-right">
@@ -67,7 +69,7 @@ const emit = defineEmits(['submit', 'update:value'])
       >
         <div v-if="busy" class="text-center w-100%">
           <div class="animate-spin preserve-3d m-auto w-2rem h-2rem">
-            <i-carbon-progress-bar-round w-2rem h-2rem/>
+            <i-carbon-progress-bar-round w-2rem h-2rem />
           </div>
           <span class="sr-only">
             {{ t('Loading...') }}

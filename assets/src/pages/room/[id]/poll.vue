@@ -1,9 +1,8 @@
 <script setup lang="ts">
+import type { Attendee, Game, Member, Session, Vote } from '~/types'
+import { equals, fromPairs, groupBy, indexBy, prop, sortBy } from 'ramda'
 import seedrandom from 'seedrandom'
-import { type Vote } from '~/types'
 import { sortByTiered } from '~/lib/utils/array'
-import { equals, fromPairs, groupBy, indexBy, prop, sortBy } from 'ramda';
-import { Game, Member, Session, Attendee } from '~/types';
 
 // votes created locally have no id until the api responds
 type LocalVote = Vote & { handle?: PromiseLike<unknown> }
@@ -15,7 +14,7 @@ const filters = useLocalStorage(`${route.path}.filters`, {
   playersInRange: true,
   activeMemberIds: [] as Member['id'][],
 }, {
-  mergeDefaults: true
+  mergeDefaults: true,
 })
 const filtersVisible = ref(false)
 
@@ -28,14 +27,14 @@ const membersById = computed(() => indexBy(prop('id'), members.value))
 const membersActive = computed(
   () => filters.value.activeMemberIds.length > 0 // ignore filter if none checked
     ? members.value.filter(member => filters.value.activeMemberIds.some(equals(member.id)))
-    : members.value
+    : members.value,
 )
 const activeMemberIds = computed(() => new Set(membersActive.value.map(member => member.id)))
 
 const games = computed(() => membership?.room.games ?? [])
 const gamesById = computed(() => indexBy(prop('id'), games.value))
 const gamesActive = computed(
-  () => games.value.filter(game => {
+  () => games.value.filter((game) => {
     if (filters.value.onlyPresentGames && game.owners.length > 0) {
       const presentOwners = game.owners.filter(owner => activeMemberIds.value.has(owner.id))
       const exactlyAllPresent = game.owners.length === presentOwners.length && presentOwners.length === membersActive.value.length
@@ -56,13 +55,13 @@ const gamesActive = computed(
     }
 
     return true
-  })
+  }),
 )
 const gamesFilteredCount = computed(() => games.value.length - gamesActive.value.length)
 const openedGameIds = ref<Set<Game['id']>>(new Set())
 
 const votes = ref<LocalVote[]>([])
-const votesVisible = computed<(Vote & {active: boolean})[]>(
+const votesVisible = computed<(Vote & { active: boolean })[]>(
   () => sortByTiered(
     vote => [
       // first active, then newest
@@ -71,20 +70,20 @@ const votesVisible = computed<(Vote & {active: boolean})[]>(
     ],
     votes.value.map(vote => ({
       ...vote,
-      active: activeMemberIds.value.has(vote.member_id)
-    }))
-  )
+      active: activeMemberIds.value.has(vote.member_id),
+    })),
+  ),
 )
 const votesByGame = computed<Record<Game['id'], Vote[]>>(() => ({
   ...fromPairs(games.value.map(game => [game.id, []])),
-  ...groupBy(prop('game_id'), votesVisible.value) as Record<Game['id'], Vote[]>
+  ...groupBy(prop('game_id'), votesVisible.value) as Record<Game['id'], Vote[]>,
 }))
 const votesOwn = computed(() => votes.value.filter(vote => vote.member_id === membership?.member_id))
 const votesOwnByGame = computed<Partial<Record<Game['id'], Vote>>>(() => indexBy(prop('game_id'), votesOwn.value))
 const votesActive = computed(
   () => filters.value.onlyPresentVotes
     ? votes.value.filter(vote => membersActive.value.some(item => item.id === vote.member_id))
-    : votes.value
+    : votes.value,
 )
 
 const scoresByGame = computed(
@@ -98,30 +97,30 @@ const scoresByGame = computed(
       {
         [-1]: 0,
         [+1]: 0,
-      }
-    ]))
-  )
+      },
+    ])),
+  ),
 )
 
 const gamesSorted = computed(() => {
   // ensure all members see the same sort result when votes are tied
-  const randomGenerator = seedrandom(String((new Date).getDate()))
+  const randomGenerator = seedrandom(String((new Date()).getDate()))
   return sortByTiered(game => [
-      // first by score
-      -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]),
-      // then by least downvotes
-      scoresByGame.value[game.id][-1],
-      // then by least positive votes from inactive people
-      // (we'd like to save them for when they're present)
-      votesByGame.value[game.id]
-        .filter(vote => vote.value === 1)
-        .filter(vote => !activeMemberIds.value.has(vote.member_id))
-        .length,
-      // finally, by a shared, static random factor
-      game.tiebreaker,
+    // first by score
+    -(scoresByGame.value[game.id][1] - scoresByGame.value[game.id][-1]),
+    // then by least downvotes
+    scoresByGame.value[game.id][-1],
+    // then by least positive votes from inactive people
+    // (we'd like to save them for when they're present)
+    votesByGame.value[game.id]
+      .filter(vote => vote.value === 1)
+      .filter(vote => !activeMemberIds.value.has(vote.member_id))
+      .length,
+    // finally, by a shared, static random factor
+    game.tiebreaker,
   ], gamesActive.value.map(game => ({
     ...game,
-    tiebreaker: randomGenerator()
+    tiebreaker: randomGenerator(),
   })))
 })
 
@@ -131,12 +130,12 @@ const isFetching = ref(false)
 async function fetchVotes(manual = false) {
   refreshHandle && clearTimeout(refreshHandle)
   isFetching.value = true
-  const { data } = await useApi<Vote & { member: Member }>('get', 'votes', { query: { include: 'member' }})
+  const { data } = await useApi<Vote & { member: Member }>('get', 'votes', { query: { include: 'member' } })
   const newVotes = data.value!.entities!
   membership!.room.members = membership!.room.members.concat(newVotes
     .filter(vote => !members.value.some(member => member.id === vote.member_id))
     .map(vote => vote.member))
-  
+
   votes.value = newVotes
   isFetching.value = false
   refreshHandle = setTimeout(fetchVotes, refreshRate)
@@ -157,7 +156,7 @@ function throttleVotes() {
   refreshHandle = setTimeout(fetchVotes, refreshRate)
 }
 
-async function vote(game_id: Game['id'], value: Vote['value']|undefined) {
+async function vote(game_id: Game['id'], value: Vote['value'] | undefined) {
   throttleVotes()
 
   const member_id = membership!.member_id
@@ -172,19 +171,19 @@ async function vote(game_id: Game['id'], value: Vote['value']|undefined) {
   }
   else if (current && value !== undefined) {
     current.value = value
-    useApi<Vote>('patch', `votes/${current.id}`, { attributes: { value }})
+    useApi<Vote>('patch', `votes/${current.id}`, { attributes: { value } })
   }
   else if (value !== undefined) {
-    const attributes =  { game_id, member_id, value }
-    const localVote: any = { ...attributes, id: null, inserted_at: (new Date).toISOString(), handle: null }
+    const attributes = { game_id, member_id, value }
+    const localVote: any = { ...attributes, id: null, inserted_at: (new Date()).toISOString(), handle: null }
     votes.value.push(localVote)
     localVote.handle = useApi<Vote>('post', 'votes', { attributes })
     localVote.handle.then(({ data }: any) => localVote.id = data.value.entity!.id)
   }
 }
 
-const loggedGameId = ref<Game['id']|null>(null)
-const sessionGameId = ref<Game['id']|null>(null)
+const loggedGameId = ref<Game['id'] | null>(null)
+const sessionGameId = ref<Game['id'] | null>(null)
 const sessionValue = ref({
   attendees: [] as (Attendee & { name: string })[],
   comment: '',
@@ -198,7 +197,7 @@ const sessionFormDefinition = [
   {
     id: 'comment',
     label: t('Comments'),
-    is: 'textarea'
+    is: 'textarea',
   },
 ]
 function logSession(game_id: Game['id']) {
@@ -217,8 +216,8 @@ async function saveSession() {
     attributes: {
       game_id: sessionGameId.value,
       attendees: sessionValue.value.attendees,
-      comment: sessionValue.value.comment
-    }
+      comment: sessionValue.value.comment,
+    },
   })
   loggedGameId.value = sessionGameId.value
   setTimeout(() => loggedGameId.value = null, 3000)
@@ -237,7 +236,7 @@ async function saveSession() {
       <!-- presence -->
       <div class="flex items-end">
         {{ t('Presence') }}
-        <span class="flex-grow"/>
+        <span class="flex-grow" />
         <label class="pr-1">
           <strong>{{ t('Select all') }}</strong>
           <input
@@ -247,12 +246,14 @@ async function saveSession() {
             class="ml-2"
             @input="() => filters.activeMemberIds.length < members.length
               ? filters.activeMemberIds = members.map(member => member.id)
-              : filters.activeMemberIds =  []"
+              : filters.activeMemberIds = []"
           >
         </label>
       </div>
       <ul class="remove-list-style">
         <li v-for="member in membersSorted" :key="member.id">
+          <!-- single-item v-for to name a local value; constant key keeps the element (and focus) -->
+          <!-- eslint-disable-next-line vue/require-v-for-key -->
           <label
             v-for="checked in [filters.activeMemberIds.some(id => id === member.id)]" key="0"
             tabindex="0"
@@ -260,13 +261,13 @@ async function saveSession() {
             :aria-checked="checked ? 'true' : 'false'"
             class="flex pl-2! label-checkbox"
           >
-            <i-material-symbols-check-box v-if="checked" class="mr-2"/>
-            <i-material-symbols-check-box-outline-blank v-else class="mr-2"/>
+            <i-material-symbols-check-box v-if="checked" class="mr-2" />
+            <i-material-symbols-check-box-outline-blank v-else class="mr-2" />
             {{ member.name }}
             <input
+              v-model="filters.activeMemberIds"
               tabindex="-1"
               type="checkbox"
-              v-model="filters.activeMemberIds"
               :value="member.id"
               class="ml-2"
             >
@@ -278,19 +279,19 @@ async function saveSession() {
       <i v-if="gamesFilteredCount > 0" class="mr-2">
         {{ t('{count} games filtered out', { count: gamesFilteredCount }) }}
       </i>
-      <span class="flex-grow"/>
+      <span class="flex-grow" />
       <button
-        aria-controls="games"
         v-aria-title="t('Refresh votes')"
+        aria-controls="games"
         class="icon-btn border border-rounded p-2 display-block mr-2"
         :disabled="isFetching"
         @click="() => fetchVotes()"
       >
-        <i-fa-refresh :class="{ 'animate-spin preserve-3d': isFetching} "/>
+        <i-fa-refresh :class="{ 'animate-spin preserve-3d': isFetching } " />
       </button>
       <button
-        aria-controls="filters"
         v-aria-title="t('Toggle filters')"
+        aria-controls="filters"
         class="icon-btn border border-rounded p-2 display-block"
         :class="{ active: filtersVisible }"
         @click="filtersVisible = !filtersVisible"
@@ -299,41 +300,41 @@ async function saveSession() {
       </button>
     </div>
     <div
-      id="filters"
       v-show="filtersVisible"
+      id="filters"
       aria-controls="games"
       class="p-2 border-rounded mt-2 border"
     >
       <!-- options -->
       <div class="options">
         <label class="flex">
-          <input type="checkbox" v-model="filters.onlyPresentVotes" :value="true" class="mr-2"> {{ t('Only count votes of present members') }}
+          <input v-model="filters.onlyPresentVotes" type="checkbox" :value="true" class="mr-2"> {{ t('Only count votes of present members') }}
         </label>
         <label class="flex">
-          <input type="checkbox" v-model="filters.onlyPresentGames" :value="true" class="mr-2"> {{ t('Only show games of present members') }}
+          <input v-model="filters.onlyPresentGames" type="checkbox" :value="true" class="mr-2"> {{ t('Only show games of present members') }}
         </label>
         <label class="flex">
-          <input type="checkbox" v-model="filters.playersInRange" :value="true" class="mr-2"> {{ t('Filter by max number of players of the game') }}
+          <input v-model="filters.playersInRange" type="checkbox" :value="true" class="mr-2"> {{ t('Filter by max number of players of the game') }}
         </label>
       </div>
     </div>
     <TransitionGroup
+      id="games"
       name="list"
       tag="ul"
-      id="games"
       aria-live="polite"
       class="remove-list-style"
     >
       <li
-        v-for="game in gamesSorted" :key="game.id"
-        :id="game.id"
+        v-for="game in gamesSorted" :id="game.id"
+        :key="game.id"
         :aria-controls="game.id"
         :aria-label="t('Toggle list of votes')"
         class="border border-rounded p-3 ml-0 my-2 mb-4"
       >
         <div class="flex">
           <div class="flex-grow">
-            <div 
+            <div
               tabindex="0"
               aria-role="button"
               class="flex flex-col items-stretch"
@@ -344,10 +345,10 @@ async function saveSession() {
               </div>
               <div class="flex mt-2">
                 <span class="mr-2 flex">
-                   {{ scoresByGame[game.id][1] }} <i-fa-arrow-up class="vote-up display-inline text-xs ml-1"/>
+                  {{ scoresByGame[game.id][1] }} <i-fa-arrow-up class="vote-up display-inline text-xs ml-1" />
                 </span>
                 <span class="flex ml-1">
-                   {{ scoresByGame[game.id][-1] }} <i-fa-arrow-down class="vote-down display-inline text-xs ml-1"/>
+                  {{ scoresByGame[game.id][-1] }} <i-fa-arrow-down class="vote-down display-inline text-xs ml-1" />
                 </span>
               </div>
             </div>
@@ -359,7 +360,7 @@ async function saveSession() {
               class="icon-btn mb-4"
               @click="() => vote(game.id, votesOwnByGame[game.id]?.value === 1 ? undefined : 1)"
             >
-              <i-fa-arrow-up :class="{'vote-up': votesOwnByGame[game.id]?.value === 1 }"/>
+              <i-fa-arrow-up :class="{ 'vote-up': votesOwnByGame[game.id]?.value === 1 }" />
             </button>
             <button
               v-aria-title="t('Vote down')"
@@ -367,7 +368,7 @@ async function saveSession() {
               class="icon-btn"
               @click="() => vote(game.id, votesOwnByGame[game.id]?.value === -1 ? undefined : -1)"
             >
-              <i-fa-arrow-down :class="{'vote-down': votesOwnByGame[game.id]?.value === -1 }"/>
+              <i-fa-arrow-down :class="{ 'vote-down': votesOwnByGame[game.id]?.value === -1 }" />
             </button>
           </div>
         </div>
@@ -377,19 +378,21 @@ async function saveSession() {
           :class="{ hidden: !openedGameIds.has(game.id) }"
         >
           <hr>
-          <p v-if="!votesByGame[game.id].length">No votes</p>
+          <p v-if="!votesByGame[game.id].length">
+            No votes
+          </p>
           <ul class="mt-0! ml-0!" style="list-style: initial">
             <li
-              v-for="vote in votesByGame[game.id]" :key="vote.id"
-              :class="{ present: !filters.onlyPresentVotes || activeMemberIds.has(vote.member_id) }"
+              v-for="gameVote in votesByGame[game.id]" :key="gameVote.id"
+              :class="{ present: !filters.onlyPresentVotes || activeMemberIds.has(gameVote.member_id) }"
               class="game-vote flex mt-1"
             >
               <div class="text-sm">
-                <i-fa-arrow-up v-if="vote.value > 0" class="icon-bt vote-up mt-0" style="font-weight: 300"/>
-                <i-fa-arrow-down v-else  class="icon-btn mt-0 vote-down" style="font-weight: 300"/>
+                <i-fa-arrow-up v-if="gameVote.value > 0" class="icon-bt vote-up mt-0" style="font-weight: 300" />
+                <i-fa-arrow-down v-else class="icon-btn mt-0 vote-down" style="font-weight: 300" />
               </div>
               <div class="ml-1">
-                {{ membersById[vote.member_id].name }}
+                {{ membersById[gameVote.member_id].name }}
               </div>
             </li>
           </ul>
@@ -404,8 +407,8 @@ async function saveSession() {
             {{ t('Logged successfully') }}
           </div>
           <div
-            :id="`session-${game.id}`"
             v-show="sessionGameId === game.id"
+            :id="`session-${game.id}`"
           >
             <p-form
               v-if="sessionGameId === game.id"
@@ -420,7 +423,7 @@ async function saveSession() {
                 <ul>
                   <li v-for="attendee in sessionValue.attendees" :key="attendee.member_id">
                     <label>
-                      <input type="checkbox" v-model="attendee.winner"> {{ attendee.name }}
+                      <input v-model="attendee.winner" type="checkbox"> {{ attendee.name }}
                     </label>
                   </li>
                 </ul>

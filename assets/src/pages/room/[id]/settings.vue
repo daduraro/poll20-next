@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Member } from '~/types'
+import type { Member } from '~/types'
 import { vOnKeyStroke } from '@vueuse/components'
 
 const { t } = useI18n()
@@ -19,7 +19,7 @@ copyUrl.onReveal(() => {
 
 // =================
 const kicking = ref(false)
-const kickedMemberId = ref<Member['id']|null>(null)
+const kickedMemberId = ref<Member['id'] | null>(null)
 const confirmKick = useConfirmDialog()
 confirmKick.onReveal((member_id: Member['id']) => {
   kickedMemberId.value = member_id
@@ -30,7 +30,7 @@ confirmKick.onConfirm(async () => {
   kicking.value = true
   const member_id = kickedMemberId.value!
   const { data } = await useApi<Member>('patch', `rooms/${membership!.room.id!}/kick`, {
-    attributes: { member_id }
+    attributes: { member_id },
   })
   kicking.value = false
   if (data.value) {
@@ -40,14 +40,14 @@ confirmKick.onConfirm(async () => {
 })
 
 // =================
-const updateNameButton = ref<HTMLButtonElement[]|null>(null)
+const updateNameButton = ref<HTMLButtonElement[] | null>(null)
 const member = computed(() => membership.room.members.find(match => match.id === membership.member_id)!)
 const name = ref(member.value.name)
 async function updateName() {
   useApi<Member>('patch', `members/${membership!.member_id}`, {
     attributes: {
-      name: name.value
-    }
+      name: name.value,
+    },
   })
   member.value.name = name.value
 }
@@ -64,31 +64,33 @@ confirmLeave.onConfirm(() => {
 <template>
   <p>{{ t('Members') }}</p>
   <ul>
-    <li v-for="member in membership.room.members" :key="member.id" class="mt-2 mb-6">
-      <div v-if="member.id !== membership.member_id" class="flex">
+    <li v-for="roomMember in membership.room.members" :key="roomMember.id" class="mt-2 mb-6">
+      <div v-if="roomMember.id !== membership.member_id" class="flex">
         <button
-          v-if="member.id !== membership.member_id"
+          v-if="roomMember.id !== membership.member_id"
           aria-live="assertive"
           class="btn btn-danger mr-4"
-          :disabled="kicking && member.id === kickedMemberId"
-          @click="() => kickedMemberId === member.id
+          :disabled="kicking && roomMember.id === kickedMemberId"
+          @click="() => kickedMemberId === roomMember.id
             ? confirmKick.confirm()
-            : confirmKick.reveal(member.id)"
-          v-text="kickedMemberId === member.id
+            : confirmKick.reveal(roomMember.id)"
+          v-text="kickedMemberId === roomMember.id
             ? t('Click again to confirm')
             : t('Kick')"
         />
-        <div class="flex-grow text-lg">{{ member.name }}</div>
+        <div class="flex-grow text-lg">
+          {{ roomMember.name }}
+        </div>
       </div>
       <div v-else class="flex">
         <input
-          v-on-key-stroke:Enter="() => updateNameButton![0].click()"
           v-model="name"
+          v-on-key-stroke:Enter="() => updateNameButton![0].click()"
           class="flex-grow text-lg"
         >
         <button
           ref="updateNameButton"
-          :disabled="name === member.name"
+          :disabled="name === roomMember.name"
           class="btn ml-4 py-1!"
           style="white-space: nowrap"
           @click="updateName"
@@ -104,14 +106,14 @@ confirmLeave.onConfirm(() => {
         readonly
         :value="inviteUrl"
         class="flex-grow rounded-0! rounded-l!"
-      />
+      >
       <button
-        aria-live="polite"
         v-aria-title="copyUrl.isRevealed.value ? t('Copied!') : t('Copy to clipboard')"
+        aria-live="polite"
         class="btn rounded-0! rounded-r!"
         @click="() => copyUrl.reveal()"
       >
-        <i-carbon-copy v-if="!copyUrl.isRevealed.value"/>
+        <i-carbon-copy v-if="!copyUrl.isRevealed.value" />
         <template v-else>
           {{ t('Copied!') }}
         </template>
@@ -119,7 +121,7 @@ confirmLeave.onConfirm(() => {
     </div>
   </label>
 
-  <hr class="w-10% dark:opacity-40 mr-auto"/>
+  <hr class="w-10% dark:opacity-40 mr-auto">
 
   <button
     aria-live="assertive"

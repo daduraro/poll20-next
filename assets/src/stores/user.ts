@@ -1,26 +1,22 @@
+import type { Game, Member, Room } from '~/types'
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import {
-  type Room,
-  type Member,
-  type Game
-} from '~/types'
 
-export type Membership = {
-  room: Room & { 
-    members: Member[];
-    games: Game[];
-  };
-  member_id: Member['id'];
+export interface Membership {
+  room: Room & {
+    members: Member[]
+    games: Game[]
+  }
+  member_id: Member['id']
 }
 
 export const useUserStore = defineStore('user', () => {
   const storageKey = 'pinia/memberships'
   const memberships = ref<Membership[]>(
-    JSON.parse(localStorage.getItem(storageKey) || JSON.stringify([]))
+    JSON.parse(localStorage.getItem(storageKey) || JSON.stringify([])),
   )
-  
-  watch(memberships, value => localStorage.setItem(storageKey, JSON.stringify(value)), {deep: true})
-  
+
+  watch(memberships, value => localStorage.setItem(storageKey, JSON.stringify(value)), { deep: true })
+
   const route = useRoute()
   // the store is used from any page; only room pages have an `id` param
   const roomId = computed(() => 'id' in route.params ? route.params.id : undefined)
@@ -34,15 +30,15 @@ export const useUserStore = defineStore('user', () => {
     memberships.value.splice(memberships.value.findIndex(membership => membership.room.id === room_id), 1)
   }
 
-  async function refreshMembership(current: Membership|undefined, previous: Membership|undefined = undefined) {
+  async function refreshMembership(current: Membership | undefined, previous: Membership | undefined = undefined) {
     if (current && !previous) {
       const { data } = await useApi<Membership['room']>('get', `rooms/${current.room.id}`, {
         query: {
           include: [
             'members',
             'games.owners',
-          ]
-        }
+          ],
+        },
       })
       const room = data.value?.entity
       if (room) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { Attendee, Member, Session } from '~/types'
 import { formatRelative } from 'date-fns'
 import { compose, sortBy } from 'ramda'
-import { Attendee, Member, Session } from '~/types'
 
 const route = useRoute()
 const { t } = useI18n()
@@ -10,16 +10,16 @@ const { data } = useApi<SessionWithMembers>('get', 'sessions', {
   query: {
     include: ['attendees.member', 'game'],
     sort: '-inserted_at',
-  }
+  },
 })
 
-const sessions = computed(() => (data.value?.entities ?? []).map(session => {
+const sessions = computed(() => (data.value?.entities ?? []).map((session) => {
   const attendees = sortBy(attendee => attendee.member.name, session.attendees)
   const winners = attendees.filter(attendee => attendee.winner)
   return {
     ...session,
     attendees,
-    winners
+    winners,
   }
 }))
 
@@ -45,7 +45,7 @@ onConfirm((index: number) => {
     </router-link>
   </p>
   <ul v-else class="remove-list-style">
-    <li v-for="(session, index) in sessions" class="border border-rounded p-2 mb-2">
+    <li v-for="(session, index) in sessions" :key="session.id" class="border border-rounded p-2 mb-2">
       <div class="flex justify-end">
         <button
           aria-live="assertive"
@@ -71,12 +71,12 @@ onConfirm((index: number) => {
           <strong class="text-xl">{{ session.game.name }}</strong>
         </dt>
         <dd>
-          <i-mdi-clock/>
+          <i-mdi-clock />
           <span class="sr-only">{{ t('Date') }}</span>
         </dd>
         <dt>{{ formatRelative(new Date(session.inserted_at), new Date) }}</dt>
         <dd>
-          <i-mdi-trophy/>
+          <i-mdi-trophy />
           <span class="sr-only">{{ t('Winners') }}</span>
         </dd>
         <dt>
@@ -91,13 +91,13 @@ onConfirm((index: number) => {
           </template>
         </dt>
         <dd>
-          <i-mdi-users/>
+          <i-mdi-users />
           <span class="sr-only">{{ t('Players') }}</span>
         </dd>
         <dt>{{ session.attendees.map(attendee => attendee.member.name).join(', ') }}</dt>
         <template v-if="session.comment">
           <dd>
-            <i-mdi-comment/>
+            <i-mdi-comment />
             <span class="sr-only">{{ t('Comments') }}</span>
           </dd>
           <dt>{{ session.comment }}</dt>

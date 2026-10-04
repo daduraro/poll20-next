@@ -1,4 +1,4 @@
-export const randomPick = <T extends Array<any>>(items: T): T[number] => {
+export function randomPick<T extends Array<any>>(items: T): T[number] {
   return items[Math.floor(Math.random() * items.length)]
 }
 
@@ -12,7 +12,7 @@ export const randomPick = <T extends Array<any>>(items: T): T[number] => {
  * )
  * ```
  */
-export function sortByTiered<T>(getValues: ((value: T) => (number|string)[]), array: T[]): T[] {
+export function sortByTiered<T>(getValues: ((value: T) => (number | string)[]), array: T[]): T[] {
   const copy = array.slice()
   copy.sort((a, b) => {
     const aValues = getValues(a)

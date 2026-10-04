@@ -4,9 +4,9 @@ const { membership } = useUserStore()
 </script>
 
 <template>
-  <TheRoomNav v-if="membership"/>
+  <TheRoomNav v-if="membership" />
   <main>
-    <RouterView v-if="membership"/>
+    <RouterView v-if="membership" />
     <div class="text-right mt-8">
       <router-link :to="{ name: '/' }">
         {{ t('Go back') }}

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import faviconUrl from '~/assets/logo-plain-transparent.svg?url'
+
 const route = useRoute()
 
 useHead({
-  title: computed(() => 'Poll20' + (route.meta.title? ` - ${route.meta.title}` : '')),
+  title: computed(() => `Poll20${route.meta.title ? ` - ${route.meta.title}` : ''}`),
   meta: [
     { name: 'description', content: 'Boardgame voting and logging' },
     {

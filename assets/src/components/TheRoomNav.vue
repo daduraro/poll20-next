@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import IconPoll from '~icons/line-md/arrows-vertical'
-import IconSettings from '~icons/carbon/settings'
 import IconStatistics from '~icons/carbon/chart-pie'
+import IconSettings from '~icons/carbon/settings'
 import IconGames from '~icons/fluent/library-16-filled'
+import IconPoll from '~icons/line-md/arrows-vertical'
 import IconHistory from '~icons/material-symbols/history-rounded'
 
 // only rendered by room.vue when there is a membership
@@ -42,11 +42,11 @@ const links = computed(() => [
   <nav class="text-xl text-center mb-6 flex border-1 border-rounded">
     <router-link
       v-for="(link, index) in links" :key="index"
-      :to="{ ...link.route, params: { id: membership.room.id } }"
       v-aria-title="t('Go to {name}', link)"
+      :to="{ ...link.route, params: { id: membership.room.id } }"
       class="icon-btn text-2xl p-4 flex-grow"
     >
-      <component :is="link.icon" class="mx-auto"/>
+      <component :is="link.icon" class="mx-auto" />
     </router-link>
   </nav>
 </template>

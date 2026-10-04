@@ -1,8 +1,8 @@
-"{count} games filtered out": "{count} games filtered out"
-"Invite link:": "Invite link:"
-"Only games played by the following members:": "Only games played by the following members:"
-"Only include these games:": "Only include these games:"
-"Your rooms:": "Your rooms:"
+'{count} games filtered out': '{count} games filtered out'
+'Invite link:': 'Invite link:'
+'Only games played by the following members:': 'Only games played by the following members:'
+'Only include these games:': 'Only include these games:'
+'Your rooms:': 'Your rooms:'
 About: About
 Add game: Add game
 Any: Any
@@ -11,10 +11,10 @@ Change language: Change language
 Change name: Change name
 Choose game: Choose game
 Choose member: Choose member
-"Click again to confirm": "Click again to confirm"
+Click again to confirm: Click again to confirm
 Comments: Comments
-"Confirm?": "Confirm?"
-"Copied!": "Copied!"
+Confirm?: Confirm?
+Copied!: Copied!
 Copy to clipboard: Copy to clipboard
 Create room: Create room
 Date: Date
@@ -22,7 +22,7 @@ Delete {name}: Delete {name}
 Delete: Delete
 Edit {name}: Edit {name}
 Edit game: Edit game
-"Everyone": "Everyone"
+Everyone: Everyone
 Exclude coop games: Exclude coop games
 Filter by max number of players of the game: Filter by max number of players of the game
 Game owners: Game owners
@@ -39,26 +39,26 @@ Join: Join
 Kick: Kick
 Leave room: Leave room
 Loading...: Loading...
-"Log games in the poll tab": "Log games in the poll tab"
+Log games in the poll tab: Log games in the poll tab
 Log session of {name}: Log session of {name}
 Log session: Log session
-"Logged successfully": "Logged successfully"
+Logged successfully: Logged successfully
 Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.: Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.
 Match all owners: Match all owners
 Max number of players: Max number of players
 Members: Members
-"Most played": "Most played"
+Most played: Most played
 Name: Name
-"No games have been logged yet.": "No games have been logged yet."
+No games have been logged yet.: No games have been logged yet.
 Nobody: Nobody
-"Not found": "Not found"
+Not found: Not found
 Only count votes of present members: Only count votes of present members
 Only show games of present members: Only show games of present members
 Or...: Or...
 Players: Players
 Presence: Presence
 Refresh votes: Refresh votes
-"Remove {name} from filter": "Remove {name} from filter"
+'Remove {name} from filter': 'Remove {name} from filter'
 Room name: Room name
 Save: Save
 Select all: Select all
@@ -67,9 +67,9 @@ Statistics: Statistics
 Times played: Times played
 Toggle dark mode: Toggle dark mode
 Toggle filters: Toggle filters
-"Toggle games filter": "Toggle games filter"
+Toggle games filter: Toggle games filter
 Toggle list of votes: Toggle list of votes
-"Toggle players filter": "Toggle players filter"
+Toggle players filter: Toggle players filter
 Vote down: Vote down
 Vote up: Vote up
 Votes: Votes

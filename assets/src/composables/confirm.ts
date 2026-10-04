@@ -1,6 +1,7 @@
-import { useConfirmDialog as _useConfirmDialog, type UseConfirmDialogReturn } from "@vueuse/core";
-import { ref, type Ref } from "vue";
-import { wrap } from "~/lib/utils/function";
+import type { UseConfirmDialogReturn } from '@vueuse/core'
+import type { Ref } from 'vue'
+import { ref } from 'vue'
+import { wrap } from '~/lib/utils/function'
 
 type Dialog = UseConfirmDialogReturn<any, any, any>
 
@@ -15,7 +16,7 @@ export function withTiming(timeout = 2000) {
       handler && clearTimeout(handler)
       handler = setTimeout(dialog.cancel, timeout)
       return callback(...args)
-    })
+    }),
   })
 }
 

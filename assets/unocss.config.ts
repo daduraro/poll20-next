@@ -2,8 +2,8 @@ import {
   defineConfig,
   presetAttributify,
   presetTypography,
-  presetWind3,
   presetWebFonts,
+  presetWind3,
   transformerDirectives,
   transformerVariantGroup,
 } from 'unocss'

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { Game, Member, Session } from '~/types'
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js'
 import { groupBy, indexBy, sortBy, sum, values } from 'ramda'
-import { Game, Member, Session } from '~/types'
 import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const { t } = useI18n()
@@ -15,7 +16,7 @@ const { data } = useApi<Session>('get', 'sessions', {
   query: {
     include: ['attendees.member', 'game'],
     sort: '-inserted_at',
-  }
+  },
 })
 
 const filterVisibility = ref({
@@ -38,12 +39,12 @@ function selectViaInput(filter: string[], event: any) {
 
 const sessions = computed((): Session[] => (data?.value?.entities ?? []))
 const filteredSessions = computed(
-  () => sessions.value.filter(session => {
+  () => sessions.value.filter((session) => {
     const { gameIds, memberIds, excludeCoop } = filters.value
     return (gameIds.length === 0 || gameIds.some(id => session.game.id === id))
       && (memberIds.length === 0 || memberIds.every(id => session.attendees.find(attendee => attendee.member_id === id)))
       && (!excludeCoop || session.attendees.slice(1).some((attendee, previousIndex) => attendee.winner !== session.attendees[previousIndex].winner))
-  })
+  }),
 )
 
 const style = getComputedStyle(document.body)
@@ -64,7 +65,7 @@ charts.value.push(computed(() => {
   const games = sortBy(
     game => game.count,
     sortBy(game => -game.count, played)
-      .filter((game, index) => index < limit || filters.value.gameIds.includes(game.id))
+      .filter((game, index) => index < limit || filters.value.gameIds.includes(game.id)),
   )
   const total = sum(games.map(game => game.count))
 
@@ -77,9 +78,9 @@ charts.value.push(computed(() => {
         {
           label: t('Times played'),
           data: games.map(game => game.count),
-          backgroundColor: style.getPropertyValue('--main-color')
-        }
-      ]
+          backgroundColor: style.getPropertyValue('--main-color'),
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -97,16 +98,16 @@ charts.value.push(computed(() => {
       plugins: {
         tooltip: {
           callbacks: {
-            label: function (context: any) {
-              let label = context.dataset.label || '';
+            label(context: any) {
+              const label = context.dataset.label || ''
               const shownPercentage = (100 * context.parsed.y / total).toFixed(2)
               const allPercentage = (100 * context.parsed.y / sessions.value.length).toFixed(0)
-              return `${label}: ${context.parsed.y} (${shownPercentage}% of shown, ${allPercentage}% of total)`;
+              return `${label}: ${context.parsed.y} (${shownPercentage}% of shown, ${allPercentage}% of total)`
             },
           },
-        }
+        },
       },
-    }
+    },
   }
 }))
 
@@ -116,12 +117,12 @@ charts.value.push(computed(() => {
 charts.value.push(computed(() => {
   const attendees = filteredSessions.value.flatMap(session => session.attendees)
   const winrates = values(groupBy(attendee => attendee.member_id, attendees))
-    .map(attendees => {
+    .map((attendees) => {
       const won = attendees!.filter(attendee => attendee.winner)
       const winrate = won.length / attendees!.length
       return {
         ...membersById.value[attendees![0].member_id],
-        winrate
+        winrate,
       }
     })
   const members = sortBy(member => member.winrate, winrates)
@@ -134,9 +135,9 @@ charts.value.push(computed(() => {
         {
           label: t('Winrate'),
           data: members.map(member => (member.winrate * 100)),
-          backgroundColor: style.getPropertyValue('--main-color')
-        }
-      ]
+          backgroundColor: style.getPropertyValue('--main-color'),
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -150,10 +151,9 @@ charts.value.push(computed(() => {
           max: 100,
         },
       },
-    }
+    },
   }
 }))
-
 </script>
 
 <template>
@@ -163,28 +163,34 @@ charts.value.push(computed(() => {
   <div>
     <div class="flex justify-end">
       <span class="flex-grow" />
-      <button aria-controls="filters-games" v-aria-title="t('Toggle games filter')"
-        class="icon-btn border border-rounded p-2 display-block" :class="{ active: filterVisibility.games, 'mr-2': true }"
-        @click="filterVisibility.games = !filterVisibility.games">
+      <button
+        v-aria-title="t('Toggle games filter')" aria-controls="filters-games"
+        class="icon-btn border border-rounded p-2 display-block mr-2" :class="{ active: filterVisibility.games }"
+        @click="filterVisibility.games = !filterVisibility.games"
+      >
         <i-fa-gamepad />
       </button>
-      <button aria-controls="filters-players" v-aria-title="t('Toggle players filter')"
+      <button
+        v-aria-title="t('Toggle players filter')" aria-controls="filters-players"
         class="icon-btn border border-rounded p-2 display-block" :class="{ active: filterVisibility.players }"
-        @click="filterVisibility.players = !filterVisibility.players">
+        @click="filterVisibility.players = !filterVisibility.players"
+      >
         <i-fa-user />
       </button>
     </div>
-    <div id="filters-games" v-show="filterVisibility.games" class="p-2 border-rounded mt-2 border">
+    <div v-show="filterVisibility.games" id="filters-games" class="p-2 border-rounded mt-2 border">
       <!-- options -->
       <div class="options">
         <label>
-          <input type="checkbox" v-model="filters.excludeCoop"> {{ t('Exclude coop games') }}
+          <input v-model="filters.excludeCoop" type="checkbox"> {{ t('Exclude coop games') }}
         </label>
         <label for="filter-games" class="flex">
           {{ t('Only include these games:') }}
         </label>
         <select id="filter-games" @input="selectViaInput(filters.gameIds, $event)">
-          <option value="">{{ t('Choose game') }}</option>
+          <option value="">
+            {{ t('Choose game') }}
+          </option>
           <option v-for="game in games" :key="game.id" :value="game.id">
             {{ game.name }}
           </option>
@@ -202,14 +208,16 @@ charts.value.push(computed(() => {
         </ul>
       </div>
     </div>
-    <div id="filters-players" v-show="filterVisibility.players" class="p-2 border-rounded mt-2 border">
+    <div v-show="filterVisibility.players" id="filters-players" class="p-2 border-rounded mt-2 border">
       <!-- options -->
       <div class="options">
         <label for="filter-players" class="flex">
           {{ t('Only games played by the following members:') }}
         </label>
         <select id="filter-players" @input="selectViaInput(filters.memberIds, $event)">
-          <option value="">{{ t('Choose member') }}</option>
+          <option value="">
+            {{ t('Choose member') }}
+          </option>
           <option v-for="member in membership!.room.members" :key="member.id" :value="member.id">
             {{ member.name }}
           </option>

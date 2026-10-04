@@ -1,5 +1,5 @@
+import type { UserModule } from '~/types'
 import NProgress from 'nprogress'
-import { type UserModule } from '~/types'
 
 export const install: UserModule = ({ router }) => {
   router.beforeEach((to, from) => {

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Member, Room } from '~/types';
+import type { Member, Room } from '~/types'
 
 const { t } = useI18n()
 const route = useRoute('/join/[invite_code]')
+const router = useRouter()
 const { join: addMembership, memberships } = useUserStore()
 
 // load room
@@ -11,7 +12,7 @@ const { data, onFetchResponse } = useApi<RoomWithMembers>('get', 'rooms', {
   query: {
     invite_code: route.params.invite_code,
     include: 'members',
-  }
+  },
 })
 const room = computed(() => data.value?.entities?.[0])
 // redirect to room if already a member
@@ -22,9 +23,8 @@ onFetchResponse(() => {
 })
 
 // join room logic
-let busy = ref(false)
+const busy = ref(false)
 const newMember = ref({ name: '' })
-const router = useRouter()
 const form = [
   {
     id: 'name',
@@ -34,7 +34,7 @@ const form = [
       type: 'text',
       required: true,
     },
-  }
+  },
 ]
 
 function joinWith(room: RoomWithMembers, member: Member) {
@@ -50,11 +50,11 @@ async function addMemberAndJoin() {
   const join = await useApi<RoomWithMembers>('patch', `/rooms/${room.value!.id}/join`, {
     query: {
       invite_code: room.value!.invite_code,
-      include: 'members'
+      include: 'members',
     },
     attributes: {
-      name: newMember.value.name
-    }
+      name: newMember.value.name,
+    },
   })
   busy.value = false
   const joined = join.data.value?.entity

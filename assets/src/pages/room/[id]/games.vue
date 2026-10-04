@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { withArguments, withTiming } from '~/composables/confirm'
+import type { Game, Member } from '~/types'
 import { range, sortBy } from 'ramda'
-import {
-  type Game,
-  type Member
-} from '~/types'
+import { withArguments, withTiming } from '~/composables/confirm'
 
 const { t } = useI18n()
 const { membership } = useUserStore()
@@ -15,12 +12,12 @@ const playerNumberOptions = range(1, 21)
 
 const editForm = ref({
   title: computed((): string => editForm.value.id ? t('Edit game') : t('Add game')),
-  id: null as Game['id']|null,
+  id: null as Game['id'] | null,
   busy: false,
   value: {
     name: '',
     owners: [] as Member['id'][],
-    players_max: null as number|null,
+    players_max: null as number | null,
     match_all_owners: false,
   },
   definition: [
@@ -30,19 +27,19 @@ const editForm = ref({
       is: 'input',
       attrs: {
         type: 'text',
-        required: true
-      }
+        required: true,
+      },
     },
     {
       id: 'players_max',
-      label: t('Max number of players')
+      label: t('Max number of players'),
     },
     {
       id: 'owners',
     },
     {
       id: 'match_all_owners',
-      label: t('Match all owners')
+      label: t('Match all owners'),
     },
   ],
   reset(game: Partial<Game> = {}) {
@@ -59,14 +56,14 @@ const editForm = ref({
   },
   async submit() {
     const patch = {
-        ...editForm.value.value,
-        owners: membership!.room.members.filter(member => editForm.value.value.owners.includes(member.id))
+      ...editForm.value.value,
+      owners: membership!.room.members.filter(member => editForm.value.value.owners.includes(member.id)),
     }
 
     // api complains about nulls
     const attributes = {
       ...editForm.value.value,
-      players_max: editForm.value.value.players_max ?? "",
+      players_max: editForm.value.value.players_max ?? '',
     }
 
     const games = membership!.room.games
@@ -80,8 +77,8 @@ const editForm = ref({
       const { data } = await useApi<Game>('post', `games`, {
         attributes: {
           ...attributes,
-          room_id: membership!.room.id
-        }
+          room_id: membership!.room.id,
+        },
       })
       editForm.value.busy = false
       games.push({ id: data.value!.entity!.id, players_min: null, ...patch })
@@ -90,12 +87,13 @@ const editForm = ref({
   },
 })
 
-const refGames = ref<HTMLUListElement|null>(null)
+const refGames = ref<HTMLUListElement | null>(null)
 const { reveal, revealArguments, isRevealed, confirm, onConfirm } = withTiming()(withArguments()(useConfirmDialog()))
 onConfirm((id: Game['id']) => {
   useApi<Game>('delete', `games/${id}`)
   membership!.room.games.splice(
-    membership!.room.games.findIndex(item => item.id === id), 1
+    membership!.room.games.findIndex(item => item.id === id),
+    1,
   )
   nextTick(() => refGames.value!.focus())
 })
@@ -107,19 +105,21 @@ onConfirm((id: Game['id']) => {
       {{ t('You haven\'t defined any games yet') }}
     </p>
     <ul
-      ref="refGames"
       id="games"
+      ref="refGames"
       tabindex="-1"
       :aria-label="t('Games')"
     >
       <li v-for="game in gamesSorted" :key="game.id">
         <div class="flex mb-2">
+          <!-- single-item v-for to name a local value; constant key keeps the element (and focus) -->
+          <!-- eslint-disable vue/valid-v-for -->
           <button
             v-for="revealed in [isRevealed && revealArguments[0] === game.id]" :key="0"
-            aria-controls="games"
             v-aria-title="revealed
               ? t('Confirm?')
               : t('Delete {name}', game)"
+            aria-controls="games"
             class="mr-2 btn btn-danger"
             @click="() => revealed
               ? confirm(game.id)
@@ -129,12 +129,13 @@ onConfirm((id: Game['id']) => {
               {{ t('Confirm?') }}
             </template>
             <template v-else>
-              <i-fa-solid-times/>
+              <i-fa-solid-times />
               <span class="sr-only">
                 {{ t('Delete {name}', game) }}
               </span>
             </template>
           </button>
+          <!-- eslint-enable vue/valid-v-for -->
           <button
             v-aria-title="t('Edit {name}', game)"
             class="mr-2 btn"
@@ -142,8 +143,8 @@ onConfirm((id: Game['id']) => {
               ? editForm.edit(game)
               : editForm.reset()"
           >
-            <i-fa-solid-pencil-alt v-if="editForm.id !== game.id"/>
-            <i-fa-solid-arrow-left v-else/>
+            <i-fa-solid-pencil-alt v-if="editForm.id !== game.id" />
+            <i-fa-solid-arrow-left v-else />
           </button>
           <div class="flex-grow text-2xl">
             {{ game.name }}
@@ -151,7 +152,7 @@ onConfirm((id: Game['id']) => {
         </div>
       </li>
     </ul>
-    
+
     <PForm
       id="form"
       v-model:value="editForm.value"
@@ -162,15 +163,19 @@ onConfirm((id: Game['id']) => {
     >
       <template #players_max>
         <select v-model="editForm.value.players_max">
-          <option :value="null">{{ t('Any') }}</option>
-          <option v-for="number in playerNumberOptions" :key="number" :value="number">{{ number }}</option>
+          <option :value="null">
+            {{ t('Any') }}
+          </option>
+          <option v-for="number in playerNumberOptions" :key="number" :value="number">
+            {{ number }}
+          </option>
         </select>
       </template>
       <template #owners>
         <fieldset>
           <legend>{{ t('Game owners') }}</legend>
           <div v-for="member in membership!.room.members" :key="member.id" class="flex">
-            <input :id="`member-${member.id}`" type="checkbox" v-model="editForm.value.owners" name="owner" :value="member.id" class="m-2">
+            <input :id="`member-${member.id}`" v-model="editForm.value.owners" type="checkbox" name="owner" :value="member.id" class="m-2">
             <label :for="`member-${member.id}`">{{ member.name }}</label>
           </div>
         </fieldset>
@@ -178,8 +183,8 @@ onConfirm((id: Game['id']) => {
       <template #match_all_owners>
         <label style="font-weight: normal">
           <input
-            type="checkbox"
             v-model="editForm.value.match_all_owners"
+            type="checkbox"
             aria-describedby="match_all_owners-description"
           > {{ t('Make the game available only if the list of present players exactly matches the list of owners. Useful for role-playing campaigns.') }}
         </label>

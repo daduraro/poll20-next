@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import logoXml from '~/assets/logo-themable.svg?raw'
+
 const { t } = useI18n()
 </script>
 
