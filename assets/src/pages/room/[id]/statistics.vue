@@ -65,7 +65,6 @@ charts.value.push(computed(() => {
     game => game.count,
     sortBy(game => -game.count, played)
       .filter((game, index) => index < limit || filters.value.gameIds.includes(game.id))
-      .slice(0, limit)
   )
   const total = sum(games.map(game => game.count))
 
