@@ -41,6 +41,7 @@ export const useUserStore = defineStore('user', () => {
           ],
           // aggregates are only loaded on request, and listing fields replaces the defaults
           'fields[game]': [...defaultFields.game, 'last_played_at'].join(','),
+          'fields[member]': [...defaultFields.member, 'has_sessions'].join(','),
         },
       })
       const room = data.value?.entity

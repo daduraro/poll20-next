@@ -8,6 +8,8 @@ defmodule Poll20.Room do
       Ash.Policy.Authorizer
     ]
 
+  require Ash.Query
+
   json_api do
     type "room"
 
@@ -64,6 +66,22 @@ defmodule Poll20.Room do
 
       argument :member_id, :uuid do
         allow_nil? false
+      end
+
+      # kicking destroys the member and, with it, their part in the logged sessions
+      validate fn changeset, _context ->
+        member_id = Ash.Changeset.get_argument(changeset, :member_id)
+
+        has_sessions? =
+          Poll20.SessionMember
+          |> Ash.Query.filter(member_id == ^member_id)
+          |> Ash.exists?(authorize?: false)
+
+        if has_sessions? do
+          {:error, field: :member_id, message: "has logged sessions"}
+        else
+          :ok
+        end
       end
 
       change manage_relationship(:member_id, :members,

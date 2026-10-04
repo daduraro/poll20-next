@@ -308,7 +308,7 @@ export interface paths {
                     fields?: {
                         /**
                          * @description Comma separated field names for member
-                         * @example id,name,room_id
+                         * @example id,name,active,room_id
                          */
                         member?: string;
                     } & {
@@ -365,7 +365,7 @@ export interface paths {
                     fields?: {
                         /**
                          * @description Comma separated field names for member
-                         * @example id,name,room_id
+                         * @example id,name,active,room_id
                          */
                         member?: string;
                     } & {
@@ -413,7 +413,7 @@ export interface paths {
                     fields?: {
                         /**
                          * @description Comma separated field names for member
-                         * @example id,name,room_id
+                         * @example id,name,active,room_id
                          */
                         member?: string;
                     } & {
@@ -432,6 +432,7 @@ export interface paths {
                     "application/vnd.api+json": {
                         data: {
                             attributes?: {
+                                active?: boolean | null;
                                 name?: string | null;
                             };
                             id: string;
@@ -1642,7 +1643,9 @@ export interface components {
          * @example
          */
         "member-filter": {
+            active?: components["schemas"]["member-filter-active"];
             and?: components["schemas"]["member-filter"][];
+            has_sessions?: components["schemas"]["member-filter-has_sessions"];
             id?: components["schemas"]["member-filter-id"];
             name?: components["schemas"]["member-filter-name"];
             not?: components["schemas"]["member-filter"];
@@ -1682,6 +1685,18 @@ export interface components {
             less_than_or_equal?: unknown;
             not_eq?: unknown;
         };
+        "member-filter-active": {
+            eq?: boolean;
+            greater_than?: boolean;
+            greater_than_or_equal?: boolean;
+            in?: boolean[];
+            is_distinct_from?: boolean;
+            is_nil?: boolean;
+            is_not_distinct_from?: boolean;
+            less_than?: boolean;
+            less_than_or_equal?: boolean;
+            not_eq?: boolean;
+        };
         "game-filter-match_all_owners": {
             eq?: boolean;
             greater_than?: boolean;
@@ -1698,6 +1713,9 @@ export interface components {
         member: {
             /** @description An attributes object for a member */
             attributes?: {
+                /** @description Field included by default. */
+                active: boolean;
+                has_sessions?: (boolean | null) | null;
                 /** @description Field included by default. */
                 name: string;
                 /**
@@ -1982,6 +2000,18 @@ export interface components {
             not_eq?: string;
             string_ends_with?: string;
             string_starts_with?: string;
+        };
+        "member-filter-has_sessions": {
+            eq?: boolean;
+            greater_than?: boolean;
+            greater_than_or_equal?: boolean;
+            in?: boolean[];
+            is_distinct_from?: boolean;
+            is_nil?: boolean;
+            is_not_distinct_from?: boolean;
+            less_than?: boolean;
+            less_than_or_equal?: boolean;
+            not_eq?: boolean;
         };
         "session_member-filter-member_id": {
             /** Format: uuid */

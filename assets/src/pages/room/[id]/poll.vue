@@ -19,12 +19,18 @@ const { t, locale } = useI18n()
 const { membership } = useUserStore()
 
 const members = computed(() => membership?.room.members ?? [])
-const membersSorted = computed(() => sortBy(prop('name'), members.value))
+// members deactivated in the settings (e.g. ex-members with logged sessions) can't be present
+const membersInPoll = computed(() => members.value.filter(member => member.active))
+const membersSorted = computed(() => sortBy(prop('name'), membersInPoll.value))
 const membersById = computed(() => indexBy(prop('id'), members.value))
+// the stored selection can hold members that were deactivated since
+const membersSelected = computed(
+  () => membersInPoll.value.filter(member => filters.value.activeMemberIds.some(equals(member.id))),
+)
 const membersActive = computed(
-  () => filters.value.activeMemberIds.length > 0 // ignore filter if none checked
-    ? members.value.filter(member => filters.value.activeMemberIds.some(equals(member.id)))
-    : members.value,
+  () => membersSelected.value.length > 0 // ignore filter if none checked
+    ? membersSelected.value
+    : membersInPoll.value,
 )
 const activeMemberIds = computed(() => new Set(membersActive.value.map(member => member.id)))
 
@@ -248,11 +254,11 @@ async function saveSession() {
           <strong>{{ t('Select all') }}</strong>
           <input
             type="checkbox"
-            :checked="filters.activeMemberIds.length === members.length"
-            :indeterminate="filters.activeMemberIds.length > 0 && filters.activeMemberIds.length < members.length"
+            :checked="membersSelected.length > 0 && membersSelected.length === membersInPoll.length"
+            :indeterminate="membersSelected.length > 0 && membersSelected.length < membersInPoll.length"
             class="ml-2"
-            @input="() => filters.activeMemberIds.length < members.length
-              ? filters.activeMemberIds = members.map(member => member.id)
+            @input="() => membersSelected.length < membersInPoll.length
+              ? filters.activeMemberIds = membersInPoll.map(member => member.id)
               : filters.activeMemberIds = []"
           >
         </label>

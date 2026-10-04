@@ -34,7 +34,7 @@ defmodule Poll20.Member do
 
   actions do
     default_accept :*
-    defaults [:create, :destroy, update: [:name]]
+    defaults [:create, :destroy, update: [:name, :active]]
 
     read :read do
       primary? true
@@ -61,6 +61,13 @@ defmodule Poll20.Member do
       public? true
     end
 
+    # inactive members are left out of the poll, for ex-members that can't be kicked
+    attribute :active, :boolean do
+      allow_nil? false
+      public? true
+      default true
+    end
+
     timestamps()
   end
 
@@ -69,6 +76,15 @@ defmodule Poll20.Member do
       allow_nil? false
       public? true
       attribute_writable? true
+    end
+
+    has_many :session_members, Poll20.SessionMember
+  end
+
+  aggregates do
+    # members with logged sessions can't be kicked, that would delete them from the history
+    exists :has_sessions, :session_members do
+      public? true
     end
   end
 end

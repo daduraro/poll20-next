@@ -27,7 +27,10 @@ interface Timestamps {
 
 export type Room = Entity<'room'>
 
-export type Member = Entity<'member'>
+// `has_sessions` is an aggregate, only there when requested (the room's members, see the user store)
+export type Member = Omit<Entity<'member'>, 'has_sessions'> & {
+  has_sessions?: boolean
+}
 
 // `last_played_at` is an aggregate (latest session's `inserted_at`), which the spec leaves untyped
 export type Game = Omit<Entity<'game'>, 'last_played_at'> & {

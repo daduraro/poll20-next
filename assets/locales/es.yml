@@ -1,5 +1,6 @@
 '{count} games filtered out': '{count} juegos no mostrados'
 '{won} of {played}': '{won} de {played}'
+'Inactive members don''t appear in the poll. Members with logged sessions can''t be kicked, make them inactive instead.': 'Los miembros inactivos no aparecen en la votación. Los miembros con partidas registradas no se pueden expulsar, desactívalos en su lugar.'
 'Invite link:': 'Enlace para invitar:'
 'Last played: never': 'Jugado por última vez: nunca'
 'Last played: {date}': 'Jugado por última vez: {date}'
@@ -7,6 +8,7 @@
 'Only include these games:': 'Solo incluir estos juegos:'
 'Your rooms:': 'Tus grupos:'
 About: Acerca de
+Active: Activo
 Add game: Añadir juego
 Any: Cualquiera
 Change color: Cambiar color

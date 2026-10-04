@@ -29,15 +29,31 @@ confirmKick.onCancel(() => kickedMemberId.value = null)
 confirmKick.onConfirm(async () => {
   kicking.value = true
   const member_id = kickedMemberId.value!
-  const { data } = await useApi<Member>('patch', `rooms/${membership!.room.id!}/kick`, {
+  const { data, statusCode } = await useApi<Member>('patch', `rooms/${membership!.room.id!}/kick`, {
     attributes: { member_id },
   })
   kicking.value = false
+  const members = membership!.room.members
   if (data.value) {
-    membership!.room.members.splice(membership!.room.members.findIndex(member => member.id === member_id), 1)
+    members.splice(members.findIndex(member => member.id === member_id), 1)
+    kickedMemberId.value = null
+  }
+  else if (statusCode.value === 400) {
+    // refused: they logged a session since the members were loaded
+    members.find(member => member.id === member_id)!.has_sessions = true
     kickedMemberId.value = null
   }
 })
+
+// =================
+function toggleActive(roomMember: Member) {
+  roomMember.active = !roomMember.active
+  useApi<Member>('patch', `members/${roomMember.id}`, {
+    attributes: {
+      active: roomMember.active,
+    },
+  })
+}
 
 // =================
 const updateNameButton = ref<HTMLButtonElement[] | null>(null)
@@ -63,39 +79,54 @@ confirmLeave.onConfirm(() => {
 
 <template>
   <p>{{ t('Members') }}</p>
+  <p id="members-hint">
+    {{ t('Inactive members don\'t appear in the poll. Members with logged sessions can\'t be kicked, make them inactive instead.') }}
+  </p>
   <ul>
     <li v-for="roomMember in membership.room.members" :key="roomMember.id" class="mt-2 mb-6">
-      <div v-if="roomMember.id !== membership.member_id" class="flex">
-        <button
-          v-if="roomMember.id !== membership.member_id"
-          aria-live="assertive"
-          class="btn btn-danger mr-4"
-          :disabled="kicking && roomMember.id === kickedMemberId"
-          @click="() => kickedMemberId === roomMember.id
-            ? confirmKick.confirm()
-            : confirmKick.reveal(roomMember.id)"
-          v-text="kickedMemberId === roomMember.id
-            ? t('Click again to confirm')
-            : t('Kick')"
-        />
-        <div class="flex-grow text-lg">
-          {{ roomMember.name }}
-        </div>
-      </div>
-      <div v-else class="flex">
-        <input
-          v-model="name"
-          v-on-key-stroke:Enter="() => updateNameButton![0].click()"
-          class="flex-grow text-lg"
-        >
-        <button
-          ref="updateNameButton"
-          :disabled="name === roomMember.name"
-          class="btn ml-4 py-1!"
-          style="white-space: nowrap"
-          @click="updateName"
-          v-text="t('Change name')"
-        />
+      <div class="flex items-center">
+        <template v-if="roomMember.id !== membership.member_id">
+          <button
+            aria-live="assertive"
+            class="btn btn-danger mr-4"
+            :disabled="roomMember.has_sessions || (kicking && roomMember.id === kickedMemberId)"
+            :aria-describedby="roomMember.has_sessions ? 'members-hint' : undefined"
+            @click="() => kickedMemberId === roomMember.id
+              ? confirmKick.confirm()
+              : confirmKick.reveal(roomMember.id)"
+            v-text="kickedMemberId === roomMember.id
+              ? t('Click again to confirm')
+              : t('Kick')"
+          />
+          <div class="flex-grow text-lg">
+            {{ roomMember.name }}
+          </div>
+        </template>
+        <template v-else>
+          <input
+            v-model="name"
+            v-on-key-stroke:Enter="() => updateNameButton![0].click()"
+            class="flex-grow min-w-0 text-lg"
+          >
+          <button
+            ref="updateNameButton"
+            :disabled="name === roomMember.name"
+            class="btn ml-4 py-1!"
+            style="white-space: nowrap"
+            @click="updateName"
+            v-text="t('Change name')"
+          />
+        </template>
+        <label v-if="roomMember.id !== membership.member_id" class="flex items-center ml-4">
+          <input
+            type="checkbox"
+            :checked="roomMember.active"
+            aria-describedby="members-hint"
+            class="mr-2"
+            @change="toggleActive(roomMember)"
+          >
+          {{ t('Active') }}
+        </label>
       </div>
     </li>
   </ul>

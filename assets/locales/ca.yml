@@ -1,5 +1,6 @@
 '{count} games filtered out': '{count} jocs no mostrats'
 '{won} of {played}': '{won} de {played}'
+'Inactive members don''t appear in the poll. Members with logged sessions can''t be kicked, make them inactive instead.': 'Els membres inactius no apareixen a la votació. Els membres amb partides registrades no es poden expulsar, desactiva''ls en lloc d''això.'
 'Invite link:': 'Enllaç per convidar:'
 'Last played: never': 'Jugat per última vegada: mai'
 'Last played: {date}': 'Jugat per última vegada: {date}'
@@ -7,6 +8,7 @@
 'Only include these games:': 'Només incloure aquests jocs:'
 'Your rooms:': 'Els teus grups:'
 About: Sobre l'autor
+Active: Actiu
 Add game: Afegir joc
 Any: Qualsevol
 Change color: Canviar color

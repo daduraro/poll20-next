@@ -1,5 +1,6 @@
 '{count} games filtered out': '{count} games filtered out'
 '{won} of {played}': '{won} of {played}'
+'Inactive members don''t appear in the poll. Members with logged sessions can''t be kicked, make them inactive instead.': 'Inactive members don''t appear in the poll. Members with logged sessions can''t be kicked, make them inactive instead.'
 'Invite link:': 'Invite link:'
 'Last played: never': 'Last played: never'
 'Last played: {date}': 'Last played: {date}'
@@ -7,6 +8,7 @@
 'Only include these games:': 'Only include these games:'
 'Your rooms:': 'Your rooms:'
 About: About
+Active: Active
 Add game: Add game
 Any: Any
 Change color: Change color

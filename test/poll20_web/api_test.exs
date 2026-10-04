@@ -177,6 +177,32 @@ defmodule Poll20Web.ApiTest do
       assert [%{"id" => remaining}] = included(body, "member")
       assert remaining == room.member
     end
+
+    test "kick is refused for members with logged sessions" do
+      room = create_room()
+      bob = join(room, "Bob")
+      game = create_game(room)
+
+      {201, _} =
+        api(:post, "/sessions",
+          member: room.member,
+          attributes: %{game_id: game["id"], attendees: [%{member_id: bob, winner: true}]}
+        )
+
+      {status, body} =
+        api(:patch, "/rooms/#{room.id}/kick", member: room.member, attributes: %{member_id: bob})
+
+      assert status == 400
+      assert [%{"source" => %{"pointer" => "/data/attributes/member_id"}}] = body["errors"]
+
+      {200, body} =
+        api(:get, "/rooms/#{room.id}?include=members&fields[member]=name,has_sessions", member: room.member)
+
+      has_sessions =
+        Map.new(included(body, "member"), &{&1["id"], &1["attributes"]["has_sessions"]})
+
+      assert has_sessions == %{room.member => false, bob => true}
+    end
   end
 
   describe "members" do
@@ -188,6 +214,20 @@ defmodule Poll20Web.ApiTest do
 
       assert status in [200, 201]
       assert member["attributes"]["name"] == "Alicia"
+    end
+
+    test "members are active until deactivated" do
+      room = create_room()
+      bob = join(room, "Bob")
+
+      {200, body} = api(:get, "/rooms/#{room.id}?include=members", member: room.member)
+      assert Enum.all?(included(body, "member"), & &1["attributes"]["active"])
+
+      {status, %{"data" => member}} =
+        api(:patch, "/members/#{bob}", member: room.member, attributes: %{active: false})
+
+      assert status == 200
+      assert member["attributes"]["active"] == false
     end
 
     test "members are sorted by join order" do

@@ -151,6 +151,15 @@ test('full flow', async ({ browser }) => {
   await alice.page.goto(`${roomPath}/statistics`)
   await expect(alice.page.locator('canvas').first()).toBeVisible()
 
+  // --- Members with logged sessions can't be kicked, but can be left out of the poll
+  await alice.page.goto(`${roomPath}/settings`)
+  const bobSettings = alice.page.locator('li').filter({ hasText: 'Bob' })
+  await expect(bobSettings.getByRole('button', { name: 'Kick' })).toBeDisabled()
+  await afterApi(alice.page, 'PATCH', 'members', () => bobSettings.getByLabel('Active', { exact: true }).uncheck())
+  await alice.page.goto(`${roomPath}/poll`)
+  await expect(alice.page.locator('#presence').getByText('Alice')).toBeVisible()
+  await expect(alice.page.locator('#presence').getByText('Bob')).toHaveCount(0)
+
   // --- History entries can be deleted
   await bob.page.goto(`${roomPath}/history`)
   await bob.page.getByRole('button', { name: 'Delete' }).click()
@@ -161,7 +170,7 @@ test('full flow', async ({ browser }) => {
 
   // --- Settings: rename, kick, leave
   await alice.page.goto(`${roomPath}/settings`)
-  const ownName = alice.page.locator('li input:not([readonly])')
+  const ownName = alice.page.locator('li input:not([readonly]):not([type="checkbox"])')
   await ownName.fill('Alicia')
   await afterApi(alice.page, 'PATCH', 'members', () => alice.page.getByRole('button', { name: 'Change name' }).click())
   await alice.page.reload()

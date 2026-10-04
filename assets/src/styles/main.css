@@ -135,6 +135,12 @@ button.btn-danger {
   color: var(--main-color-contrast);
 }
 
+/* icon buttons are left out: the vote buttons are disabled during every votes refresh */
+button:not(.icon-btn):disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 button.btn-link {
   background-color: transparent;
   text-decoration: underline;

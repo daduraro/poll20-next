@@ -8,6 +8,7 @@ export const defaultFields = {
     "room_id"
   ],
   "member": [
+    "active",
     "name",
     "room_id"
   ],

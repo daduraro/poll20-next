@@ -593,12 +593,18 @@
         "description": "Filters the query to results matching the given filter object",
         "example": "",
         "properties": {
+          "active": {
+            "$ref": "#/components/schemas/member-filter-active"
+          },
           "and": {
             "items": {
               "$ref": "#/components/schemas/member-filter"
             },
             "type": "array",
             "uniqueItems": true
+          },
+          "has_sessions": {
+            "$ref": "#/components/schemas/member-filter-has_sessions"
           },
           "id": {
             "$ref": "#/components/schemas/member-filter-id"
@@ -694,6 +700,45 @@
         },
         "type": "object"
       },
+      "member-filter-active": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "type": "boolean"
+          },
+          "greater_than": {
+            "type": "boolean"
+          },
+          "greater_than_or_equal": {
+            "type": "boolean"
+          },
+          "in": {
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "boolean"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "boolean"
+          },
+          "less_than": {
+            "type": "boolean"
+          },
+          "less_than_or_equal": {
+            "type": "boolean"
+          },
+          "not_eq": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
       "game-filter-match_all_owners": {
         "additionalProperties": false,
         "properties": {
@@ -741,6 +786,21 @@
             "additionalProperties": false,
             "description": "An attributes object for a member",
             "properties": {
+              "active": {
+                "description": "Field included by default.",
+                "type": "boolean"
+              },
+              "has_sessions": {
+                "anyOf": [
+                  {
+                    "nullable": true,
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "name": {
                 "description": "Field included by default.",
                 "type": "string"
@@ -753,6 +813,7 @@
             },
             "required": [
               "name",
+              "active",
               "room_id"
             ],
             "type": "object"
@@ -1528,6 +1589,45 @@
           },
           "string_starts_with": {
             "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "member-filter-has_sessions": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "type": "boolean"
+          },
+          "greater_than": {
+            "type": "boolean"
+          },
+          "greater_than_or_equal": {
+            "type": "boolean"
+          },
+          "in": {
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "boolean"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "boolean"
+          },
+          "less_than": {
+            "type": "boolean"
+          },
+          "less_than_or_equal": {
+            "type": "boolean"
+          },
+          "not_eq": {
+            "type": "boolean"
           }
         },
         "type": "object"
@@ -2986,7 +3086,7 @@
             "name": "sort",
             "required": false,
             "schema": {
-              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|room_id|-room_id|\\+\\+room_id|--room_id)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|room_id|-room_id|\\+\\+room_id|--room_id))*$",
+              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|active|-active|\\+\\+active|--active|room_id|-room_id|\\+\\+room_id|--room_id|has_sessions|-has_sessions|\\+\\+has_sessions|--has_sessions)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|active|-active|\\+\\+active|--active|room_id|-room_id|\\+\\+room_id|--room_id|has_sessions|-has_sessions|\\+\\+has_sessions|--has_sessions))*$",
               "type": "string"
             },
             "style": "form"
@@ -3011,12 +3111,12 @@
             "schema": {
               "additionalProperties": true,
               "example": {
-                "member": "id,name,room_id"
+                "member": "id,name,active,room_id"
               },
               "properties": {
                 "member": {
                   "description": "Comma separated field names for member",
-                  "example": "id,name,room_id",
+                  "example": "id,name,active,room_id",
                   "type": "string"
                 }
               },
@@ -3106,12 +3206,12 @@
             "schema": {
               "additionalProperties": true,
               "example": {
-                "member": "id,name,room_id"
+                "member": "id,name,active,room_id"
               },
               "properties": {
                 "member": {
                   "description": "Comma separated field names for member",
-                  "example": "id,name,room_id",
+                  "example": "id,name,active,room_id",
                   "type": "string"
                 }
               },
@@ -3193,12 +3293,12 @@
             "schema": {
               "additionalProperties": true,
               "example": {
-                "member": "id,name,room_id"
+                "member": "id,name,active,room_id"
               },
               "properties": {
                 "member": {
                   "description": "Comma separated field names for member",
-                  "example": "id,name,room_id",
+                  "example": "id,name,active,room_id",
                   "type": "string"
                 }
               },
@@ -3219,6 +3319,16 @@
                       "attributes": {
                         "additionalProperties": false,
                         "properties": {
+                          "active": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
                           "name": {
                             "anyOf": [
                               {
