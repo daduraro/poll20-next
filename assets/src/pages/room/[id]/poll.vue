@@ -4,9 +4,6 @@ import { equals, fromPairs, groupBy, indexBy, prop, sortBy } from 'ramda'
 import seedrandom from 'seedrandom'
 import { sortByTiered } from '~/lib/utils/array'
 
-// votes created locally have no id until the api responds
-type LocalVote = Vote & { handle?: PromiseLike<unknown> }
-
 const route = useRoute()
 const filters = useLocalStorage(`${route.path}.filters`, {
   onlyPresentVotes: true,
@@ -60,7 +57,7 @@ const gamesActive = computed(
 const gamesFilteredCount = computed(() => games.value.length - gamesActive.value.length)
 const openedGameIds = ref<Set<Game['id']>>(new Set())
 
-const votes = ref<LocalVote[]>([])
+const votes = ref<Vote[]>([])
 const votesVisible = computed<(Vote & { active: boolean })[]>(
   () => sortByTiered(
     vote => [
@@ -156,30 +153,33 @@ function throttleVotes() {
   refreshHandle = setTimeout(fetchVotes, refreshRate)
 }
 
+// Voting and refreshing never overlap (the vote buttons are disabled while either runs):
+// a refresh answered before a vote was saved would drop it from the screen, inviting a second vote
+const isVoting = ref(false)
 async function vote(game_id: Game['id'], value: Vote['value'] | undefined) {
-  throttleVotes()
+  refreshHandle && clearTimeout(refreshHandle)
+  isVoting.value = true
 
   const member_id = membership!.member_id
   const current = votes.value.find(vote => vote.member_id === member_id && vote.game_id === game_id)
-  if (current && !current.id) {
-    await current.handle // wait before attempting to operate on new items to quick
-  }
-
   if (current && value === undefined) {
     votes.value.splice(votes.value.indexOf(current), 1)
-    useApi<Vote>('delete', `votes/${current.id}`)
+    await useApi<Vote>('delete', `votes/${current.id}`)
   }
   else if (current && value !== undefined) {
     current.value = value
-    useApi<Vote>('patch', `votes/${current.id}`, { attributes: { value } })
+    await useApi<Vote>('patch', `votes/${current.id}`, { attributes: { value } })
   }
   else if (value !== undefined) {
-    const attributes = { game_id, member_id, value }
-    const localVote: any = { ...attributes, id: null, inserted_at: (new Date()).toISOString(), handle: null }
-    votes.value.push(localVote)
-    localVote.handle = useApi<Vote>('post', 'votes', { attributes })
-    localVote.handle.then(({ data }: any) => localVote.id = data.value.entity!.id)
+    const { data } = await useApi<Vote>('post', 'votes', { attributes: { game_id, member_id, value } })
+    const created = data.value?.entity
+    if (created) {
+      votes.value.push(created)
+    }
   }
+
+  isVoting.value = false
+  throttleVotes()
 }
 
 const loggedGameId = ref<Game['id'] | null>(null)
@@ -284,7 +284,7 @@ async function saveSession() {
         v-aria-title="t('Refresh votes')"
         aria-controls="games"
         class="icon-btn border border-rounded p-2 display-block mr-2"
-        :disabled="isFetching"
+        :disabled="isFetching || isVoting"
         @click="() => fetchVotes()"
       >
         <i-fa-refresh :class="{ 'animate-spin preserve-3d': isFetching } " />
@@ -356,6 +356,7 @@ async function saveSession() {
           <div class="flex flex-col">
             <button
               v-aria-title="t('Vote up')"
+              :disabled="isFetching || isVoting"
               :class="{ active: votesOwnByGame[game.id]?.value === 1 }"
               class="icon-btn mb-4"
               @click="() => vote(game.id, votesOwnByGame[game.id]?.value === 1 ? undefined : 1)"
@@ -364,6 +365,7 @@ async function saveSession() {
             </button>
             <button
               v-aria-title="t('Vote down')"
+              :disabled="isFetching || isVoting"
               :class="{ active: votesOwnByGame[game.id]?.value === -1 }"
               class="icon-btn"
               @click="() => vote(game.id, votesOwnByGame[game.id]?.value === -1 ? undefined : -1)"

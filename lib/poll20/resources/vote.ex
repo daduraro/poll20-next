@@ -38,7 +38,16 @@ defmodule Poll20.Vote do
 
   actions do
     default_accept :*
-    defaults [:create, :read, :destroy, update: [:value]]
+    defaults [:read, :destroy, update: [:value]]
+
+    create :create do
+      primary? true
+      # Voting again on a game replaces the member's vote instead of adding a second one
+      # (e.g. a click racing a refresh, or the same member voting from two devices)
+      upsert? true
+      upsert_identity :unique_member_game
+      upsert_fields [:value, :updated_at]
+    end
   end
 
   policies do
@@ -83,5 +92,9 @@ defmodule Poll20.Vote do
       public? true
       attribute_writable? true
     end
+  end
+
+  identities do
+    identity :unique_member_game, [:member_id, :game_id]
   end
 end

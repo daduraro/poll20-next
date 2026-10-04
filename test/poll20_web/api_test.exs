@@ -338,6 +338,37 @@ defmodule Poll20Web.ApiTest do
       assert status == 400
     end
 
+    test "voting again on the same game replaces the vote instead of adding one" do
+      room = create_room()
+      bob = join(room, "Bob")
+      game = create_game(room)
+      attributes = %{game_id: game["id"], member_id: room.member}
+
+      {201, %{"data" => first}} =
+        api(:post, "/votes", member: room.member, attributes: Map.put(attributes, :value, 1))
+
+      {status, %{"data" => second}} =
+        api(:post, "/votes", member: room.member, attributes: Map.put(attributes, :value, -1))
+
+      assert status == 201
+      assert second["id"] == first["id"]
+      assert second["attributes"]["value"] == -1
+
+      {201, _} =
+        api(:post, "/votes",
+          member: bob,
+          attributes: %{game_id: game["id"], member_id: bob, value: 1}
+        )
+
+      {200, %{"data" => votes}} = api(:get, "/votes", member: room.member)
+
+      values_by_member =
+        Map.new(votes, &{&1["attributes"]["member_id"], &1["attributes"]["value"]})
+
+      assert values_by_member == %{room.member => -1, bob => 1}
+      assert length(votes) == 2
+    end
+
     test "votes from other rooms are not listed" do
       room = create_room()
       game = create_game(room)

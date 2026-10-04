@@ -193,3 +193,66 @@ test('full flow', async ({ browser }) => {
   expect(alice.errors, 'errors in Alice\'s browser').toEqual([])
   expect(bob.errors, 'errors in Bob\'s browser').toEqual([])
 })
+
+// Holds the next request matching `method` and `path` until `release()` is called
+async function holdNextRequest(page: Page, method: string, path: string) {
+  let release!: () => void
+  const released = new Promise<void>(resolve => release = resolve)
+  let held = false
+  await page.route(url => url.pathname === `/api/${path}`, async (route) => {
+    if (route.request().method() !== method || held) {
+      return route.fallback()
+    }
+    held = true
+    await released
+    await route.continue()
+  })
+  return { release }
+}
+
+// A refresh answered before a vote was saved used to drop the vote from the screen, so clicking
+// it again created a duplicate. Voting and refreshing must not overlap
+test('voting and refreshing votes never overlap', async ({ browser }) => {
+  const carol = await person(browser)
+  const page = carol.page
+
+  await page.goto('/')
+  await page.getByLabel('Room name').fill(`${roomName} (refresh race)`)
+  await page.getByLabel('Your name').fill('Carol')
+  await page.getByRole('button', { name: 'Save' }).click()
+  await expect(page).toHaveURL(/\/room\/[0-9a-f-]+\/settings$/)
+  const roomPath = new URL(page.url()).pathname.replace(/\/settings$/, '')
+
+  await page.goto(`${roomPath}/games`)
+  await page.getByLabel('Name', { exact: true }).fill('Azul')
+  await page.getByRole('button', { name: 'Save' }).click()
+  await expect(page.getByRole('button', { name: 'Edit Azul' })).toBeVisible()
+
+  await page.goto(`${roomPath}/poll`)
+  const refreshButton = page.getByRole('button', { name: 'Refresh votes' })
+  const voteUpButton = gameCard(page, 'Azul').getByRole('button', { name: 'Vote up' })
+  await expect(voteUpButton).toBeEnabled()
+
+  // no voting while a refresh is in flight
+  const refresh = await holdNextRequest(page, 'GET', 'votes')
+  await refreshButton.click()
+  await expect(voteUpButton).toBeDisabled()
+  refresh.release()
+  await expect(voteUpButton).toBeEnabled()
+
+  // no refreshing while a vote is being saved
+  const voteRequest = await holdNextRequest(page, 'POST', 'votes')
+  await voteUpButton.click()
+  await expect(refreshButton).toBeDisabled()
+  await expect(voteUpButton).toBeDisabled()
+  await afterApi(page, 'POST', 'votes', async () => voteRequest.release())
+  await expect(refreshButton).toBeEnabled()
+  await expect((await votes(page, 'Azul')).up).toHaveText('1')
+
+  // and the API has exactly that one vote
+  await page.unrouteAll()
+  await page.reload()
+  await expect((await votes(page, 'Azul')).up).toHaveText('1')
+
+  expect(carol.errors, 'errors in Carol\'s browser').toEqual([])
+})
