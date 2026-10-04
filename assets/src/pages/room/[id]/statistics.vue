@@ -123,6 +123,8 @@ charts.value.push(computed(() => {
       return {
         ...membersById.value[attendees![0].member_id],
         winrate,
+        // each winrate is over the sessions that member played, so they can add up to over 100%
+        record: t('{won} of {played}', { won: won.length, played: attendees!.length }),
       }
     })
   const members = sortBy(member => member.winrate, winrates)
@@ -130,7 +132,8 @@ charts.value.push(computed(() => {
     component: Bar,
     title: t('Winrates'),
     data: {
-      labels: members.map(member => member.name),
+      // an array is drawn as one line each
+      labels: members.map(member => [member.name, member.record]),
       datasets: [
         {
           label: t('Winrate'),
@@ -149,6 +152,14 @@ charts.value.push(computed(() => {
           grid: gridStyle,
           min: 0,
           max: 100,
+        },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: (items: any[]) => members[items[0].dataIndex].name,
+            label: (context: any) => `${context.dataset.label}: ${context.parsed.y.toFixed(0)}% (${members[context.dataIndex].record})`,
+          },
         },
       },
     },
