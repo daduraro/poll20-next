@@ -1,2 +1,14 @@
+# drop minimumReleaseAgeExclude entries once the lockfile no longer uses them
+minimumReleaseAgeExcludePrune: true
+
+# reject versions published with weaker provenance than earlier ones (stolen-token releases)
+trustPolicy: no-downgrade
+# legitimate releases that trustPolicy flags; exact versions so newer ones are still checked
+trustPolicyExclude:
+  # npm team's manual 6.x security backport (CVE-2022-25883), needed by babel via vite-plugin-pwa
+  - semver@6.3.1
+  # fork that workbox-build 7.4.1 depends on (^3.0.0-pre1), published without provenance
+  - '@trickfilm400/rollup-plugin-off-main-thread@3.0.0-pre1'
+
 allowBuilds:
   esbuild: true
