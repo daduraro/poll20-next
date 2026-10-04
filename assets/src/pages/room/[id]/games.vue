@@ -8,6 +8,16 @@ const { membership } = useUserStore()
 const games = computed(() => membership?.room.games || [])
 const gamesSorted = computed(() => sortBy(game => game.name.toLowerCase(), games.value))
 
+const nameFilter = ref('')
+// case and accent insensitive, so "catan" also finds "Catán"
+function normalizeName(name: string) {
+  return name.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+}
+const gamesShown = computed(() => {
+  const search = normalizeName(nameFilter.value.trim())
+  return gamesSorted.value.filter(game => normalizeName(game.name).includes(search))
+})
+
 const playerNumberOptions = range(1, 21)
 
 const editForm = ref({
@@ -105,13 +115,20 @@ onConfirm((id: Game['id']) => {
     <p v-if="games.length === 0">
       {{ t('You haven\'t defined any games yet') }}
     </p>
+    <div v-else class="mb-4">
+      <label for="games-filter">{{ t('Search games') }}</label>
+      <input id="games-filter" v-model="nameFilter" type="search" aria-controls="games">
+    </div>
+    <p v-if="games.length > 0 && gamesShown.length === 0">
+      {{ t('No games match the search') }}
+    </p>
     <ul
       id="games"
       ref="refGames"
       tabindex="-1"
       :aria-label="t('Games')"
     >
-      <li v-for="game in gamesSorted" :key="game.id">
+      <li v-for="game in gamesShown" :key="game.id">
         <div class="flex mb-2">
           <!-- single-item v-for to name a local value; constant key keeps the element (and focus) -->
           <!-- eslint-disable vue/valid-v-for -->

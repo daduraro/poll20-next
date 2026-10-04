@@ -85,6 +85,16 @@ test('full flow', async ({ browser }) => {
   await alice.page.getByRole('button', { name: 'Save' }).click()
   await expect(alice.page.getByRole('button', { name: 'Edit Azul' })).toBeVisible()
 
+  // Searching by name: partial, case and accent insensitive
+  const search = alice.page.getByLabel('Search games')
+  await search.fill('ATÁ')
+  await expect(alice.page.getByRole('button', { name: 'Edit Catan' })).toBeVisible()
+  await expect(alice.page.getByRole('button', { name: 'Edit Azul' })).toHaveCount(0)
+  await search.fill('nothing like it')
+  await expect(alice.page.getByText('No games match the search')).toBeVisible()
+  await search.fill('')
+  await expect(alice.page.getByRole('button', { name: 'Edit Azul' })).toBeVisible()
+
   await alice.page.getByRole('button', { name: 'Edit Catan' }).click()
   await expect(alice.page.getByLabel('Name', { exact: true })).toHaveValue('Catan')
   await expect(owners.getByLabel('Alice')).toBeChecked()

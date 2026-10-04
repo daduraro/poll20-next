@@ -56,6 +56,7 @@ Members: Members
 Most played: Most played
 Name: Name
 No games have been logged yet.: No games have been logged yet.
+No games match the search: No games match the search
 No sessions of this game have been logged yet.: No sessions of this game have been logged yet.
 Nobody: Nobody
 Not found: Not found
@@ -63,6 +64,7 @@ Only count votes of present members: Only count votes of present members
 Only show games of present members: Only show games of present members
 Or...: Or...
 Players: Players
+Search games: Search games
 Presence: Presence
 Refresh votes: Refresh votes
 'Remove {name} from filter': 'Remove {name} from filter'

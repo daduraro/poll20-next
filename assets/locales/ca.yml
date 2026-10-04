@@ -56,6 +56,7 @@ Members: Membres
 Most played: Més jugats
 Name: Nom
 No games have been logged yet.: "Encara no s'ha registrat cap partida."
+No games match the search: Cap joc coincideix amb la cerca
 No sessions of this game have been logged yet.: "Encara no s'ha registrat cap partida d'aquest joc."
 Nobody: Ningú
 Not found: No trobat
@@ -63,6 +64,7 @@ Only count votes of present members: Només comptar vots de jugadors presents
 Only show games of present members: Només mostrar jocs de jugadors presents
 Or...: O...
 Players: Jugadors
+Search games: Cercar jocs
 Presence: Jugadors presents
 Refresh votes: Refrescar vots
 'Remove {name} from filter': 'Treure {name} del filtre'
