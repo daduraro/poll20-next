@@ -1,5 +1,6 @@
 import type { App } from 'vue'
 import type { Router } from 'vue-router'
+import type { components } from './api-schema'
 
 export type MaybeArray<T> = T | T[]
 export type ElementType<T> = T extends any[] ? T[number] : never
@@ -8,44 +9,36 @@ export type UserModule = (ctx: { app: App, router: Router }) => void
 
 export type UUID = string
 
-export interface Room {
-  id: UUID
-  type: string
-  name: string
-  invite_code: UUID
-}
+/*
+ * API resources, generated from the backend's OpenAPI spec (`mix api.spec`, then `pnpm api:types`).
+ * `useApi` flattens a JSON:API resource object into its id plus its attributes; relationships
+ * are only present when requested with `include`, so they're added below where they're loaded.
+ */
+type Schemas = components['schemas']
+type ResourceName = 'room' | 'member' | 'game' | 'session' | 'session_member' | 'vote'
+// the api always returns every attribute; nullable ones are just marked as optional in the spec
+type Entity<Name extends ResourceName> = { id: UUID } & Required<NonNullable<Schemas[Name]['attributes']>>
 
-export interface Member {
-  id: UUID
-  name: string
-}
-
-export interface Game {
-  id: UUID
-  name: string
-  owners: Member[]
-  players_min: number | null
-  players_max: number | null
-  match_all_owners: boolean
-}
-
-export interface Session {
-  id: UUID
+// ash_json_api has no OpenAPI type for `timestamps()` (usec datetimes); they're ISO strings
+interface Timestamps {
   inserted_at: string
-  comment: string | null
+  updated_at: string
+}
+
+export type Room = Entity<'room'>
+
+export type Member = Entity<'member'>
+
+export type Game = Entity<'game'> & {
+  owners: Member[]
+}
+
+export type Vote = Omit<Entity<'vote'>, keyof Timestamps> & Timestamps
+
+// a session_member, as created when logging a session
+export type Attendee = Pick<Entity<'session_member'>, 'member_id' | 'winner' | 'vote'>
+
+export type Session = Omit<Entity<'session'>, keyof Timestamps> & Timestamps & {
   game: Game
   attendees: Attendee[]
-}
-
-export interface Vote {
-  id: UUID
-  game_id: Game['id']
-  member_id: Member['id']
-  value: -1 | 1
-  inserted_at: string
-}
-export interface Attendee {
-  member_id: Member['id']
-  winner: boolean
-  vote: Vote['value'] | null
 }

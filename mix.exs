@@ -56,6 +56,22 @@ defmodule Poll20.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "api.spec": &api_spec/1,
     ]
+  end
+
+  # OpenAPI spec of the JSON:API, source of the frontend's types (`pnpm api:types`).
+  # `mix api.spec --check=true` fails if the committed spec is outdated
+  defp api_spec(args) do
+    Mix.Task.run("openapi.spec.json", [
+      "--spec",
+      "Poll20.Router",
+      "--filename",
+      "priv/openapi.json",
+      "--start-app=false",
+      "--pretty=true",
+      "--vendor-extensions=false"
+      | args
+    ])
   end
 end

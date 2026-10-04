@@ -35,7 +35,7 @@ defmodule Poll20.SessionMember do
       public? true
     end
 
-    attribute :vote, :integer do
+    attribute :vote, Poll20.Types.VoteValue do
       allow_nil? true
       public? true
     end
@@ -61,6 +61,7 @@ defmodule Poll20.SessionMember do
   postgres do
     table "session_members"
     repo Poll20.Repo
+    migration_types vote: :smallint
 
     references do
       reference :session, on_delete: :delete

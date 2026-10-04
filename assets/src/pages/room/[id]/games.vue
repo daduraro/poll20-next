@@ -81,7 +81,8 @@ const editForm = ref({
         },
       })
       editForm.value.busy = false
-      games.push({ id: data.value!.entity!.id, players_min: null, ...patch })
+      // the response has every attribute but not the owners relationship
+      games.push({ ...data.value!.entity!, owners: patch.owners })
     }
     editForm.value.reset()
   },

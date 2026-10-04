@@ -25,6 +25,12 @@ export default defineConfig({
     },
   },
 
+  optimizeDeps: {
+    // pages are lazy-loaded through a virtual module the dependency scanner doesn't follow,
+    // so scan them directly; otherwise their deps are found on first visit and force a reload
+    entries: ['index.html', 'src/pages/**/*.vue'],
+  },
+
   plugins: [
     // File-based routing from src/pages, must come before Vue()
     // https://router.vuejs.org/file-based-routing/

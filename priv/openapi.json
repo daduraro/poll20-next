@@ -1,0 +1,5256 @@
+{
+  "components": {
+    "responses": {
+      "errors": {
+        "content": {
+          "application/vnd.api+json": {
+            "schema": {
+              "$ref": "#/components/schemas/errors"
+            }
+          }
+        },
+        "description": "General Error"
+      }
+    },
+    "schemas": {
+      "game-filter": {
+        "additionalProperties": false,
+        "description": "Filters the query to results matching the given filter object",
+        "example": "",
+        "properties": {
+          "and": {
+            "items": {
+              "$ref": "#/components/schemas/game-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "id": {
+            "$ref": "#/components/schemas/game-filter-id"
+          },
+          "match_all_owners": {
+            "$ref": "#/components/schemas/game-filter-match_all_owners"
+          },
+          "name": {
+            "$ref": "#/components/schemas/game-filter-name"
+          },
+          "not": {
+            "$ref": "#/components/schemas/game-filter"
+          },
+          "or": {
+            "items": {
+              "$ref": "#/components/schemas/game-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "owners": {
+            "$ref": "#/components/schemas/member-filter"
+          },
+          "players_max": {
+            "$ref": "#/components/schemas/game-filter-players_max"
+          },
+          "players_min": {
+            "$ref": "#/components/schemas/game-filter-players_min"
+          },
+          "room": {
+            "$ref": "#/components/schemas/room-filter"
+          },
+          "room_id": {
+            "$ref": "#/components/schemas/game-filter-room_id"
+          }
+        },
+        "type": "deepObject"
+      },
+      "session-filter": {
+        "additionalProperties": false,
+        "description": "Filters the query to results matching the given filter object",
+        "example": "",
+        "properties": {
+          "and": {
+            "items": {
+              "$ref": "#/components/schemas/session-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "attendees": {
+            "$ref": "#/components/schemas/session_member-filter"
+          },
+          "comment": {
+            "$ref": "#/components/schemas/session-filter-comment"
+          },
+          "game": {
+            "$ref": "#/components/schemas/game-filter"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/session-filter-game_id"
+          },
+          "id": {
+            "$ref": "#/components/schemas/session-filter-id"
+          },
+          "inserted_at": {
+            "$ref": "#/components/schemas/session-filter-inserted_at"
+          },
+          "not": {
+            "$ref": "#/components/schemas/session-filter"
+          },
+          "or": {
+            "items": {
+              "$ref": "#/components/schemas/session-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/session-filter-updated_at"
+          }
+        },
+        "type": "deepObject"
+      },
+      "session_member": {
+        "additionalProperties": false,
+        "description": "A \"Resource object\" representing a session_member",
+        "properties": {
+          "attributes": {
+            "additionalProperties": false,
+            "description": "An attributes object for a session_member",
+            "properties": {
+              "member_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "session_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "vote": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      -1,
+                      1
+                    ],
+                    "nullable": true,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Field included by default."
+              },
+              "winner": {
+                "description": "Field included by default.",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "winner",
+              "session_id",
+              "member_id"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "relationships": {
+            "additionalProperties": false,
+            "description": "A relationships object for a session_member",
+            "properties": {
+              "member": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for member",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "session": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for session",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "type": "object"
+      },
+      "session_member-filter-session_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "link": {
+        "description": "A link MUST be represented as either: a string containing the link's URL or a link object.",
+        "type": "string"
+      },
+      "errors": {
+        "items": {
+          "$ref": "#/components/schemas/error"
+        },
+        "type": "array",
+        "uniqueItems": true
+      },
+      "session-filter-inserted_at": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {},
+          "greater_than": {},
+          "greater_than_or_equal": {},
+          "in": {
+            "items": {},
+            "type": "array"
+          },
+          "is_distinct_from": {},
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {},
+          "less_than": {},
+          "less_than_or_equal": {},
+          "not_eq": {}
+        },
+        "type": "object"
+      },
+      "room-filter-invite_code": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "session-filter-id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "session-filter-updated_at": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {},
+          "greater_than": {},
+          "greater_than_or_equal": {},
+          "in": {
+            "items": {},
+            "type": "array"
+          },
+          "is_distinct_from": {},
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {},
+          "less_than": {},
+          "less_than_or_equal": {},
+          "not_eq": {}
+        },
+        "type": "object"
+      },
+      "links": {
+        "additionalProperties": {
+          "$ref": "#/components/schemas/link"
+        },
+        "type": "object"
+      },
+      "error": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "description": "An application-specific error code, expressed as a string value.",
+            "type": "string"
+          },
+          "detail": {
+            "description": "A human-readable explanation specific to this occurrence of the problem.",
+            "type": "string"
+          },
+          "id": {
+            "description": "A unique identifier for this particular occurrence of the problem.",
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links"
+          },
+          "source": {
+            "properties": {
+              "parameter": {
+                "description": "A string indicating which query parameter caused the error.",
+                "type": "string"
+              },
+              "pointer": {
+                "description": "A JSON Pointer [RFC6901] to the associated entity in the request document [e.g. \"/data\" for a primary data object, or \"/data/attributes/title\" for a specific attribute].",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "status": {
+            "description": "The HTTP status code applicable to this problem, expressed as a string value.",
+            "type": "string"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "vote": {
+        "additionalProperties": false,
+        "description": "A \"Resource object\" representing a vote",
+        "properties": {
+          "attributes": {
+            "additionalProperties": false,
+            "description": "An attributes object for a vote",
+            "properties": {
+              "game_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "inserted_at": {
+                "description": "Field included by default."
+              },
+              "member_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "updated_at": {
+                "description": "Field included by default."
+              },
+              "value": {
+                "description": "Field included by default.",
+                "enum": [
+                  -1,
+                  1
+                ],
+                "type": "integer"
+              }
+            },
+            "required": [
+              "value",
+              "inserted_at",
+              "updated_at",
+              "game_id",
+              "member_id"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "relationships": {
+            "additionalProperties": false,
+            "description": "A relationships object for a vote",
+            "properties": {
+              "game": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for game",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              },
+              "member": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for member",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "type": "object"
+      },
+      "member-filter": {
+        "additionalProperties": false,
+        "description": "Filters the query to results matching the given filter object",
+        "example": "",
+        "properties": {
+          "and": {
+            "items": {
+              "$ref": "#/components/schemas/member-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "id": {
+            "$ref": "#/components/schemas/member-filter-id"
+          },
+          "name": {
+            "$ref": "#/components/schemas/member-filter-name"
+          },
+          "not": {
+            "$ref": "#/components/schemas/member-filter"
+          },
+          "or": {
+            "items": {
+              "$ref": "#/components/schemas/member-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "room": {
+            "$ref": "#/components/schemas/room-filter"
+          },
+          "room_id": {
+            "$ref": "#/components/schemas/member-filter-room_id"
+          }
+        },
+        "type": "deepObject"
+      },
+      "session-filter-game_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "vote-filter-updated_at": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {},
+          "greater_than": {},
+          "greater_than_or_equal": {},
+          "in": {
+            "items": {},
+            "type": "array"
+          },
+          "is_distinct_from": {},
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {},
+          "less_than": {},
+          "less_than_or_equal": {},
+          "not_eq": {}
+        },
+        "type": "object"
+      },
+      "game-filter-match_all_owners": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "type": "boolean"
+          },
+          "greater_than": {
+            "type": "boolean"
+          },
+          "greater_than_or_equal": {
+            "type": "boolean"
+          },
+          "in": {
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "boolean"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "boolean"
+          },
+          "less_than": {
+            "type": "boolean"
+          },
+          "less_than_or_equal": {
+            "type": "boolean"
+          },
+          "not_eq": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "member": {
+        "additionalProperties": false,
+        "description": "A \"Resource object\" representing a member",
+        "properties": {
+          "attributes": {
+            "additionalProperties": false,
+            "description": "An attributes object for a member",
+            "properties": {
+              "name": {
+                "description": "Field included by default.",
+                "type": "string"
+              },
+              "room_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "room_id"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "relationships": {
+            "additionalProperties": false,
+            "description": "A relationships object for a member",
+            "properties": {
+              "room": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for room",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "type": "object"
+      },
+      "vote-filter-member_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "session-filter-comment": {
+        "additionalProperties": false,
+        "properties": {
+          "contains": {
+            "type": "string"
+          },
+          "eq": {
+            "type": "string"
+          },
+          "greater_than": {
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "type": "string"
+          },
+          "ilike": {
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "string"
+          },
+          "less_than": {
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "type": "string"
+          },
+          "like": {
+            "type": "string"
+          },
+          "not_eq": {
+            "type": "string"
+          },
+          "string_ends_with": {
+            "type": "string"
+          },
+          "string_starts_with": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "vote-filter-value": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "greater_than": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "greater_than_or_equal": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "in": {
+            "items": {
+              "enum": [
+                -1,
+                1
+              ],
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "less_than": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "less_than_or_equal": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "not_eq": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "session": {
+        "additionalProperties": false,
+        "description": "A \"Resource object\" representing a session",
+        "properties": {
+          "attributes": {
+            "additionalProperties": false,
+            "description": "An attributes object for a session",
+            "properties": {
+              "comment": {
+                "anyOf": [
+                  {
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Field included by default."
+              },
+              "game_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "inserted_at": {
+                "description": "Field included by default."
+              },
+              "updated_at": {
+                "description": "Field included by default."
+              }
+            },
+            "required": [
+              "inserted_at",
+              "updated_at",
+              "game_id"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "relationships": {
+            "additionalProperties": false,
+            "description": "A relationships object for a session",
+            "properties": {
+              "attendees": {
+                "properties": {
+                  "data": {
+                    "description": "Relationship data for attendees",
+                    "items": {
+                      "additionalProperties": false,
+                      "description": "Resource identifiers for attendees",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "meta": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  }
+                }
+              },
+              "game": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for game",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "type": "object"
+      },
+      "session_member-filter-id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "session_member-filter": {
+        "additionalProperties": false,
+        "description": "Filters the query to results matching the given filter object",
+        "example": "",
+        "properties": {
+          "and": {
+            "items": {
+              "$ref": "#/components/schemas/session_member-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "id": {
+            "$ref": "#/components/schemas/session_member-filter-id"
+          },
+          "member": {
+            "$ref": "#/components/schemas/member-filter"
+          },
+          "member_id": {
+            "$ref": "#/components/schemas/session_member-filter-member_id"
+          },
+          "not": {
+            "$ref": "#/components/schemas/session_member-filter"
+          },
+          "or": {
+            "items": {
+              "$ref": "#/components/schemas/session_member-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "session": {
+            "$ref": "#/components/schemas/session-filter"
+          },
+          "session_id": {
+            "$ref": "#/components/schemas/session_member-filter-session_id"
+          },
+          "vote": {
+            "$ref": "#/components/schemas/session_member-filter-vote"
+          },
+          "winner": {
+            "$ref": "#/components/schemas/session_member-filter-winner"
+          }
+        },
+        "type": "deepObject"
+      },
+      "member-filter-room_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "session_member-filter-vote": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "greater_than": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "greater_than_or_equal": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "in": {
+            "items": {
+              "enum": [
+                -1,
+                1
+              ],
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "less_than": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "less_than_or_equal": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          },
+          "not_eq": {
+            "enum": [
+              -1,
+              1
+            ],
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "vote-filter": {
+        "additionalProperties": false,
+        "description": "Filters the query to results matching the given filter object",
+        "example": "",
+        "properties": {
+          "and": {
+            "items": {
+              "$ref": "#/components/schemas/vote-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "game": {
+            "$ref": "#/components/schemas/game-filter"
+          },
+          "game_id": {
+            "$ref": "#/components/schemas/vote-filter-game_id"
+          },
+          "id": {
+            "$ref": "#/components/schemas/vote-filter-id"
+          },
+          "inserted_at": {
+            "$ref": "#/components/schemas/vote-filter-inserted_at"
+          },
+          "member": {
+            "$ref": "#/components/schemas/member-filter"
+          },
+          "member_id": {
+            "$ref": "#/components/schemas/vote-filter-member_id"
+          },
+          "not": {
+            "$ref": "#/components/schemas/vote-filter"
+          },
+          "or": {
+            "items": {
+              "$ref": "#/components/schemas/vote-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "updated_at": {
+            "$ref": "#/components/schemas/vote-filter-updated_at"
+          },
+          "value": {
+            "$ref": "#/components/schemas/vote-filter-value"
+          }
+        },
+        "type": "deepObject"
+      },
+      "game-filter-id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "game-filter-room_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "member-filter-name": {
+        "additionalProperties": false,
+        "properties": {
+          "contains": {
+            "type": "string"
+          },
+          "eq": {
+            "type": "string"
+          },
+          "greater_than": {
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "type": "string"
+          },
+          "ilike": {
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "string"
+          },
+          "less_than": {
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "type": "string"
+          },
+          "like": {
+            "type": "string"
+          },
+          "not_eq": {
+            "type": "string"
+          },
+          "string_ends_with": {
+            "type": "string"
+          },
+          "string_starts_with": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "session_member-filter-member_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "game-filter-name": {
+        "additionalProperties": false,
+        "properties": {
+          "contains": {
+            "type": "string"
+          },
+          "eq": {
+            "type": "string"
+          },
+          "greater_than": {
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "type": "string"
+          },
+          "ilike": {
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "string"
+          },
+          "less_than": {
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "type": "string"
+          },
+          "like": {
+            "type": "string"
+          },
+          "not_eq": {
+            "type": "string"
+          },
+          "string_ends_with": {
+            "type": "string"
+          },
+          "string_starts_with": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "vote-filter-inserted_at": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {},
+          "greater_than": {},
+          "greater_than_or_equal": {},
+          "in": {
+            "items": {},
+            "type": "array"
+          },
+          "is_distinct_from": {},
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {},
+          "less_than": {},
+          "less_than_or_equal": {},
+          "not_eq": {}
+        },
+        "type": "object"
+      },
+      "room-filter-id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "vote-filter-game_id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "game": {
+        "additionalProperties": false,
+        "description": "A \"Resource object\" representing a game",
+        "properties": {
+          "attributes": {
+            "additionalProperties": false,
+            "description": "An attributes object for a game",
+            "properties": {
+              "match_all_owners": {
+                "description": "Field included by default.",
+                "type": "boolean"
+              },
+              "name": {
+                "description": "Field included by default.",
+                "type": "string"
+              },
+              "players_max": {
+                "anyOf": [
+                  {
+                    "nullable": true,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Field included by default."
+              },
+              "players_min": {
+                "anyOf": [
+                  {
+                    "nullable": true,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Field included by default."
+              },
+              "room_id": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "match_all_owners",
+              "room_id"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "relationships": {
+            "additionalProperties": false,
+            "description": "A relationships object for a game",
+            "properties": {
+              "owners": {
+                "properties": {
+                  "data": {
+                    "description": "Relationship data for owners",
+                    "items": {
+                      "additionalProperties": false,
+                      "description": "Resource identifiers for owners",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "meta": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  }
+                }
+              },
+              "room": {
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "description": "An identifier for room",
+                    "nullable": true,
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "meta": {
+                        "additionalProperties": true,
+                        "type": "object"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "type": "object"
+      },
+      "room-filter": {
+        "additionalProperties": false,
+        "description": "Filters the query to results matching the given filter object",
+        "example": "",
+        "properties": {
+          "and": {
+            "items": {
+              "$ref": "#/components/schemas/room-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
+          "games": {
+            "$ref": "#/components/schemas/game-filter"
+          },
+          "id": {
+            "$ref": "#/components/schemas/room-filter-id"
+          },
+          "invite_code": {
+            "$ref": "#/components/schemas/room-filter-invite_code"
+          },
+          "members": {
+            "$ref": "#/components/schemas/member-filter"
+          },
+          "name": {
+            "$ref": "#/components/schemas/room-filter-name"
+          },
+          "not": {
+            "$ref": "#/components/schemas/room-filter"
+          },
+          "or": {
+            "items": {
+              "$ref": "#/components/schemas/room-filter"
+            },
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "type": "deepObject"
+      },
+      "member-filter-id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "room-filter-name": {
+        "additionalProperties": false,
+        "properties": {
+          "contains": {
+            "type": "string"
+          },
+          "eq": {
+            "type": "string"
+          },
+          "greater_than": {
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "type": "string"
+          },
+          "ilike": {
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "string"
+          },
+          "less_than": {
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "type": "string"
+          },
+          "like": {
+            "type": "string"
+          },
+          "not_eq": {
+            "type": "string"
+          },
+          "string_ends_with": {
+            "type": "string"
+          },
+          "string_starts_with": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "game-filter-players_max": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "type": "integer"
+          },
+          "greater_than": {
+            "type": "integer"
+          },
+          "greater_than_or_equal": {
+            "type": "integer"
+          },
+          "in": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "integer"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "integer"
+          },
+          "less_than": {
+            "type": "integer"
+          },
+          "less_than_or_equal": {
+            "type": "integer"
+          },
+          "not_eq": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "room": {
+        "additionalProperties": false,
+        "description": "A \"Resource object\" representing a room",
+        "properties": {
+          "attributes": {
+            "additionalProperties": false,
+            "description": "An attributes object for a room",
+            "properties": {
+              "invite_code": {
+                "description": "Field included by default.",
+                "format": "uuid",
+                "type": "string"
+              },
+              "name": {
+                "description": "Field included by default.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "invite_code"
+            ],
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "relationships": {
+            "additionalProperties": false,
+            "description": "A relationships object for a room",
+            "properties": {
+              "games": {
+                "properties": {
+                  "data": {
+                    "description": "Relationship data for games",
+                    "items": {
+                      "additionalProperties": false,
+                      "description": "Resource identifiers for games",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "meta": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  }
+                }
+              },
+              "members": {
+                "properties": {
+                  "data": {
+                    "description": "Relationship data for members",
+                    "items": {
+                      "additionalProperties": false,
+                      "description": "Resource identifiers for members",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "meta": {
+                          "additionalProperties": true,
+                          "type": "object"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "id"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  }
+                }
+              }
+            },
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "type": "object"
+      },
+      "session_member-filter-winner": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "type": "boolean"
+          },
+          "greater_than": {
+            "type": "boolean"
+          },
+          "greater_than_or_equal": {
+            "type": "boolean"
+          },
+          "in": {
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "boolean"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "boolean"
+          },
+          "less_than": {
+            "type": "boolean"
+          },
+          "less_than_or_equal": {
+            "type": "boolean"
+          },
+          "not_eq": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "game-filter-players_min": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "type": "integer"
+          },
+          "greater_than": {
+            "type": "integer"
+          },
+          "greater_than_or_equal": {
+            "type": "integer"
+          },
+          "in": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "type": "integer"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "type": "integer"
+          },
+          "less_than": {
+            "type": "integer"
+          },
+          "less_than_or_equal": {
+            "type": "integer"
+          },
+          "not_eq": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "vote-filter-id": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "greater_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "in": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "is_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "less_than_or_equal": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "not_eq": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "JWT",
+        "description": "JWT for bearer authentication",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "Open API Specification",
+    "version": "1.1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/games": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/games operation on game resource",
+        "parameters": [
+          {
+            "description": "Filters the query to results with attributes matching the given filter object",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/game-filter"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Sort order to apply to the results",
+            "explode": false,
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|players_min|-players_min|\\+\\+players_min|--players_min|players_max|-players_max|\\+\\+players_max|--players_max|match_all_owners|-match_all_owners|\\+\\+match_all_owners|--match_all_owners|room_id|-room_id|\\+\\+room_id|--room_id)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|players_min|-players_min|\\+\\+players_min|--players_min|players_max|-players_max|\\+\\+players_max|--players_max|match_all_owners|-match_all_owners|\\+\\+match_all_owners|--match_all_owners|room_id|-room_id|\\+\\+room_id|--room_id))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Paginates the response with the limit and offset or keyset pagination.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "example": {
+                "limit": 25
+              },
+              "properties": {
+                "after": {
+                  "type": "string"
+                },
+                "before": {
+                  "type": "string"
+                },
+                "count": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "limit": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "offset": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(owners)(,(owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "game": "id,name,players_min,players_max,match_all_owners,room_id"
+              },
+              "properties": {
+                "game": {
+                  "description": "Comma separated field names for game",
+                  "example": "id,name,players_min,players_max,match_all_owners,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "description": "An array of resource objects representing a game",
+                      "items": {
+                        "$ref": "#/components/schemas/game"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "game"
+        ]
+      },
+      "post": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/games operation on game resource",
+        "parameters": [
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(owners)(,(owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "game": "id,name,players_min,players_max,match_all_owners,room_id"
+              },
+              "properties": {
+                "game": {
+                  "description": "Comma separated field names for game",
+                  "example": "id,name,players_min,players_max,match_all_owners,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "match_all_owners": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "owners": {
+                            "anyOf": [
+                              {
+                                "items": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "players_max": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "players_min": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "room_id": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "room_id"
+                        ],
+                        "type": "object"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "game"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /games operation on game resource",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/game"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "game"
+        ]
+      }
+    },
+    "/games/{id}": {
+      "delete": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/games/:id operation on game resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(owners)(,(owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "game": "id,name,players_min,players_max,match_all_owners,room_id"
+              },
+              "properties": {
+                "game": {
+                  "description": "Comma separated field names for game",
+                  "example": "id,name,players_min,players_max,match_all_owners,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "game"
+        ]
+      },
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/games/:id operation on game resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(owners)(,(owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "game": "id,name,players_min,players_max,match_all_owners,room_id"
+              },
+              "properties": {
+                "game": {
+                  "description": "Comma separated field names for game",
+                  "example": "id,name,players_min,players_max,match_all_owners,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/game"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "game"
+        ]
+      },
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/games/:id operation on game resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(owners)(,(owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "game": "id,name,players_min,players_max,match_all_owners,room_id"
+              },
+              "properties": {
+                "game": {
+                  "description": "Comma separated field names for game",
+                  "example": "id,name,players_min,players_max,match_all_owners,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "match_all_owners": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "owners": {
+                            "anyOf": [
+                              {
+                                "items": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "players_max": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "players_min": {
+                            "anyOf": [
+                              {
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "game"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /games/:id operation on game resource",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/game"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "game"
+        ]
+      }
+    },
+    "/members": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/members operation on member resource",
+        "parameters": [
+          {
+            "description": "Filters the query to results with attributes matching the given filter object",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/member-filter"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Sort order to apply to the results",
+            "explode": false,
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|room_id|-room_id|\\+\\+room_id|--room_id)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|room_id|-room_id|\\+\\+room_id|--room_id))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(room)(,(room))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "member": "id,name,room_id"
+              },
+              "properties": {
+                "member": {
+                  "description": "Comma separated field names for member",
+                  "example": "id,name,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "description": "An array of resource objects representing a member",
+                      "items": {
+                        "$ref": "#/components/schemas/member"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/room"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "member"
+        ]
+      }
+    },
+    "/members/{id}": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/members/:id operation on member resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(room)(,(room))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "member": "id,name,room_id"
+              },
+              "properties": {
+                "member": {
+                  "description": "Comma separated field names for member",
+                  "example": "id,name,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/member"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/room"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "member"
+        ]
+      },
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/members/:id operation on member resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(room)(,(room))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "member": "id,name,room_id"
+              },
+              "properties": {
+                "member": {
+                  "description": "Comma separated field names for member",
+                  "example": "id,name,room_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "member"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /members/:id operation on member resource",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/member"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/room"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "member"
+        ]
+      }
+    },
+    "/rooms": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/rooms operation on room resource",
+        "parameters": [
+          {
+            "description": "Filters the query to results with attributes matching the given filter object",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/room-filter"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Sort order to apply to the results",
+            "explode": false,
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|invite_code|-invite_code|\\+\\+invite_code|--invite_code)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|invite_code|-invite_code|\\+\\+invite_code|--invite_code))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(members|games|games.owners)(,(members|games|games.owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "room": "id,name,invite_code"
+              },
+              "properties": {
+                "room": {
+                  "description": "Comma separated field names for room",
+                  "example": "id,name,invite_code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "description": "An array of resource objects representing a room",
+                      "items": {
+                        "$ref": "#/components/schemas/room"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "room"
+        ]
+      },
+      "post": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/rooms operation on room resource",
+        "parameters": [
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(members|games|games.owners)(,(members|games|games.owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "room": "id,name,invite_code"
+              },
+              "properties": {
+                "room": {
+                  "description": "Comma separated field names for room",
+                  "example": "id,name,invite_code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "room"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /rooms operation on room resource",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/room"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "room"
+        ]
+      }
+    },
+    "/rooms/{id}": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/rooms/:id operation on room resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(members|games|games.owners)(,(members|games|games.owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "room": "id,name,invite_code"
+              },
+              "properties": {
+                "room": {
+                  "description": "Comma separated field names for room",
+                  "example": "id,name,invite_code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/room"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "room"
+        ]
+      },
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/rooms/:id operation on room resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(members|games|games.owners)(,(members|games|games.owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "room": "id,name,invite_code"
+              },
+              "properties": {
+                "room": {
+                  "description": "Comma separated field names for room",
+                  "example": "id,name,invite_code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "room"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /rooms/:id operation on room resource",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/room"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "room"
+        ]
+      }
+    },
+    "/rooms/{id}/join": {
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/rooms/:id/join operation on room resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(members|games|games.owners)(,(members|games|games.owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "room": "id,name,invite_code"
+              },
+              "properties": {
+                "room": {
+                  "description": "Comma separated field names for room",
+                  "example": "id,name,invite_code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "invite_code": {
+                            "anyOf": [
+                              {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "name"
+                        ],
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "room"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /rooms/:id/join operation on room resource",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/room"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "room"
+        ]
+      }
+    },
+    "/rooms/{id}/kick": {
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/rooms/:id/kick operation on room resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(members|games|games.owners)(,(members|games|games.owners))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "room": "id,name,invite_code"
+              },
+              "properties": {
+                "room": {
+                  "description": "Comma separated field names for room",
+                  "example": "id,name,invite_code",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "invite_code": {
+                            "anyOf": [
+                              {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "member_id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "member_id"
+                        ],
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "room"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /rooms/:id/kick operation on room resource",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/room"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "room"
+        ]
+      }
+    },
+    "/sessions": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/sessions operation on session resource",
+        "parameters": [
+          {
+            "description": "Filters the query to results with attributes matching the given filter object",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/session-filter"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Sort order to apply to the results",
+            "explode": false,
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "pattern": "^(id|-id|\\+\\+id|--id|comment|-comment|\\+\\+comment|--comment|inserted_at|-inserted_at|\\+\\+inserted_at|--inserted_at|updated_at|-updated_at|\\+\\+updated_at|--updated_at|game_id|-game_id|\\+\\+game_id|--game_id)(,(id|-id|\\+\\+id|--id|comment|-comment|\\+\\+comment|--comment|inserted_at|-inserted_at|\\+\\+inserted_at|--inserted_at|updated_at|-updated_at|\\+\\+updated_at|--updated_at|game_id|-game_id|\\+\\+game_id|--game_id))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Paginates the response with the limit and offset or keyset pagination.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "example": {
+                "limit": 25
+              },
+              "properties": {
+                "after": {
+                  "type": "string"
+                },
+                "before": {
+                  "type": "string"
+                },
+                "count": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "limit": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "offset": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(attendees|attendees.member|game)(,(attendees|attendees.member|game))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "session": "id,comment,inserted_at,updated_at,game_id"
+              },
+              "properties": {
+                "session": {
+                  "description": "Comma separated field names for session",
+                  "example": "id,comment,inserted_at,updated_at,game_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "description": "An array of resource objects representing a session",
+                      "items": {
+                        "$ref": "#/components/schemas/session"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/session_member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "session"
+        ]
+      },
+      "post": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/sessions operation on session resource",
+        "parameters": [
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(attendees|attendees.member|game)(,(attendees|attendees.member|game))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "session": "id,comment,inserted_at,updated_at,game_id"
+              },
+              "properties": {
+                "session": {
+                  "description": "Comma separated field names for session",
+                  "example": "id,comment,inserted_at,updated_at,game_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "attendees": {
+                            "items": {
+                              "type": "object"
+                            },
+                            "type": "array"
+                          },
+                          "comment": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "game_id": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "game_id",
+                          "attendees"
+                        ],
+                        "type": "object"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "session"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /sessions operation on session resource",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/session"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/session_member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "session"
+        ]
+      }
+    },
+    "/sessions/{id}": {
+      "delete": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/sessions/:id operation on session resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(attendees|attendees.member|game)(,(attendees|attendees.member|game))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "session": "id,comment,inserted_at,updated_at,game_id"
+              },
+              "properties": {
+                "session": {
+                  "description": "Comma separated field names for session",
+                  "example": "id,comment,inserted_at,updated_at,game_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "session"
+        ]
+      },
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/sessions/:id operation on session resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(attendees|attendees.member|game)(,(attendees|attendees.member|game))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "session": "id,comment,inserted_at,updated_at,game_id"
+              },
+              "properties": {
+                "session": {
+                  "description": "Comma separated field names for session",
+                  "example": "id,comment,inserted_at,updated_at,game_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/session"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/session_member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "session"
+        ]
+      },
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/sessions/:id operation on session resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(attendees|attendees.member|game)(,(attendees|attendees.member|game))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "session": "id,comment,inserted_at,updated_at,game_id"
+              },
+              "properties": {
+                "session": {
+                  "description": "Comma separated field names for session",
+                  "example": "id,comment,inserted_at,updated_at,game_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "comment": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "session"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /sessions/:id operation on session resource",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/session"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/session_member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          },
+                          {
+                            "$ref": "#/components/schemas/game"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "session"
+        ]
+      }
+    },
+    "/votes": {
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/votes operation on vote resource",
+        "parameters": [
+          {
+            "description": "Filters the query to results with attributes matching the given filter object",
+            "in": "query",
+            "name": "filter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/vote-filter"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Sort order to apply to the results",
+            "explode": false,
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "pattern": "^(id|-id|\\+\\+id|--id|value|-value|\\+\\+value|--value|inserted_at|-inserted_at|\\+\\+inserted_at|--inserted_at|updated_at|-updated_at|\\+\\+updated_at|--updated_at|game_id|-game_id|\\+\\+game_id|--game_id|member_id|-member_id|\\+\\+member_id|--member_id)(,(id|-id|\\+\\+id|--id|value|-value|\\+\\+value|--value|inserted_at|-inserted_at|\\+\\+inserted_at|--inserted_at|updated_at|-updated_at|\\+\\+updated_at|--updated_at|game_id|-game_id|\\+\\+game_id|--game_id|member_id|-member_id|\\+\\+member_id|--member_id))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Paginates the response with the limit and offset or keyset pagination.",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "example": {
+                "limit": 25
+              },
+              "properties": {
+                "after": {
+                  "type": "string"
+                },
+                "before": {
+                  "type": "string"
+                },
+                "count": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "limit": {
+                  "minimum": 1,
+                  "type": "integer"
+                },
+                "offset": {
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(game|member)(,(game|member))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "vote": "id,value,inserted_at,updated_at,game_id,member_id"
+              },
+              "properties": {
+                "vote": {
+                  "description": "Comma separated field names for vote",
+                  "example": "id,value,inserted_at,updated_at,game_id,member_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "description": "An array of resource objects representing a vote",
+                      "items": {
+                        "$ref": "#/components/schemas/vote"
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/game"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "vote"
+        ]
+      },
+      "post": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/votes operation on vote resource",
+        "parameters": [
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(game|member)(,(game|member))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "vote": "id,value,inserted_at,updated_at,game_id,member_id"
+              },
+              "properties": {
+                "vote": {
+                  "description": "Comma separated field names for vote",
+                  "example": "id,value,inserted_at,updated_at,game_id,member_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "game_id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "member_id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "value": {
+                            "enum": [
+                              -1,
+                              1
+                            ],
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "value",
+                          "game_id",
+                          "member_id"
+                        ],
+                        "type": "object"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "vote"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /votes operation on vote resource",
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/vote"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/game"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "vote"
+        ]
+      }
+    },
+    "/votes/{id}": {
+      "delete": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/votes/:id operation on vote resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(game|member)(,(game|member))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "vote": "id,value,inserted_at,updated_at,game_id,member_id"
+              },
+              "properties": {
+                "vote": {
+                  "description": "Comma separated field names for vote",
+                  "example": "id,value,inserted_at,updated_at,game_id,member_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "vote"
+        ]
+      },
+      "get": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/votes/:id operation on vote resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(game|member)(,(game|member))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "vote": "id,value,inserted_at,updated_at,game_id,member_id"
+              },
+              "properties": {
+                "vote": {
+                  "description": "Comma separated field names for vote",
+                  "example": "id,value,inserted_at,updated_at,game_id,member_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/vote"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/game"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "vote"
+        ]
+      },
+      "patch": {
+        "callbacks": {},
+        "deprecated": false,
+        "description": "/votes/:id operation on vote resource",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Relationship paths to include in the response",
+            "explode": false,
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "pattern": "^(game|member)(,(game|member))*$",
+              "type": "string"
+            },
+            "style": "form"
+          },
+          {
+            "description": "Limits the response fields to only those listed for each type",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "additionalProperties": true,
+              "example": {
+                "vote": "id,value,inserted_at,updated_at,game_id,member_id"
+              },
+              "properties": {
+                "vote": {
+                  "description": "Comma separated field names for vote",
+                  "example": "id,value,inserted_at,updated_at,game_id,member_id",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "style": "deepObject"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "data": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "attributes": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "value": {
+                            "anyOf": [
+                              {
+                                "enum": [
+                                  -1,
+                                  1
+                                ],
+                                "type": "integer"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "relationships": {
+                        "additionalProperties": false,
+                        "properties": {},
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "vote"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "data"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "description": "Request body for the /votes/:id operation on vote resource",
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/vote"
+                    },
+                    "included": {
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/game"
+                          },
+                          {
+                            "$ref": "#/components/schemas/member"
+                          }
+                        ]
+                      },
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "meta": {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "$ref": "#/components/responses/errors"
+          }
+        },
+        "tags": [
+          "vote"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "servers": [],
+  "tags": []
+}

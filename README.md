@@ -35,3 +35,13 @@ Regular Phoenix server https://hexdocs.pm/phoenix/up_and_running.html + Ash http
 
 ## Client
 Vue3 + Vite app (Vitesse starter template). Lives on `assets/`, compiles to `priv/static`.
+
+## API types
+The client's API types (`assets/src/types.ts`) derive from the backend's OpenAPI spec. After changing a resource's public attributes, regenerate both and commit them:
+
+```sh
+podman-compose -f compose.dev.yaml exec app mix api.spec        # -> priv/openapi.json
+podman-compose -f compose.dev.yaml exec assets pnpm api:types   # -> assets/src/api-schema.d.ts
+```
+
+`mix api.spec --check=true` fails if the committed spec is out of date (e.g. for CI).

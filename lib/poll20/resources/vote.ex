@@ -48,7 +48,7 @@ defmodule Poll20.Vote do
   attributes do
     uuid_primary_key :id
 
-    attribute :value, :integer do
+    attribute :value, Poll20.Types.VoteValue do
       allow_nil? false
       public? true
     end
@@ -77,6 +77,7 @@ defmodule Poll20.Vote do
   postgres do
     table "votes"
     repo Poll20.Repo
+    migration_types value: :smallint
 
     references do
       reference :game, on_delete: :delete
