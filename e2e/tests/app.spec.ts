@@ -225,6 +225,8 @@ test('voting and refreshing votes never overlap', async ({ browser }) => {
 
   await page.goto(`${roomPath}/games`)
   await page.getByLabel('Name', { exact: true }).fill('Azul')
+  // the poll hides games nobody owns
+  await page.getByRole('group', { name: 'Game owners' }).getByLabel('Carol').check()
   await page.getByRole('button', { name: 'Save' }).click()
   await expect(page.getByRole('button', { name: 'Edit Azul' })).toBeVisible()
 

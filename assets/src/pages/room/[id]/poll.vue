@@ -32,7 +32,7 @@ const games = computed(() => membership?.room.games ?? [])
 const gamesById = computed(() => indexBy(prop('id'), games.value))
 const gamesActive = computed(
   () => games.value.filter((game) => {
-    if (filters.value.onlyPresentGames && game.owners.length > 0) {
+    if (filters.value.onlyPresentGames) {
       const presentOwners = game.owners.filter(owner => activeMemberIds.value.has(owner.id))
       const exactlyAllPresent = game.owners.length === presentOwners.length && presentOwners.length === membersActive.value.length
       if (!game.match_all_owners && presentOwners.length === 0) {
