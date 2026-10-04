@@ -15,7 +15,7 @@ const filters = useLocalStorage(`${route.path}.filters`, {
 })
 const filtersVisible = ref(false)
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { membership } = useUserStore()
 
 const members = computed(() => membership?.room.members ?? [])
@@ -200,6 +200,12 @@ const sessionFormDefinition = [
     is: 'textarea',
   },
 ]
+function formatLastPlayed(game: Game) {
+  return game.last_played_at
+    ? t('Last played: {date}', { date: new Date(game.last_played_at).toLocaleDateString(locale.value) })
+    : t('Last played: never')
+}
+
 function logSession(game_id: Game['id']) {
   sessionGameId.value = game_id
   sessionValue.value.attendees = membersActive.value.map(member => ({
@@ -220,6 +226,7 @@ async function saveSession() {
     },
   })
   loggedGameId.value = sessionGameId.value
+  gamesById.value[sessionGameId.value!].last_played_at = new Date().toISOString()
   setTimeout(() => loggedGameId.value = null, 3000)
   sessionGameId.value = null
   isSavingSession.value = false
@@ -342,6 +349,9 @@ async function saveSession() {
             >
               <div class="text-xl">
                 {{ game.name }}
+              </div>
+              <div class="opacity-75">
+                {{ formatLastPlayed(game) }}
               </div>
               <div class="flex mt-2">
                 <span class="mr-2 flex">

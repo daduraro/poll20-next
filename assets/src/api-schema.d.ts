@@ -1408,6 +1408,7 @@ export interface components {
         "game-filter": {
             and?: components["schemas"]["game-filter"][];
             id?: components["schemas"]["game-filter-id"];
+            last_played_at?: components["schemas"]["game-filter-last_played_at"];
             match_all_owners?: components["schemas"]["game-filter-match_all_owners"];
             name?: components["schemas"]["game-filter-name"];
             not?: components["schemas"]["game-filter"];
@@ -1780,6 +1781,18 @@ export interface components {
             /** @enum {integer} */
             not_eq?: -1 | 1;
         };
+        "game-filter-last_played_at": {
+            eq?: unknown;
+            greater_than?: unknown;
+            greater_than_or_equal?: unknown;
+            in?: unknown[];
+            is_distinct_from?: unknown;
+            is_nil?: boolean;
+            is_not_distinct_from?: unknown;
+            less_than?: unknown;
+            less_than_or_equal?: unknown;
+            not_eq?: unknown;
+        };
         /** @description A "Resource object" representing a session */
         session: {
             /** @description An attributes object for a session */
@@ -2065,6 +2078,7 @@ export interface components {
         game: {
             /** @description An attributes object for a game */
             attributes?: {
+                last_played_at?: unknown | null;
                 /** @description Field included by default. */
                 match_all_owners: boolean;
                 /** @description Field included by default. */

@@ -110,5 +110,13 @@ defmodule Poll20.Game do
       source_attribute_on_join_resource :game_id
       destination_attribute_on_join_resource :member_id
     end
+
+    has_many :sessions, Poll20.Session
+  end
+
+  aggregates do
+    max :last_played_at, :sessions, :inserted_at do
+      public? true
+    end
   end
 end

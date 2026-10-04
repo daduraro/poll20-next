@@ -1,5 +1,6 @@
 import type { Game, Member, Room } from '~/types'
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { defaultFields } from '~/api-default-fields'
 
 export interface Membership {
   room: Room & {
@@ -34,10 +35,12 @@ export const useUserStore = defineStore('user', () => {
     if (current && !previous) {
       const { data } = await useApi<Membership['room']>('get', `rooms/${current.room.id}`, {
         query: {
-          include: [
+          'include': [
             'members',
             'games.owners',
           ],
+          // aggregates are only loaded on request, and listing fields replaces the defaults
+          'fields[game]': [...defaultFields.game, 'last_played_at'].join(','),
         },
       })
       const room = data.value?.entity

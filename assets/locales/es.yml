@@ -1,5 +1,7 @@
 '{count} games filtered out': '{count} juegos no mostrados'
 'Invite link:': 'Enlace para invitar:'
+'Last played: never': 'Jugado por última vez: nunca'
+'Last played: {date}': 'Jugado por última vez: {date}'
 'Only games played by the following members:': 'Solo partidas jugadas por los siguientes miembros:'
 'Only include these games:': 'Solo incluir estos juegos:'
 'Your rooms:': 'Tus grupos:'

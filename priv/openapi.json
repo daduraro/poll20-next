@@ -28,6 +28,9 @@
           "id": {
             "$ref": "#/components/schemas/game-filter-id"
           },
+          "last_played_at": {
+            "$ref": "#/components/schemas/game-filter-last_played_at"
+          },
           "match_all_owners": {
             "$ref": "#/components/schemas/game-filter-match_all_owners"
           },
@@ -977,6 +980,27 @@
         },
         "type": "object"
       },
+      "game-filter-last_played_at": {
+        "additionalProperties": false,
+        "properties": {
+          "eq": {},
+          "greater_than": {},
+          "greater_than_or_equal": {},
+          "in": {
+            "items": {},
+            "type": "array"
+          },
+          "is_distinct_from": {},
+          "is_nil": {
+            "type": "boolean"
+          },
+          "is_not_distinct_from": {},
+          "less_than": {},
+          "less_than_or_equal": {},
+          "not_eq": {}
+        },
+        "type": "object"
+      },
       "session": {
         "additionalProperties": false,
         "description": "A \"Resource object\" representing a session",
@@ -1735,6 +1759,14 @@
             "additionalProperties": false,
             "description": "An attributes object for a game",
             "properties": {
+              "last_played_at": {
+                "anyOf": [
+                  {},
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "match_all_owners": {
                 "description": "Field included by default.",
                 "type": "boolean"
@@ -2306,7 +2338,7 @@
             "name": "sort",
             "required": false,
             "schema": {
-              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|players_min|-players_min|\\+\\+players_min|--players_min|players_max|-players_max|\\+\\+players_max|--players_max|match_all_owners|-match_all_owners|\\+\\+match_all_owners|--match_all_owners|room_id|-room_id|\\+\\+room_id|--room_id)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|players_min|-players_min|\\+\\+players_min|--players_min|players_max|-players_max|\\+\\+players_max|--players_max|match_all_owners|-match_all_owners|\\+\\+match_all_owners|--match_all_owners|room_id|-room_id|\\+\\+room_id|--room_id))*$",
+              "pattern": "^(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|players_min|-players_min|\\+\\+players_min|--players_min|players_max|-players_max|\\+\\+players_max|--players_max|match_all_owners|-match_all_owners|\\+\\+match_all_owners|--match_all_owners|room_id|-room_id|\\+\\+room_id|--room_id|last_played_at|-last_played_at|\\+\\+last_played_at|--last_played_at)(,(id|-id|\\+\\+id|--id|name|-name|\\+\\+name|--name|players_min|-players_min|\\+\\+players_min|--players_min|players_max|-players_max|\\+\\+players_max|--players_max|match_all_owners|-match_all_owners|\\+\\+match_all_owners|--match_all_owners|room_id|-room_id|\\+\\+room_id|--room_id|last_played_at|-last_played_at|\\+\\+last_played_at|--last_played_at))*$",
               "type": "string"
             },
             "style": "form"

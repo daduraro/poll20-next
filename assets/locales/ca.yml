@@ -1,5 +1,7 @@
 '{count} games filtered out': '{count} jocs no mostrats'
 'Invite link:': 'Enllaç per convidar:'
+'Last played: never': 'Jugat per última vegada: mai'
+'Last played: {date}': 'Jugat per última vegada: {date}'
 'Only games played by the following members:': 'Només partides jugades pels següents members:'
 'Only include these games:': 'Només incloure aquests jocs:'
 'Your rooms:': 'Els teus grups:'

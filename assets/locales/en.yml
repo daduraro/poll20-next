@@ -1,5 +1,7 @@
 '{count} games filtered out': '{count} games filtered out'
 'Invite link:': 'Invite link:'
+'Last played: never': 'Last played: never'
+'Last played: {date}': 'Last played: {date}'
 'Only games played by the following members:': 'Only games played by the following members:'
 'Only include these games:': 'Only include these games:'
 'Your rooms:': 'Your rooms:'

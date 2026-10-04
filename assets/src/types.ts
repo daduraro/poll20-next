@@ -29,7 +29,9 @@ export type Room = Entity<'room'>
 
 export type Member = Entity<'member'>
 
-export type Game = Entity<'game'> & {
+// `last_played_at` is an aggregate (latest session's `inserted_at`), which the spec leaves untyped
+export type Game = Omit<Entity<'game'>, 'last_played_at'> & {
+  last_played_at: string | null
   owners: Member[]
 }
 
