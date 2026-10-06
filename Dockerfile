@@ -10,6 +10,7 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM elixir:${ELIXIR_VERSION}
+ENV MIX_ENV=prod
 WORKDIR /opt/app
 COPY . .
 RUN mix local.hex --force && \
@@ -17,4 +18,4 @@ RUN mix local.hex --force && \
 
 COPY --from=build /app/priv priv
 
-CMD ["/bin/sh", "-c", "mix setup && mix phx.server"]
+CMD ["/bin/sh", "-c", "mix setup && exec mix phx.server"]
