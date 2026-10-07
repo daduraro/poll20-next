@@ -5,6 +5,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from 'vue-router/auto-routes'
 import App from './App.vue'
+import { loadDateFnsLocale } from './lib/date-fns-locale'
 
 import '@unocss/reset/tailwind.css'
 import './styles/main.css'
@@ -23,7 +24,10 @@ Object
 
 app.use(router)
 app.use(createHead())
-app.mount('#app')
+// mount once dates can be formatted in the browser's locale (or with date-fns's default, if it fails to load)
+loadDateFnsLocale()
+  .catch(error => console.warn('Could not load the date-fns locale', error))
+  .finally(() => app.mount('#app'))
 
 // treat role="button" as such
 document.addEventListener('keydown', (event: KeyboardEvent) => {

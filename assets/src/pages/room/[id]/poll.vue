@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Attendee, Game, Member, Session, Vote } from '~/types'
+import { format } from 'date-fns'
 import { equals, fromPairs, groupBy, indexBy, prop, sortBy } from 'ramda'
 import seedrandom from 'seedrandom'
 import { sortByTiered } from '~/lib/utils/array'
@@ -15,7 +16,7 @@ const filters = useLocalStorage(`${route.path}.filters`, {
 })
 const filtersVisible = ref(false)
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const { membership } = useUserStore()
 
 const members = computed(() => membership?.room.members ?? [])
@@ -208,7 +209,7 @@ const sessionFormDefinition = [
 ]
 function formatLastPlayed(game: Game) {
   return game.last_played_at
-    ? t('Last played: {date}', { date: new Date(game.last_played_at).toLocaleDateString(locale.value) })
+    ? t('Last played: {date}', { date: format(new Date(game.last_played_at), 'P') })
     : t('Last played: never')
 }
 
