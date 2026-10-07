@@ -19,6 +19,11 @@ export default defineConfig({
     emptyOutDir: true,
   },
 
+  define: {
+    // shown on the about page as the last update; set when the frontend is built (i.e. deployed)
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+  },
+
   resolve: {
     alias: {
       '~/': `${path.resolve(import.meta.dirname, 'src')}/`,

@@ -1,3 +1,6 @@
+// see `define` in vite.config.ts
+declare const __BUILD_DATE__: string
+
 declare interface Window {
   // extend the window
 }
